@@ -1,0 +1,298 @@
+
+@import 'https://fonts.googleapis.com/css?family=Poppins';
+.main-Container{
+    background: #F0F4F3;
+    width: 100vw;
+    height: 100vh;
+    box-sizing: border-box;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    
+    
+}
+.main-Container::before {
+    content: '';
+    position: absolute;
+    bottom:-100px;
+    left: -90px;
+
+    width: 300px; 
+    height: 300px; 
+    background: #90D449;; 
+    border-radius: 50%; /* To Create the half circle shape */
+    filter: blur(2px);
+   
+  }
+  .main-Container::after {
+    content: '';
+    position: absolute;
+    top: -470px;
+    left:87rem;
+
+    border-style: solid;
+    border-width:280px 0 650px 350px; /* Adjust the values to change the size of the polygon */
+    clip-path: polygon(50% 0, 0 0, 100% 0% 20%); /* Create a polygon shape */
+    transform: rotate(280deg);
+    filter: blur(2px);
+    border-color: transparent transparent transparent #156FB3;
+    /* background: linear-gradient(to bottom, transparent, #6e7ae6); */
+    /* backdrop-filter: blur(2px); */
+}
+
+ 
+.second-container{
+    display: flex;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    position: absolute;
+}
+
+.left{
+    background: white;
+    width: 450px;
+    height: 470px;
+    display: flex;
+    flex-direction: column;
+    max-width: 450px;
+}
+.right{
+    background: linear-gradient(225deg, #9CD94D 0%, #20A61E 100%);
+    width: 307px;
+    height: 470px;
+    position: relative;
+    max-width: 450px;
+}
+.right::before {
+    content: '';
+    position: absolute;
+    top: -22px;
+    left: 40%;
+    border-left: 80px solid transparent;
+    border-right: 68px solid transparent;
+    border-bottom: 57px solid rgba(255, 255, 255, 0.20);
+    /* fill: rgba(255, 255, 255, 0.20); */
+    transform: translate(-112px, 47px) rotate(330deg);
+  }
+  .right::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 130px;
+    height: 130px;
+    border-radius: 100%;
+    background-color: rgba(255, 255, 255, 0.20);
+    transform: translate(35%, 50%) rotate(127deg);
+    bottom: 9rem;
+    left: 85px;
+  }
+.login{
+    text-align: center;
+    position: relative;
+    font-family: Poppins;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    padding-top: 2rem;
+    
+}
+/* .login h1{
+    transform: translateY(95px);
+} */
+.input-field{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    padding-top: 1rem;
+
+}
+.input-field input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    background: #EDF5F3;;
+    
+  }
+  
+ .input-field input:focus {
+    outline: none;
+  }
+  
+.input-field input[type="email"]{
+    width: 300px;
+    height: 30px;
+}
+
+.input-field input[type="password"]{
+    width: 300px;
+    height: 30px;
+    margin-bottom: 18px;
+}
+.input-field input[type="text"]{
+  width: 300px;
+  height: 30px;
+  margin-bottom: 18px;
+}
+.input-field input::placeholder{
+    font-weight: 550;
+    color: black;
+    font-family: Poppins;
+    font-size: 12px;
+    font-style: normal;
+    opacity: 0.8;
+}
+.UM{
+    text-align: center;
+    position: relative;
+    font-family: Poppins;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    padding-top: 100px;
+    padding-top: 8rem;
+}
+.UM h1{
+    /* transform: translateY(120px); */
+    color: white;
+    
+}
+.description{
+    /* transform: translateY(120px); */
+    width: 250px;
+    height: 180px;
+    flex-shrink: 0;
+    text-align: center;
+    margin: auto;
+
+}
+.description p{
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    color: white;
+    line-height: 1.5;
+}
+.button{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    justify-items: center;
+    padding-top: 1.5rem; 
+}
+.button-edit {
+    
+    width: 180px;
+    height: 40px; 
+    border: none;
+    border-radius: 55px;
+    background: #8FD448;
+    color: white;
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    text-align: center;
+    animation: signin-animation 1s infinite;
+  transition: background-color 0.2s ease;
+}
+.button-edit:hover{
+    cursor: pointer;
+    background: #0719b6;
+    transform: scale(1.05);
+    
+}
+@keyframes button-animation{
+    0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+      }
+}
+.logo img{
+    padding: 4px;
+    width: 120px;
+    height: auto;
+}
+.password-container{
+    padding-left: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* position: relative; */
+}
+.password-toggle {
+    /* position: absolute; */
+    /* top: 50%;
+    right: 1rem; */
+    transform: translateX(-150%);
+    cursor: pointer;
+    opacity: 0.4;
+    
+    
+  }
+  .password-toggle-icon:hover {
+    color: rgba(0, 0, 0, 0.20); 
+  }
+  .error-message{
+    color: red;
+    font-size: 0.75rem;
+    padding-bottom: 0;
+    /* margin-bottom: 10px; */
+    margin-top: -0.5rem;
+    margin-bottom: -0.5rem;
+  }
+  .error-message1{
+    color: red;
+    font-size: 0.75rem;
+    padding-bottom: 0;
+    /* margin-bottom: 10px; */
+    margin-top: -0.5rem;
+  }
+.signup-text{
+    text-align: center;
+    position: relative;
+    font-family: Poppins;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 500;
+    padding-top: 1rem;
+}
+.Ellipse img{
+    padding-left: 17rem;
+    height: 5rem;
+}
+@media (max-width: 768px) {
+    .left {
+      max-width: none;
+      width: 100%;
+    } 
+    .right {
+        
+        display: none;
+          }
+          .login{
+              width: 98%;
+          }
+  .main-Container::before {
+    display: none;
+  }
+    
+    .button-edit {
+      animation: none; 
+    }
+}

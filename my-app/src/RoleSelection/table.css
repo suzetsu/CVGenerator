@@ -1,0 +1,11 @@
+.table-container {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .centered-table {
+    border-spacing: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  

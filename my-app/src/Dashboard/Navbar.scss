@@ -1,0 +1,48 @@
+
+$background-color: #121214;
+// $padding: 13px;
+$primary-color: #dbdbdb;
+
+.nav-container {
+  background-color: $background-color;
+  // padding: $padding;
+  // padding: 10px 10px;
+  height: 4rem;
+  display: flex;
+  position: fixed;
+  z-index: 10;
+  // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
+}
+.side-logo{
+    display: flex;
+    align-items: center;
+    padding-right: 2rem;
+    padding-top: 7px;
+}
+.logo-text{
+    color: white;
+    font-size: 16px;
+    padding-bottom: 3px;
+}
+.nav-links{
+    display: flex;
+    align-items: center;
+    color: #FFF;
+    justify-content: space-between;
+    font-size: 14px;
+    font-weight: 700;
+
+}
+.hoverNav {
+    
+    cursor: pointer;
+    // border: 1px solid #888;
+    border-radius: 8px;
+    padding: 6px;
+    transition: background-color 0.2s, color 0.3s;
+  }
+  .hoverNav:hover {
+    background-color: #4a5568;
+    color: white;
+  }
+

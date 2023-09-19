@@ -1,0 +1,33 @@
+$background-color: #F0F4F3;;
+.second-cont{
+    background-color: $background-color;
+    // width: 100vw;
+    // height: 1535px;
+    padding-bottom: 2rem;
+}
+.inside-container{
+    // margin-top: -20px;
+    // padding-left: 4.5rem;
+    // padding: 2rem;
+    display: flex;
+    margin: 4;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.dashboard-text{
+    color: #666;
+    font-family: Helvetica;
+    font-size: 25.446px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    padding-left: 0;
+    padding-right: 67.2rem;
+    padding-top: 4rem;
+}
+.first-card-container{
+    display: flex;
+
+}
+
