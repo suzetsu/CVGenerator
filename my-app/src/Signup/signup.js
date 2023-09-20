@@ -122,15 +122,13 @@ const Login = () => {
         }));
         // history("/");
       }
+      if (userCreationStatus === 'success') {
+        Swal.fire('User Created', 'User created successfully!', 'success');
+        history("/");
+      } else {
+        Swal.fire('User Creation Failed', 'User creation failed!', 'error');
+      }
     }
-  
-
-  if (userCreationStatus === 'sucess') {
-    Swal.fire('User Created', 'User created successfully!', 'success');
-    history("/");
-  } else {
-    Swal.fire('User Creation Failed', 'User creation failed!', 'error');
-  }
     
   };
  

@@ -12,27 +12,30 @@ import * as actionTypes from './actionTypes';
 
 
 export const login = (email, password) => async (dispatch) => {
+  // const authToken = "UmbrellaSolutions"
   try {
     const response = await axios.post(
-      "https://192.168.1.72:7270/api/Authentication/Login",
-      { email, password }
+      "http://192.168.1.89:7270/api/Authentication/Login",
+      { email, password },
+      {
+        
+        headers: { 'Authorization': 'Bearer UmbrellaSolutions'},
+      }
     );
 
     const token = response.data.token;
     console.log(token);
-    // const secretKey = "ABCDEFGHHIabchdgeubchaolha8fkf123447684b";
-    // const decodedToken = jwtDecode(token, secretKey);
-    // const userRole = response.data.role
-    // console.log(decodedToken);
    
     if (token) {
       dispatch({ type: actionTypes.LOGIN_SUCCESS, payload: token });
+      // dispatch({type:actionTypes.SET_USER_ROLE, payload:role})
       // dispatch(setUserRole(userRole));
       return { success: true };
     } else {
       dispatch({ type: actionTypes.LOGIN_FAILURE });
       return { success: false };
     }
+
   } catch (error) {
     dispatch({ type: actionTypes.LOGIN_FAILURE });
     return { success: false };
@@ -42,7 +45,7 @@ export const login = (email, password) => async (dispatch) => {
 export const createUser = (email, password, fullName, mobile) => async (dispatch) => {
   try {
     const response = await axios.post(
-      "https://192.168.1.72:7270/api/Users",
+      "http://192.168.1.89:7270/api/Users",
       email, password, fullName, mobile
     );
 
@@ -78,7 +81,7 @@ export const storeClientInfo = ( clientName,
   secondProjectDescription) => async (dispatch) => {
   try {
     const response = await axios.post(
-      "https://192.168.1.72:7270/api/Client",
+      "http://192.168.1.89:7270/api/Client",
       {clientName, 
       email, 
       phone, 
@@ -111,12 +114,12 @@ export const storeClientInfo = ( clientName,
       dispatch({ type: actionTypes.CLIENT_INFO_FAILURE });
     }
   } catch (error) {
-   if (error.response.data.message)
-    { 
-      const Errmessage = error.response.data.message
-      dispatch({ type: actionTypes.CLIENT_INFO_EMAIL_ERROR, payload: Errmessage });
-      // console.log(Errmessage);
-    }
+  //  if (error.response.data.message)
+  //   { 
+  //     const Errmessage = error.response.data.message
+  //     dispatch({ type: actionTypes.CLIENT_INFO_EMAIL_ERROR, payload: Errmessage });
+  //     // console.log(Errmessage);
+  //   }
     dispatch({ type: actionTypes.CLIENT_INFO_FAILURE });
   
   }
@@ -124,7 +127,7 @@ export const storeClientInfo = ( clientName,
 
 export const fetchClientInfo = () => async (dispatch) => {
   try {
-    const response = await axios.get("https://192.168.1.72:7270/api/Client/GetAllClients");
+    const response = await axios.get("http://192.168.1.89:7270/api/Client/GetAllClients");
 
     if (response.status === 200) {
       // Assuming the response data contains the client information
@@ -143,25 +146,33 @@ export const fetchClientInfo = () => async (dispatch) => {
   
 };
 
-export const deleteClientInfo = (clientIdToDelete) => async (dispatch) => {
+export const deleteClientInfo = (clientInformationID) => async (dispatch) => {
   try {
-    const response = await axios.delete(`https://192.168.1.72:7270/api/Client/${clientIdToDelete}`);
+    const response = await axios.delete(`http://192.168.1.89:7270/api/Client/${clientInformationID}`);
     if (response.status === 200) {
-      dispatch({ type: actionTypes.CLIENT_INFO_SUCCESS });
+      dispatch({ type: actionTypes.CLIENT_INFO_DELETE_SUCCESS });
     }
   } catch (error) {
-    dispatch({ type: actionTypes.CLIENT_INFO_FAILURE });
+    dispatch({ type: actionTypes.CLIENT_INFO_DELETE_FAILURE });
   }
 }
 
-export const updateClientInfo = (clientToUpdate, clientName, phone, email) => async (dispatch) => {
+export const updateClientInfo = (clientInformationID, updatedClient) => async (dispatch) => {
   try {
-    const response = await axios.put(`https://192.168.1.72:7270/api/Client/${clientToUpdate}`, {clientName, phone, email});
+    const response = await axios.put(`http://192.168.1.89:7270/api/Client/${clientInformationID}`,
+    updatedClient,
+    {
+      headers: { 
+        "Content-Type": "application/json",
+      }
+    }
+    );
     if (response.status === 200) {
-      dispatch({ type: actionTypes.CLIENT_INFO_SUCCESS });
+      dispatch({ type: actionTypes.CLIENT_INFO_UPDATE_SUCCESS });
     }
   } catch (error) {
-    dispatch({ type: actionTypes.CLIENT_INFO_FAILURE });
+    console.log(error);
+    dispatch({ type: actionTypes.CLIENT_INFO_UPDATE_FAILURE });
   }
 }
 

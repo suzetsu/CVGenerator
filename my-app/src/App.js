@@ -36,13 +36,16 @@ const App = () => {
               <Route  path="/signup" element={<Signup/>} />
               <Route  path="/info" element={<Info/>} />
               <Route  path="/Update" element={<Update/>} />
+              <Route  path="/CVGenerate" element={<CVGenerate/>} />
+              <Route  path="/CVTemp" element={<CVTemp/>} />
+              
         </Routes>  
         </Router>
       {/* Protected Routes  */}
                {/* <Route element={<ProtectedRoute />}>
                 <Route path="/main" element={<Main />} />
               </Route> */}
-              {/* <Route element={<ProtectedRoute />} auth={true}>
+              {/* <Route element={<ProtectedRoute />}>
                 <Route path="/info" element={<Info />} />
               </Route>  */}
               

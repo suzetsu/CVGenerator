@@ -17,7 +17,7 @@ function CVGenerate() {
     const history = useNavigate();
 
     const clientDetails = useSelector((state) => state.auth.clientData);
-    // console.log(clientDetails);
+    console.log(clientDetails);
 
     useEffect(() => {
         dispatch(fetchClientInfo());

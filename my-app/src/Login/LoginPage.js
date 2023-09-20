@@ -6,6 +6,7 @@ import Ellipse from '../images/Ellipse.png';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import {login} from '../Redux/actions';
+import Swal from 'sweetalert2';
 
 
 const Login = () => {
@@ -31,20 +32,19 @@ const Login = () => {
     if (!isValidEmail(email)) {
       setErrormail('Invalid email');
     } else if (isValidEmail(email) && password) {
-      try {
-        // Dispatch the login action
-        const result = await dispatch(login(email, password));
-        
-        if (result.success) {
-          history("/Main");
-        } else {
-          alert("Invalid email or password");
+      
+        const loginResult = await dispatch(login(email, password));
+        if (loginResult.success) {
+          history('/Info');
+        } 
+      else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Invalid Credentials',
+          })
         }
-      } catch (error) {
-        console.error('Login error:', error);
       }
-    }
-   
   };
   const isValidEmail = (email) => {
     return String(email)

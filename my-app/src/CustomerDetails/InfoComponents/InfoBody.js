@@ -26,6 +26,13 @@ const InfoBody = () => {
     const [degree, setdegree] = useState('')
     const [skills, setSelectedSkills] = useState([]); // Store selected roles
     const [currentSkill, setCurrentSkill] = useState(''); // Store current input role
+    const [description, setDescription] = useState('')
+    const [firstProject, setFirstProject] = useState('')
+    const [secondProject, setSecondProject] = useState('')
+    const [firstProjectDescription, setFirstProjectDescription] = useState('')
+    const [secondProjectDescription, setSecondProjectDescription] = useState('')
+    const [previewImage, setPreviewImage] = useState('')
+    const [uploadedImage, setUploadedImage] = useState(null)
     
     const [fielderrorMessage, setFieldErrorMessage] = useState('')
 
@@ -79,13 +86,7 @@ const InfoBody = () => {
     
 
     const [errorMail, setErrorEmail] = useState('')
-    const [description, setDescription] = useState('')
-    const [firstProject, setFirstProject] = useState('')
-    const [secondProject, setSecondProject] = useState('')
-    const [firstProjectDescription, setFirstProjectDescription] = useState('')
-    const [secondProjectDescription, setSecondProjectDescription] = useState('')
-    const [previewImage, setPreviewImage] = useState('')
-    const [uploadedImage, setUploadedImage] = useState(null)
+   
 
 
 
@@ -117,7 +118,7 @@ const InfoBody = () => {
     // const [emailExistMsg, setEmailExistsMsg] = useState(emailExistsErrorMessage);
     // console.log(emailExistMsg)
     
-    
+
 
     // const IsSameEmail = (email) => {
     //      if (clientDetails && clientDetails.$values) {
