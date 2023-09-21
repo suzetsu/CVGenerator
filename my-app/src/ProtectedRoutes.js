@@ -1,17 +1,35 @@
 import React from 'react';
-import { Route, Navigate } from 'react-router-dom';
+import { Route, Navigate, useLocation, Outlet } from 'react-router-dom';
 import { useAuth } from './useAuth'; // Import your useAuth custom hook
+import { useSelector } from 'react-redux';
 
-const ProtectedRoute = ({ element, ...rest }) => {
-  const { isLoggedIn } = useAuth(); // Use the useAuth hook to check authentication status
+// const ProtectedRoute = ({ element }) => {
+//   // const isLoggedIn = useSelector((state) => state.auth.token);
+//   let {isLoggedIn} = useAuth();
+  // let location = useLocation();
+  // if (!isLoggedIn) {
+  //   return <Navigate to="/login" state={{ from: location }} />;
+  // }
 
-  return (
-    <Route
-      {...rest}
-      element={isLoggedIn() ? element : <Navigate to="/" />} // Redirect to the login page if not logged in
-    />
-  );
+  // return <Outlet />;
+
+  // return (
+  //   <Route
+  //     element={ isLoggedIn ? element : <Navigate to="/" /> } // Redirect to the login page if not logged in
+  //   />
+  // );
+// };
+
+const ProtectedRoute = ({ isLoggedIn, children }) => {
+  if (!isLoggedIn) {
+    return <Navigate to="/" replace />;
+  }
+  else {
+    return children;
+  }
+  
 };
+export default ProtectedRoute;
 // const ProtectedRoute = ({ auth, component: Component, ...rest }) => {
 //     return (
 //       <Route
@@ -27,4 +45,4 @@ const ProtectedRoute = ({ element, ...rest }) => {
 //     );
 //   };
 
-export default ProtectedRoute;
+

@@ -1,10 +1,11 @@
 import { Outlet } from "react-router-dom"
+import Info from "./CustomerDetails/info"
 
 const Layout = () => {
     return (
-        <maiN className="App">
+        <div className="App">
             <Outlet />
-        </maiN>
+        </div>
     )
 }
 

@@ -13,7 +13,6 @@ const Info = () => {
           <div>
             <InfoBody/>
             </div>
-            {/* <EditUpdate/> */}
            
         </div>
     </div>
@@ -21,3 +20,4 @@ const Info = () => {
 }
 
 export default Info
+

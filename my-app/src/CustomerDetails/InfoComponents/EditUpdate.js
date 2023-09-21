@@ -48,6 +48,7 @@ function EditUpdate() {
         const clientInformationID = matchingClient.clientInformationID
         console.log(clientInformationID)
         dispatch( deleteClientInfo(clientInformationID))
+      }
         
       if ( clientDeleteStatus === 'success') {
         Swal.fire({
@@ -67,7 +68,7 @@ function EditUpdate() {
           })
         }
     
-      }
+      
       
     
         // if (clientDeleteStatus === 'success') {

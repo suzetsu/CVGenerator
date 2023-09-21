@@ -13,22 +13,27 @@ import * as actionTypes from './actionTypes';
 
 export const login = (email, password) => async (dispatch) => {
   // const authToken = "UmbrellaSolutions"
+  // const headers = {
+  //   'Authorization': `Bearer ${authToken}`
+  // };
   try {
     const response = await axios.post(
-      "http://192.168.1.89:7270/api/Authentication/Login",
+      "http://192.168.1.89:7270/api/UserRole/Login",
       { email, password },
-      {
+      // {
         
-        headers: { 'Authorization': 'Bearer UmbrellaSolutions'},
-      }
+      //   headers: { 'Authorization': 'Bearer UmbrellaSolutions'},
+      // }
     );
 
     const token = response.data.token;
-    console.log(token);
+    // console.log(token);
+    const role = response.data.roleName
+    console.log(role);
    
     if (token) {
       dispatch({ type: actionTypes.LOGIN_SUCCESS, payload: token });
-      // dispatch({type:actionTypes.SET_USER_ROLE, payload:role})
+      dispatch({type:actionTypes.SET_USER_ROLE, payload:role})
       // dispatch(setUserRole(userRole));
       return { success: true };
     } else {

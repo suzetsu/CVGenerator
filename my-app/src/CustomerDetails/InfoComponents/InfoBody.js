@@ -114,7 +114,9 @@ const InfoBody = () => {
 
     let emailExistsErrorMessage = useSelector((state) => state.auth.emailError);
     const clientInformation = useSelector((state) => state.auth.clientCreationStatus);
-    console.log(clientInformation)
+    const userRole = useSelector((state) => state.auth.role);
+    const isLoggedIn = useSelector((state) => state.auth.token);
+    
     // const [emailExistMsg, setEmailExistsMsg] = useState(emailExistsErrorMessage);
     // console.log(emailExistMsg)
     
@@ -384,7 +386,7 @@ const InfoBody = () => {
     //   console.log(matchedUser)
     // };
 
-    
+
   return (
     <div className='  flex justify-center pt-12 bg-[#F8F8F8] pb-10'>
         <div className='flex flex-col'>
@@ -636,8 +638,12 @@ const InfoBody = () => {
                   Clicke Here To Generate CV
                 </a>
             </div>
-
-            <EditUpdate/>
+            {
+               userRole === 'Admin' && (
+                   <EditUpdate/>
+               )
+            }                     
+            
             
         </div>
     </div>
