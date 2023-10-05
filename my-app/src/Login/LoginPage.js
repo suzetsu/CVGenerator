@@ -35,7 +35,7 @@ const Login = () => {
       
         const loginResult = await dispatch(login(email, password));
         if (loginResult.success) {
-          history('/Info');
+          history('/Main');
         } 
       else {
           Swal.fire({
@@ -76,10 +76,10 @@ const Login = () => {
           <input type='email' placeholder='Email' valeue={email} onChange={handleEmailChange}/>
           {errorMessage && <p className='error-message'>{errorMessage}</p>}
           <div className='password-container'>
-            <div>
+            <div className='flex gap-8 pl-9'>
           <input type={passwordVisible ? "text": "password"} value={password} onChange={handlePasswordChange} placeholder='Password' />
       
-          <i className={`password-toggle ${passwordVisible ? "fa fa-eye-slash" : "fa fa-eye"} `} onClick={togglePasswordVisibility}></i>
+          <i className={`password-toggle ${passwordVisible ? "fa fa-eye-slash" : "fa fa-eye"} pt-2`} onClick={togglePasswordVisibility}></i>
       
           </div>
           {errorPW && <p className='error-message1'>{errorPW}</p>}

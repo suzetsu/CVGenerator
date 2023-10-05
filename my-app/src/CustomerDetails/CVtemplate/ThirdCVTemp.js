@@ -84,14 +84,16 @@ function ThirdCVTemp() {
                             <p className='m-0 pl-11 pt-0 pb-0 font-bold text-[#0268d7]'>
                                 Contact
                             </p>
-                            <div className='flex flex-col gap-3 pl-3 font-helvetica opacity-75 text-sm'>
+                            <div className='flex flex-col gap-3 pl-3 font-helvetica opacity-75 text-sm w-auto'>
                                 <div className='flex gap-4'>
                                 <img src={locationIcon} alt= 'location' className=' w-4 h-4  '/>
-                                <div>{municipality}, {municipalityNumber}, {district}, {province}</div>
+                                <div className='overflow-anywhere'>{municipality}, {municipalityNumber}, {district}, {province}</div>
                                 </div>
                                 <div className='flex gap-4'>
                                 <img src={mailIcon} alt= 'location' className=' w-4 h-4  '/>
-                                <div>{email}</div>
+                                <div className='overflow-anywhere'>
+                                    {email}
+                                </div>
                                 </div>
                                 <div className='flex gap-4'>
                                 <img src={callIcon} alt= 'location' className=' w-4 h-4  '/>

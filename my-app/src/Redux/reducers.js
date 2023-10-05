@@ -3,12 +3,18 @@ import * as actionTypes from './actionTypes';
 const initialState = {
   token: null,
   userCreationStatus: null,
+  userData: '',
+  roleUpdateStatus: null,
+  roleDeleteStatus: null,
+
   clientData: '',
   clientCreationStatus: null,
   clientDeleteStatus: null,
   clientUpdateStatus: null,
+
   errorMail:null,
   role : null,
+  errorUsermail : null,
 
   // matchingClient: null,
   // role: "",
@@ -17,24 +23,44 @@ const initialState = {
 
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
+
+    //Login action
     case actionTypes.LOGIN_SUCCESS:
       return { ...state, token: action.payload };
     case actionTypes.LOGIN_FAILURE:
       return { ...state, token: null };
+
+      //Role Creation
     case actionTypes.USER_CREATE_SUCCESS:
       return { ...state, userCreationStatus: 'success' };
     case actionTypes.USER_CREATE_FAILURE:
       return { ...state, userCreationStatus: 'failure' };
+    case actionTypes.FETCH_USER_INFO_SUCCESS:
+      return { ...state, userData: action.payload };
+    case actionTypes.FETCH_USER_INFO_FAILURE:
+      return { ...state, userData: 'error' };
+      case actionTypes.ROLE_UPDATE_SUCCESS:
+      return { ...state, roleUpdateStatus:'success'};
+    case actionTypes.ROLE_UPDATE_FAILURE:
+      return { ...state, roleUpdateStatus:'failure'};
+    case actionTypes.ROLE_DELETE_SUCCESS:
+      return { ...state, roleDeleteStatus:'success'};
+    case actionTypes.ROLE_DELETE_FAILURE:
+      return { ...state, roleDeleteStatus:'failure'};
 
 
     case actionTypes.SET_USER_ROLE:
       return {...state, role: action.payload };
+
+    //Employe creation
     case actionTypes.CLIENT_INFO_SUCCESS:
       return { ...state, clientCreationStatus: 'success' };
     case actionTypes.CLIENT_INFO_FAILURE:
       return { ...state, clientCreationStatus: "failure" };
     case actionTypes.CLIENT_INFO_EMAIL_ERROR:
       return { ...state, errorMail: action.payload };
+    case actionTypes.USER_INFO_EMAIL_ERROR:
+      return { ...state, errorUsermail: action.payload };
     case actionTypes.FETCH_CLIENT_INFO_SUCCESS:
       return { ...state, clientData: action.payload };
       
@@ -49,6 +75,8 @@ const authReducer = (state = initialState, action) => {
       return { ...state, clientUpdateStatus:'success'};
     case actionTypes.CLIENT_INFO_UPDATE_FAILURE:
       return { ...state, clientUpdateStatus:'failure'};
+
+    
       
     default:
       return state;
@@ -57,3 +85,5 @@ const authReducer = (state = initialState, action) => {
 
 
 export default authReducer;
+
+

@@ -48,25 +48,23 @@ function EditUpdate() {
         const clientInformationID = matchingClient.clientInformationID
         console.log(clientInformationID)
         dispatch( deleteClientInfo(clientInformationID))
-      }
-        
-      if ( clientDeleteStatus === 'success') {
         Swal.fire({
-            icon: 'success',
-            title: 'Client Updated Successfully',
-            showConfirmButton: false,
-            timer: 1500
-        })
-        
-        setUserName2('')
+          icon: 'success',
+          title: 'Client Deleted Successfully',
+          showConfirmButton: true,
+          timer: 1500
+      })
+      setUserName2('')
       }
-        else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Please select a client'
-          })
-        }
+      else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Please select a valid client',
+          showConfirmButton: true,
+        })
+      } 
+      }
     
       
       
@@ -87,7 +85,6 @@ function EditUpdate() {
       
       
     }
-  }
   
   return (
     <div>

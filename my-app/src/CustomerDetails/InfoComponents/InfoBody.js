@@ -7,16 +7,22 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchClientInfo } from '../../Redux/actions';
 import CVTemp from '../CVtemplate/CVTemp';
 import EditUpdate from './EditUpdate'
+import { allProvinces } from './dropdownMenu'
 import Swal from 'sweetalert2'
 
 const InfoBody = () => {
     const [clientName, setName] = useState('')
     const [clientPANNO, setPAN] = useState('')
+    const [companyName, setCompany] = useState('')
+    const [departmentName, setDepartment] = useState('')
     const [municipality, setAddress] = useState('')
     const [municipalityNumber, setMUNno] = useState('')
     const [district, setDistrict] = useState('')
     const [province, setProvince] = useState('')
-    const [role, setRole] = useState('')
+
+    
+    
+    const [designation, setDesignation] = useState('')
     const [phone, setMobile] = useState('')
     const [email, setEmail] = useState('')
     
@@ -25,26 +31,33 @@ const InfoBody = () => {
     const [level, setLevel] = useState('')
     const [degree, setdegree] = useState('')
     const [skills, setSelectedSkills] = useState([]); // Store selected roles
+    
     const [currentSkill, setCurrentSkill] = useState(''); // Store current input role
     const [description, setDescription] = useState('')
-    const [firstProject, setFirstProject] = useState('')
-    const [secondProject, setSecondProject] = useState('')
-    const [firstProjectDescription, setFirstProjectDescription] = useState('')
-    const [secondProjectDescription, setSecondProjectDescription] = useState('')
+    const [firstOrganizationName, setFirstOrganizationName] = useState('')
+    const [secondOrganizationName, setSecondOrganizationName] = useState('')
+    const [firstTitle, setFirstTitle] = useState('')
+    const [secondTitle, setSecondTitle] = useState('')
+    const [firstDuration, setFirstDuration] = useState('')
+    const [secondDuration, setSecondDuration] = useState('')
     const [previewImage, setPreviewImage] = useState('')
     const [uploadedImage, setUploadedImage] = useState(null)
+
+    console.log(firstDuration, secondDuration, firstOrganizationName, secondOrganizationName, firstTitle, secondTitle)
     
     const [fielderrorMessage, setFieldErrorMessage] = useState('')
 
     const allError = {
         emailFieldError: '',
         clientNameFieldError: '',
+        companyNameFieldError: '',
+        departmentNameFieldError: '',
         clientPANNOfieldError: '',
         municipalityFieldError: '',
         municipalityNumberFieldError: '',
         districtFieldError: '',
         provinceFieldError: '',
-        roleFieldError: '',
+        designationFieldError: '',
         phoneFieldError: '',
         universityFieldError: '',
         collegeFieldError: '',
@@ -52,34 +65,21 @@ const InfoBody = () => {
         degreeFieldError: '',
         skillsFieldError: '',
         descriptionFieldError: '',
-        firstProjectFieldError: '',
-        secondProjectFieldError: '',
-        firstProjectDescriptionFieldError: '',
-        secondProjectDescriptionFieldError: '',
+        firstDurationFieldError : '',
+        secondDurationFieldError : '',
+        firstOrganizationNameFieldError: '',
+        secondDurationOrganizationNameFieldError: '',
+        firstTitleFieldError: '',
+        secondTitleFieldError: '',
 
     }
-    // const formFields = [
-    //     { name: 'email', label: 'Email' },
-    //     { name: 'clientName', label: 'Name' },
-    //     { name: 'clientPANNO', label: 'PAN' },
-    //     { name: 'municipality', label: 'Municipality' },
-    //     { name: 'municipalityNumber', label: 'MUN No.' },
-    //     { name: 'district', label: 'District' },
-    //     { name: 'province', label: 'Province' },
-    //     { name: 'role', label: 'Role' },
-    //     { name: 'phone', label: 'Phone' },
-    //     { name: 'university', label: 'University' },
-    //     { name: 'college', label: 'College' },
-    //     { name: 'level', label: 'Level' },
-    //     { name: 'degree', label: 'Degree' },
-    //     { name: 'skills', label: 'Skills' },
-    //     { name: 'description', label: 'Description' },
-    //     { name: 'firstProject', label: 'First Project' },
-    //     { name: 'secondProject', label: 'Second Project' },
-    //     { name: 'firstProjectDescription', label: 'First Project Description' },
-    //     { name: 'secondProjectDescription', label: 'Second Project Description' },
-    //   ];
 
+    const [showOptions, setShowOptions] = useState(false);
+    const [filteredOptions, setFilteredOptions] = useState([]);
+    
+
+    // All available options
+    
       
 
     const [allErrors, setAllErrors] = useState(allError)
@@ -88,32 +88,19 @@ const InfoBody = () => {
     const [errorMail, setErrorEmail] = useState('')
    
 
-
-
-    // const emailExistsError2 = useSelector((state) => state.auth.emailError2);
-    // // console.log(emailExistsError2)
-
-    // const emailExistsError1 = useSelector((state) => state.auth.emailError1);
-    // console.log(emailExistsError1)
-
-
-
-    // const [projectDesc, setProjectDesc] = useState({
-    //     firstProject: "",
-    //     secondProject: "",
-    //     firstProjectDescription: "",
-    //     secondProjectDescription: ""
-    // })
-
     const dispatch = useDispatch()
     const history = useNavigate()
 
-    // const clientDetails = useSelector((state) => state.auth.clientData);
+    useEffect(() => {
+        dispatch(fetchClientInfo());
+    }, [])
+
+    const clientDetails = useSelector((state) => state.auth.clientData);
     // const [matchedUser, setMatchedUser] = useState(null);
     // console.log(clientDetails)
 
     let emailExistsErrorMessage = useSelector((state) => state.auth.emailError);
-    const clientInformation = useSelector((state) => state.auth.clientCreationStatus);
+    const clientCreationStatus = useSelector(state => state.auth.clientCreationStatus);
     const userRole = useSelector((state) => state.auth.role);
     const isLoggedIn = useSelector((state) => state.auth.token);
     
@@ -122,17 +109,19 @@ const InfoBody = () => {
     
 
 
-    // const IsSameEmail = (email) => {
-    //      if (clientDetails && clientDetails.$values) {
-    //         const matchingEmail = clientDetails.$values.find(
-    //           (client) => client.email === email
-    //         )
-    //         return matchingEmail;
+    const IsSameEmail = (email) => {
+         if (clientDetails && clientDetails.$values) {
+            const matchingEmail = clientDetails.$values.find(
+              (client) => client.email === email
+            )
+            return matchingEmail;
            
-    //     }
-    //     return null
+        }
+        return null
         
-    // }
+    }
+    
+    
     
 
     const handleRoleSelect = (e) => {
@@ -177,7 +166,38 @@ const InfoBody = () => {
           );
       };
     
-    const handleSubmit = async (e) => {
+    
+      const handleInputChange = (e) => {
+        setAllErrors({...allErrors, provinceFieldError: '' })
+        const inputValue = e.target.value;
+        setProvince(inputValue);
+    
+        // Filter options based on the input value
+        const filtered = allProvinces.filter((option) =>
+          option.toLowerCase().startsWith(inputValue.toLowerCase())
+        );
+    
+        setFilteredOptions(filtered);
+        setShowOptions(true);
+      }
+      const handleInputFocus = () => {
+          setFilteredOptions(allProvinces);
+          setShowOptions(true);
+
+      };
+    
+      const handleInputBlur = () => {
+        setShowOptions(false);
+      };
+      const handleOptionClick = (option) => {
+        console.log("handleOptionClick called with option:", option);
+        setProvince(option);
+        setShowOptions(false);
+        // console.log(option);
+      }
+      
+    
+      const handleSubmit = async (e) => {
         
         e.preventDefault();
         setFieldErrorMessage('');
@@ -194,37 +214,33 @@ const InfoBody = () => {
         //     secondProjectDescription: ""
         // })
 
-        // const errors = {}
-        // formFields.forEach((field) => {
-        //     const fieldValue = eval(field.name); // Access form field value using eval()
-        //     if (!fieldValue) {
-        //         errors[`${field.name}FieldError`] = `${field.label} is required`;
-        //     }
-
         // })
         // setAllErrors(errors); 
 
-        // const ClientInfo = {
-        //     ClientName, 
-        //     Email, 
-        //     Phone, 
-        //     ClientPANNO,
-        //     Municipality,
-        //     MunicipalityNumber,
-        //     District,
-        //     Province,
-        //     Role, 
-        //     University, 
-        //     College, 
-        //     Level, 
-        //     Degree,
-        //     Skills,
-        //     Description,
-        //     FirstProject,
-        //     SecondProject,
-        //     firstProjectDescription,
-        //     secondProjectDescription,
-          
+        // const employeeData = {
+        //   clientName,
+        //   companyName,
+        //   departmentName, 
+        //   email, 
+        //   phone, 
+        //   clientPANNO,
+        //   municipality,
+        //   municipalityNumber,
+        //   district,
+        //   province,
+        //   role, 
+        //   university, 
+        //   college, 
+        //   level, 
+        //   degree,
+        //   skills,
+        //   description,
+        //   firstOrganizationName,
+        //   secondOrganizationName,
+        //   firstDuration,
+        //   secondDuration,
+        //   firstTitle,
+        //   secondTitle,
         // }
         // const formData = new FormData();
         // for (const key in ClientInfo) {
@@ -244,7 +260,7 @@ const InfoBody = () => {
         {name: 'municipalityNumber', label : 'MUN No'},
         {name: 'district', label : 'District'},
         {name: 'province', label : 'Province'},
-        {name: 'role', label : 'Role'},
+        {name: 'designation', label : 'Designation'},
         {name: 'phone', label : 'Phone'},
         {name: 'email', label : 'Email'},
         {name: 'university', label : 'University'},
@@ -253,10 +269,11 @@ const InfoBody = () => {
         {name: 'degree', label : 'Degree'},
         {name: 'skills', label : 'Skills'},
         {name: 'description', label : 'Description'},
-        {name: 'firstProject', label : 'First Project'},
-        {name: 'secondProject', label : 'Second Project'},
-        {name: 'firstProjectDescription', label : 'First Project Description'},
-        {name: 'secondProjectDescription', label : 'Second Project Description'},
+        {name: 'firstOrganizationName', label : 'Organization Name'},
+        {name: 'firstDuration', label : 'Project Duration'},
+        {name: 'firstTitle', label : 'Title'},
+        {name: 'companyName', label : 'Company Name'},
+        {name: 'departmentName', label : 'Department Name'},
       ]
       requiredField.forEach((field) => {
         const fieldName = field.name;
@@ -270,72 +287,57 @@ const InfoBody = () => {
         setErrorEmail('Email is invalid')
 
       }
-      else{
-        dispatch(storeClientInfo( clientName, 
-          email, 
-          phone, 
-          clientPANNO,
-          municipality,
-          municipalityNumber,
-          district,
-          province,
-          role, 
-          university, 
-          college, 
-          level, 
-          degree,
-          skills,
-          description,
-          firstProject,
-          secondProject,
-          firstProjectDescription,
-          secondProjectDescription, ));
+      else if (IsSameEmail(email)) {
+        setErrorEmail('Email already exists')
       }
-      // const hasErrors = Object.keys(allErrors).some((key) => allErrors[key]);
-      // if (hasErrors) {
-      //   setFieldErrorMessage('All fields are required');
-      // }
 
-    //    if (!clientName || !clientPANNO || !municipality || !municipalityNumber || !district || !province || !role || !phone || !email || !university || !college || !level || !degree) {
-    //       setFieldErrorMessage('All fields are required');
-          
-    //   }
-      
-
-        
-        
+      else{
+        dispatch(storeClientInfo( {clientName,
+        clientPANNO,
+        companyName,
+        departmentName,
+        designation,
+        municipality,
+        municipalityNumber,
+        province,
+        district,
+        email,
+        phone,
+        university,
+        college,
+        level,
+        degree,
+        description,
+        firstOrganizationName,
+        firstDuration,
+        firstTitle,
+        secondOrganizationName,
+        secondDuration,
+        secondTitle,
+        skills}));
+      }
     
-        // setName('');
-        //     setPAN('');
-        //     setAddress('');
-        //     setMUNno('');
-        //     setDistrict('');
-        //     setProvince('');
-        //     setRole('');
-        //     setMobile('');
-        //     setEmail('');
-        //     setUni('');
-        //     setCollege('');
-        //     setLevel('');
-        //     setdegree('');
-        //     setSelectedSkills([]);
-        //     setFirstProject('');
-        //     setSecondProject('');
-        //     setFirstProjectDescription('');
-        //     setSecondProjectDescription(''); 
-        if (clientInformation === 'success'){
-            Swal.fire('User Created', 'User created successfully!', 'success');
-        }
-        else {
-            Swal.fire('User Not Created', 'User not created!', 'error');
-        }
+            // setName('');
+            // setPAN('');
+            // setAddress('');
+            // setMUNno('');
+            // setDistrict('');
+            // setProvince('');
+            // setRole('');
+            // setMobile('');
+            // setEmail('');
+            // setUni('');
+            // setCollege('');
+            // setLevel('');
+            // setdegree('');
+            // setSelectedSkills([]);
+            // setFirstProject('');
+            // setSecondProject('');
+            // setFirstProjectDescription('');
+            // setSecondProjectDescription(''); 
+       
     }
-    
-    // useEffect(() => {
-    //     dispatch(fetchClientInfo());
-    //  } , []);
-
-    //  console.log(clientDetails);
+ 
 
     const handlePhotoUpload = (e) => {
       const imageFile = e.target.files[0]; // Get the selected image fil
@@ -361,30 +363,9 @@ const InfoBody = () => {
 
     
   }
-    }
-    // const handleGenerateCV = () => {
-        
-    //     // Check if a matching user is found and set matchedUser accordingly
+}
 
-    // if (clientDetails && clientDetails.$values) {
-    //     const matchingClient = clientDetails.$values.find(
-    //       (client) => client.clientName === userName
-    //     );
-        
-  
-    //     if (matchingClient) {
-    //       setMatchedUser(matchingClient);
-    //       // Dispatch an action to store the matching client in Redux
-    //     // dispatch(storeMatchingClient(matchingClient));
-    //     // console.log(matchedUser);
-    //     history('/CVTemp', { state: { matchedUser: matchingClient } });
-    //     // history('/CVTemp');
-    //     //   history('/CVTemp', {state: {matchedUser: matchingClient}});
-    //     // history('/CVTemp', {matchedUser: {matchingClient}});
-    //     }
-    //   }
-    //   console.log(matchedUser)
-    // };
+
 
 
   return (
@@ -416,16 +397,18 @@ const InfoBody = () => {
                         </div>
                         <div className='flex flex-col gap-1 pt-2'>
                             <p className='p-0 m-0 font-helvetica text-xs font-semibold'>Designation</p>
-                            <div className={` ${allErrors.roleFieldError ? 'error-input' : 'info-input-field flex gap-1'}`}>
-                                <input type='text' value={role}  placeholder='Eg: Developer, Analyst, Tester' onChange={(e) => {setRole(e.target.value); setAllErrors({...allErrors, roleFieldError: '' }); setFieldErrorMessage('') }}/>
-                                <select value={role} onChange={(e) => setRole(e.target.value)}>
+                            <div className={` ${allErrors.designationFieldError ? 'error-input' : 'info-input-field flex gap-1'}`}>
+                                <input type='text' value={designation}  placeholder='Eg: Developer, Analyst, Tester' onChange={(e) => {setDesignation(e.target.value); setAllErrors({...allErrors, designationFieldError: '' }) }}
+                                
+                                />
+                                <select value={designation} onChange={(e) => setDesignation(e.target.value)}>
                                     <option value=""></option>
                                     <option value="Developer">Developer</option>
                                     <option value="Analyst">Analyst</option>
                                     <option value="Tester">Tester</option>
                                 </select>
                             </div>
-                            { allErrors.roleFieldError && <p className='field-error-message'>{allErrors.roleFieldError}</p> }
+                            { allErrors.designationFieldError && <p className='field-error-message'>{allErrors.designationFieldError}</p> }
                         </div>
                         <div>
                             
@@ -433,6 +416,25 @@ const InfoBody = () => {
                         
 
                     </div>
+                    <div className='flex gap-14'>
+
+                        <div className='flex flex-col gap-1 pt-2'>
+                            <p className='p-0 m-0 font-helvetica text-xs font-semibold'>Company Name</p>
+                            <div className={` ${allErrors.companyNameFieldError? 'error-input' : 'info-input-field'}`}>
+                                <input type='text' value={companyName} placeholder='Company Name' onChange={(e) => {setCompany(e.target.value); setAllErrors({...allErrors, companyNameFieldError: ''});}} />
+                            </div>
+                            { allErrors.companyNameFieldError && <p className=' field-error-message'>{allErrors.companyNameFieldError}</p> }
+                        </div>
+
+                        <div className='flex flex-col gap-1 pt-2'>
+                            <p className='p-0 m-0 font-helvetica text-xs font-semibold'>Department Name</p>
+                            <div className={` ${allErrors.departmentNameFieldError? 'error-input' : 'info-input-field'}`}>
+                                <input type='text' value={departmentName} placeholder='Company Name' onChange={(e) => {setDepartment(e.target.value); setAllErrors({...allErrors, departmentNameFieldError: ''});}} />
+                            </div>
+                            { allErrors.departmentNameFieldError && <p className=' field-error-message'>{allErrors.departmentNameFieldError}</p> }
+                        </div>
+                      </div>
+                    
                     <div className='flex flex-col gap-1 pt-2'>
                             <p className='p-0 m-0 font-helvetica text-xs font-semibold'>Skills</p>
                             <div className={` ${allErrors.skillsFieldError ? 'error-input' : 'info-input-field flex gap-1'}`}>
@@ -461,6 +463,7 @@ const InfoBody = () => {
                         </div>))}
                         </div>
                         </div>
+                        
 
                     </div>
                     
@@ -485,8 +488,29 @@ const InfoBody = () => {
                         </div>
                         <div className='flex flex-col gap-1 pt-2'>
                             <p className='p-0 m-0 font-helvetica text-xs font-semibold'>Province</p>
-                            <div className={` ${allErrors.provinceFieldError ? 'error-input' : 'info-input-field'}`}>
-                                <input type='text' value={province}  placeholder='province' onChange={(e) => {setProvince(e.target.value); setAllErrors({...allErrors, provinceFieldError: '' })}}/>
+                            <div className={` ${allErrors.provinceFieldError ? 'error-input' : 'info-input-field flex gap-1'}`}>
+                                <input 
+                                type='text' 
+                                value={province}  
+                                placeholder='province' 
+                                onChange={ handleInputChange}
+                                onFocus={handleInputFocus}
+                                onBlur={handleInputBlur}
+                                />
+                                
+                                {showOptions && (
+                                    <div className='pt-[27px] absolute'>
+                                    <div className='autocomplete-options'>
+                                      {filteredOptions.map((option) => (
+                                        <div key={option} className='option' onClick={() => handleOptionClick(option)} >
+                                          {option}
+                                          
+                                        </div>
+                                      ))}
+                                    </div>
+                                    </div>
+                                  )}
+                                  
                             </div>
                             { allErrors.provinceFieldError && <p className='field-error-message'>{allErrors.provinceFieldError}</p> }
                         </div>
@@ -586,31 +610,45 @@ const InfoBody = () => {
                      </div>
                     </div>
                     <div>
-                    <p className=" m-0 pb-4 font-roboto font-bold" style={{color:"#1670B2", fontSize:"16px",}}>Project Works</p>
+                    <p className=" m-0 pb-4 font-roboto font-bold" style={{color:"#1670B2", fontSize:"16px",}}>Professional Experiences</p>
                     <div className=' pl-2'>
                         <div className='flex  gap-14'>
                         <div className='flex  flex-col gap-2'>
                         
-                        <p className='p-0 m-0 font-helvetica text-xs font-semibold'>Project 1</p>
-                        <div className={` ${ allErrors.firstProjectFieldError ? 'error-input' : 'info-input-field'}`}>
-                                <input type='text'value={firstProject}  placeholder='Enter your project name'  onChange={(e) => {setFirstProject(e.target.value); setAllErrors({...allErrors, firstProjectFieldError: '' })}}/>
+                        <p className='p-0 m-0 font-helvetica text-xs font-semibold'>Organization Name</p>
+                        <div className={` ${ allErrors.firstOrganizationNameFieldError ? 'error-input' : 'info-input-field'}`}>
+                                <input type='text'value={firstOrganizationName}  placeholder='Enter Organization name'  onChange={(e) => {setFirstOrganizationName(e.target.value); setAllErrors({...allErrors, firstOrganizationNameFieldError: '' })}}/>
                         </div>
-                        <div className='flex items-start pb-2'>{allErrors.firstProjectFieldError && <p className='field-error-message'>{allErrors.frstProjectFieldError}</p>}</div>
-                        <div className= {` ${ allErrors.firstProjectDescriptionFieldError ? 'error-input-project-desc' : 'info-input-field-project-desc'}`}>
-                                <textarea type='text' value={firstProjectDescription} placeholder='Enter your project details...' onChange={(e) => {setFirstProjectDescription(e.target.value); setAllErrors({...allErrors, firstProjectDescriptionFieldError: '' })}} rows={3} cols={40}></textarea>
+
+                        <div>{allErrors.firstTitleFieldError && <p className='field-error-message'>{allErrors.firstTitleFieldError}</p>}</div>
+
+                        <p className='p-0 m-0 font-helvetica text-xs font-semibold'>Work Duration</p>
+                        <div className={` ${allErrors.firstDurationFieldError ? 'error-input' : 'info-input-field'}`}>
+                            <input type='text' value={firstDuration} placeholder='Enter work duration' onChange={(e) => { setFirstDuration(e.target.value); setAllErrors({ ...allErrors, workDurationFieldError: '' }) }} />
                         </div>
-                        {allErrors.firstProjectDescriptionFieldError && <p className='field-error-message'>{allErrors.firstProjectDescriptionFieldError}</p>}
+                        <div>{allErrors.firstDurationFieldError && <p className='field-error-message'>{allErrors.firstDurationFieldError}</p>}</div>
+
+                        <div className= {` ${ allErrors.firstTitleFieldError ? 'error-input-project-desc' : 'info-input-field-project-desc'}`}>
+                                <textarea type='text' value={firstTitle} placeholder='Enter your work details...' onChange={(e) => {setFirstTitle(e.target.value); setAllErrors({...allErrors, firstTitleFieldError: '' })}} rows={3} cols={40}></textarea>
+                        </div>
+                        {allErrors.firstTitleFieldError && <p className='field-error-message'>{allErrors.firstTitleFieldError}</p>}
                         </div>
                         <div className='flex  flex-col gap-2'>
-                        <p className='p-0 m-0 font-helvetica text-xs font-semibold'>Project 2</p>
-                        <div className={` ${ allErrors.secondProjectFieldError ? 'error-input' : 'info-input-field'}`}>
-                                <input type='text'value={secondProject}  placeholder='Enter your project name'  onChange={(e) => {setSecondProject(e.target.value); setAllErrors({...allErrors, secondProjectFieldError: '' }) }}/>
+                        <p className='p-0 m-0 font-helvetica text-xs font-semibold'>Organization name</p>
+                        <div className='info-input-field'>
+                                <input type='text'value={secondOrganizationName}  placeholder='Enter Organization name'  onChange={(e) => {setSecondOrganizationName(e.target.value); setAllErrors({...allErrors, secondDurationOrganizationNameFieldError: '' }) }}/>
                         </div>
-                        <div className='flex items-start pb-2'>{allErrors.secondProjectFieldError && <p className='field-error-message'>{allErrors.secondProjectFieldError}</p>}</div>
-                        <div className={` ${ allErrors.secondProjectDescriptionFieldError ? 'error-input-project-desc' : 'info-input-field-project-desc'}`}>
-                                <textarea type='text' value={secondProjectDescription} placeholder='Enter your project details...' onChange={(e) => {setSecondProjectDescription(e.target.value); setAllErrors({...allErrors, secondProjectDescriptionFieldError: '' })}} rows={3} cols={40}></textarea>
+                        
+
+                        <p className='p-0 m-0 font-helvetica text-xs font-semibold'>Work Duration</p>
+                        <div className='info-input-field'>
+                            <input type='text' value={secondDuration} placeholder='Enter work duration' onChange={(e) => { setSecondDuration(e.target.value); setAllErrors({ ...allErrors, secondDurationFieldError: '' }) }} />
                         </div>
-                        {allErrors.secondProjectDescriptionFieldError && <p className='field-error-message'>{allErrors.secondProjectDescriptionFieldError}</p>}
+
+                        <div className='info-input-field-project-desc'>
+                                <textarea type='text' value={secondTitle} placeholder='Enter your work details...' onChange={(e) => {setSecondTitle(e.target.value); setAllErrors({...allErrors, secondProjectDescriptionFieldError: '' })}} rows={3} cols={40}></textarea>
+                        </div>
+                        {allErrors.secondTitleFieldError && <p className='field-error-message'>{allErrors.secondTitleFieldError}</p>}
 
                         </div>
                         </div>
@@ -624,8 +662,9 @@ const InfoBody = () => {
                     <div className='flex justify-center'>
                         <button className='btn-info' onClick={handleSubmit}>Submit</button>
                     </div>
+                    {clientCreationStatus ==='success' && <p className='success-message1'>User created successfully!</p>}
                     { fielderrorMessage && <p className='field-error-message'>{fielderrorMessage}</p>}
-                    {clientInformation ==='success' && <p className='success-message1'>User created successfully!</p>}
+                    
 
                     </div>
                 </div>

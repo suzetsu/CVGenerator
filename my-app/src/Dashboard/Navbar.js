@@ -7,14 +7,18 @@ import userCircle from '../images/userCircle.png'
 import userLogo from '../images/userLogo.png'
 // import { getUserRole } from '../Redux/actions';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 const NavBar = () => {
+  const history = useNavigate();
   // const userRole = useSelector(state => state.auth.role);
   // const dispatch = useDispatch();
 
 //  useEffect(() => {
 //     dispatch(getUserRole());
 //   }, [dispatch])
-
+const handleClick = () => {
+  history('/main');
+}
   return (
     <div className='nav-container w-full shadow-paper '>
         <div className='side-logo'>
@@ -27,8 +31,14 @@ const NavBar = () => {
         </div>
         <div className='nav-links space-x-8 pl-24 font-helvetica'>
             
-            <div className='hoverNav'>Home</div>
-            <div className='hoverNav'>Member's Details</div>
+            <div className='hoverNav' onClick={handleClick}>Home</div>
+            <div className='hoverNav-company'>
+              Company Details
+              <div className='dropdown-menu hidden absolute top-10 left-0 bg-white shadow-md py-2 '>
+                <div className='pb-2'><a href='/addCompany' className='menu-item'>Add Company</a></div>
+                <div><a href='/viewCompany' className='menu-item'>View Company</a></div>
+              </div>
+            </div>
             <div className='hoverNav'>CV category</div>
             <div className='hoverNav'>CV Template List</div>
             {/* {userRole === 'Admin' || userRole === 'SuperAdmin' ? (
@@ -37,8 +47,20 @@ const NavBar = () => {
             {userRole === 'SuperAdmin' ? (
           <div className='hoverNav'>Role Management</div>
              ) : null} */}
-            <div className='hoverNav'>User Management</div>
-            <div className='hoverNav'>Role Management</div>
+            <div className='hoverNav-company'>
+              Employee Management
+              <div className='dropdown-menu hidden absolute top-10 left-0 bg-white shadow-md py-2'>
+                <div className='pb-2'><a href='/Info' className='menu-item'>Add Employee</a></div>
+                {/* <div><a href='/viewRole' className='menu-item'>View Employee</a></div> */}
+              </div>
+              </div>
+            <div className='hoverNav-company'>
+              Role Management
+              <div className='dropdown-menu hidden absolute top-10 left-0 bg-white shadow-md py-2'>
+                <div className='pb-2'><a href='/signup' className='menu-item'>Add Role</a></div>
+                <div><a href='/viewRole' className='menu-item'>View Role</a></div>
+              </div>
+            </div>
             <div className='hoverNav'>Settings</div>
             
            

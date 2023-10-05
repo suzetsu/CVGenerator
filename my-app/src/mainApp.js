@@ -9,7 +9,12 @@ import SecondCVTemp from './CustomerDetails/CVtemplate/SecondCVTemp';
 import ThirdCVTemp from './CustomerDetails/CVtemplate/ThirdCVTemp';
 import CVGenerate from './CustomerDetails/CVtemplate/CVGenerate';
 import Update from './CustomerDetails/InfoComponents/Update';
+import AddCompany from './Company/addCompany';
+import ViewCompany from './Company/viewCompany';
+import AddRole from './Role/addRole';
+import ViewRole from './Role/viewRole';
 import Layout from './Layout';
+import ViewDepartment from './Company/viewDepartment';
 // import CVContainer from './CustomerDetails/CVtemplate/CVData';
 // import { configureStore } from '@reduxjs/toolkit';
 // import authReducer from './Redux/reducers';
@@ -33,26 +38,33 @@ console.log(isLoggedIn);
 
 return (
     <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+             <Route path="/" element={<Login />} />
+             <Route path="/signup" element={<Signup />} />
+             
 
         
-        <Route
+        {/* <Route
             path="/Info"
             element={
                 <ProtectedRoute isLoggedIn={isLoggedIn}>
                 <Info />
                 </ProtectedRoute>
             }
-            />
-        <Route path="/CVGenerate" element={<CVGenerate />} />         
-        
-                
-       <Route path="/Update" element={<Update />} />
-     
+            /> */}
+            <Route path="/Main" element={<Main />} />
+              <Route path="/Info" element={<Info />} />
+              <Route path="/CVGenerate" element={<CVGenerate />} />         
+              <Route path="/Update" element={<Update />} />
               <Route path="/CVTemp" element={<CVTemp />} />
-               <Route path="/SecondCVTemp" element={<SecondCVTemp />} />
+              <Route path="/SecondCVTemp" element={<SecondCVTemp />} />
               <Route path="/ThirdCVTemp" element={<ThirdCVTemp />} />
+              <Route path="/addCompany" element={<AddCompany />} />
+              <Route path="/RoleSelect" element={<RoleSelect />} />
+              <Route path="/viewCompany" element={<ViewCompany />} />
+              <Route path="/addRole" element={<AddRole />} />
+              <Route path="/viewRole" element={<ViewRole />} />
+              <Route path="/viewDepartment" element={<ViewDepartment />} />
+
     
     </Routes>
 )

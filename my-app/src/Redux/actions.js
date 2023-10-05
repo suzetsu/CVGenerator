@@ -18,7 +18,7 @@ export const login = (email, password) => async (dispatch) => {
   // };
   try {
     const response = await axios.post(
-      "http://192.168.1.89:7270/api/UserRole/Login",
+      "http://192.168.0.104:7270/api/Authentication/Login",
       { email, password },
       // {
         
@@ -47,92 +47,88 @@ export const login = (email, password) => async (dispatch) => {
   }
 };
 
-export const createUser = (email, password, fullName, mobile) => async (dispatch) => {
-  try {
-    const response = await axios.post(
-      "http://192.168.1.89:7270/api/Users",
-      email, password, fullName, mobile
-    );
 
-    if (response.status === 201) {
-      dispatch({ type: actionTypes.USER_CREATE_SUCCESS });
-    
-    } else {
-      dispatch({ type: actionTypes.USER_CREATE_FAILURE });
-    }
-  } catch (error) {
-    dispatch({ type: actionTypes.USER_CREATE_FAILURE });
-  }
-};
 
-export const storeClientInfo = ( clientName, 
-  email, 
-  phone, 
+export const storeClientInfo = (clientName,
   clientPANNO,
+  companyName,
+  departmentName,
+  designation,
   municipality,
   municipalityNumber,
-  district,
   province,
-  role, 
-  university, 
-  college, 
-  level, 
+  district,
+  email,
+  phone,
+  university,
+  college,
+  level,
   degree,
-  skills,
   description,
-  firstProject,
-  secondProject,
-  firstProjectDescription,
-  secondProjectDescription) => async (dispatch) => {
+  firstOrganizationName,
+  firstDuration,
+  firstTitle,
+  secondOrganizationName,
+  secondDuration,
+  secondTitle,
+  skills) => async (dispatch) => {
   try {
     const response = await axios.post(
-      "http://192.168.1.89:7270/api/Client",
-      {clientName, 
-      email, 
-      phone, 
-      clientPANNO,
-      municipality,
-      municipalityNumber,
-      district,
-      province,
-      role, 
-      university, 
-      college, 
-      level, 
-      degree,
-      skills,
-      description,
-      firstProject,
-      secondProject,
-      firstProjectDescription,
-      secondProjectDescription},
+      "http://192.168.0.104:7270/api/Client",
+      
+        clientName,
+        clientPANNO,
+        companyName,
+        departmentName,
+        designation,
+        municipality,
+        municipalityNumber,
+        province,
+        district,
+        email,
+        phone,
+        university,
+        college,
+        level,
+        degree,
+        description,
+        firstOrganizationName,
+        firstDuration,
+        firstTitle,
+        secondOrganizationName,
+        secondDuration,
+        secondTitle,
+        skills,
       {
-        headers: {
+        headers: { 
           "Content-Type": "application/json",
         }
       }
+      
       
     );
     if (response.status === 201) {
       dispatch({ type: actionTypes.CLIENT_INFO_SUCCESS });
     } else{
       dispatch({ type: actionTypes.CLIENT_INFO_FAILURE });
+
     }
   } catch (error) {
-  //  if (error.response.data.message)
-  //   { 
-  //     const Errmessage = error.response.data.message
-  //     dispatch({ type: actionTypes.CLIENT_INFO_EMAIL_ERROR, payload: Errmessage });
-  //     // console.log(Errmessage);
-  //   }
+   if (error.response.data.message)
+    { 
+      const Errmessage = error.response.data.message
+      dispatch({ type: actionTypes.CLIENT_INFO_EMAIL_ERROR, payload: Errmessage });
+      console.log(Errmessage);
+    }
     dispatch({ type: actionTypes.CLIENT_INFO_FAILURE });
+    // console.log(error);
   
   }
 }
 
 export const fetchClientInfo = () => async (dispatch) => {
   try {
-    const response = await axios.get("http://192.168.1.89:7270/api/Client/GetAllClients");
+    const response = await axios.get("http://192.168.0.104:7270/api/Client/GetAllClients");
 
     if (response.status === 200) {
       // Assuming the response data contains the client information
@@ -153,7 +149,7 @@ export const fetchClientInfo = () => async (dispatch) => {
 
 export const deleteClientInfo = (clientInformationID) => async (dispatch) => {
   try {
-    const response = await axios.delete(`http://192.168.1.89:7270/api/Client/${clientInformationID}`);
+    const response = await axios.delete(`http://192.168.0.104:7270/api/Client/${clientInformationID}`);
     if (response.status === 200) {
       dispatch({ type: actionTypes.CLIENT_INFO_DELETE_SUCCESS });
     }
@@ -164,7 +160,7 @@ export const deleteClientInfo = (clientInformationID) => async (dispatch) => {
 
 export const updateClientInfo = (clientInformationID, updatedClient) => async (dispatch) => {
   try {
-    const response = await axios.put(`http://192.168.1.89:7270/api/Client/${clientInformationID}`,
+    const response = await axios.put(`http://192.168.0.104:7270/api/Client/${clientInformationID}`,
     updatedClient,
     {
       headers: { 

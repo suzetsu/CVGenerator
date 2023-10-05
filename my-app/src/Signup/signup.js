@@ -6,36 +6,39 @@ import Logo from '../images/Logo.png';
 import Ellipse from '../images/Ellipse.png';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-import {createUser} from '../Redux/actions';
+import { fetchUserInfo } from '../Redux/roleActions';
+import NavBar from '../Dashboard/Navbar';
+
+import {createRole} from '../Redux/roleActions';
 import Swal from 'sweetalert2'
 import { useNavigate } from 'react-router-dom';
+import '../CustomerDetails/InfoComponents/infoStyles.css'
 
 
 
-const Login = () => {
+const Signup = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [passwordVisible1, setPasswordVisible1] = useState(false);
   const [email, setEmail] = useState('');
   const [passwords, setPasswords] = useState({password:"", confirmPassword:""});
   const [fullName, setName] = useState('');
-  const [mobile, setMobile] = useState('');
+  const [roleName, setRole] = useState('');
   const [errorMails, setErrormail] = useState('');
 
   const [errorPW, seterrorPW] = useState('');
-  const [errorNumber, setErrorNumber] = useState('');
+  const [errorRole, setErrorRole] = useState('');
   const [pwnotMatch, setpwnotMatch] = useState('');
   const [fielderrorMessage, setfieldErrorMessage] = useState('');
   const history = useNavigate();
   const dispatch = useDispatch();
   const userCreationStatus = useSelector(state => state.auth.userCreationStatus);
-  // const emailExistsError = useSelector(state => state.auth.emailError);
+  const emailExistsError = useSelector(state => state.auth.errorUsermail);
+  
 
 
-  // const [errorMail, setErrormailMessage] = useState(emailErrorMessage);
+  const [errorMail, setErrormailMessage] = useState(emailExistsError);
   // console.log(emailErrorMessage)
-  // useEffect(() => {
-  //   setErrormailMessage(emailErrorMessage);
-  // }, [emailErrorMessage]);
+  
   
   
   // const [errorMail, setErrorMailMsg] = useState(emailErrorMessage);
@@ -52,12 +55,31 @@ const Login = () => {
   //   }
   // }, [emailExistsError]);
   
+useEffect (() => {
+  dispatch(fetchUserInfo());
+}, [])
+
+const userData = useSelector(state => state.auth.userData);
+
+
+const IsSameEmail = (email) => {
+  if (userData && userData.$values) {
+     const matchingEmail = userData.$values.find(
+       (client) => client.email === email
+     )
+     return matchingEmail;
+    
+ }
+ return null
+ 
+}
+  
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
     setErrormail('');
     setfieldErrorMessage('');
-    // setErrormailMessage('')
+    setErrormailMessage('')
     // emailErrorMessage = e.target.value;
 
 
@@ -79,10 +101,10 @@ const Login = () => {
     setName(e.target.value);
     setfieldErrorMessage('');
   }
-  const handleMobileChange = (e) => {
-    setMobile(e.target.value);
+  const handleRoleChange = (e) => {
+    setRole(e.target.value);
     setfieldErrorMessage('');
-    setErrorNumber('');
+    setErrorRole('');
     
     
   }
@@ -95,38 +117,38 @@ const Login = () => {
     
     const { password } = passwords;
 
-    if (!email || !passwords.password || !passwords.confirmPassword || !fullName || !mobile) {
+    if (!email || !passwords.password || !passwords.confirmPassword || !fullName || !roleName) {
       setfieldErrorMessage('All fields are necessary');
     } 
     else {
       if (!isValidEmail(email)) {
         setErrormail('Invalid email');
       } 
-      // else if ( emailExistsError) {
-      //   setErrormail(emailExistsError);
-      // }
+      else if (IsSameEmail(email)) {
+        setErrormail('Email already exists');
+        
+      }
       
       else if (!IsPasswordVald(passwords.password)) {
         seterrorPW('Password must have a special character, number, uppercase letter, and 6 characters');
       } else if (passwords.password !== passwords.confirmPassword) {
         setpwnotMatch('Passwords do not match');
       }
-        else if (!isValidNumber(mobile)){
-          setErrorNumber('Invalid number');
-      } else {
-        dispatch(createUser({
+     else {
+        dispatch(createRole({
           email,
           password,
           fullName,
-          mobile
+          roleName
         }));
-        // history("/");
-      }
-      if (userCreationStatus === 'success') {
-        Swal.fire('User Created', 'User created successfully!', 'success');
-        history("/");
-      } else {
-        Swal.fire('User Creation Failed', 'User creation failed!', 'error');
+        Swal.fire({
+          icon: 'success',
+          title: 'Account Created Successfully',
+          showConfirmButton: false,
+          timer: 1500
+        })
+        
+        
       }
     }
     
@@ -139,9 +161,7 @@ const Login = () => {
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
       );
   };
-  const isValidNumber = (mobile)=>{
-    return (mobile).match(/^(98|97)\d{8}$/);
-  }
+
   const IsPasswordVald = (password) => {
     return(password).match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/);
   }
@@ -156,7 +176,11 @@ const Login = () => {
   
   return (
     <div>
+      <div>
+        <NavBar/>
+      </div>
     <div className='main-Container1'>
+      
       
       <div className='second-container1'>
         
@@ -166,7 +190,7 @@ const Login = () => {
         </div>
         <div>
         <div className='signup1'>
-          <h1>Create A New Account</h1>
+          <h2>Create New User</h2>
           </div>
           <div className='input-field1'>
             <input 
@@ -176,6 +200,7 @@ const Login = () => {
             onChange={handleNameChange} 
             className='typeStyle'
             />
+            
           <input 
           type='email' 
           placeholder='Email' 
@@ -184,15 +209,21 @@ const Login = () => {
           />
           {errorMails && <p className='error-message1'>{errorMails}</p>}
           {/* {errorMail && <p className='error-message1'>{errorMail}</p>} */}
-
+          <div className='info-input-field-dropdown '>
           <input 
-          type='tel' 
-          placeholder='Mobile no.' 
-          value={mobile} 
-          onChange={handleMobileChange} 
+          type='text' 
+          placeholder='Select Role' 
+          value={roleName} 
+          onChange={handleRoleChange} 
           className='typeStyle' 
           />
-          {errorNumber && <p className='error-message2'>{errorNumber}</p>}
+           <select value={roleName} onChange={(e) => setRole(e.target.value)}>
+                                    <option value=""></option>
+                                    <option value="User">User</option>
+                                    <option value="Admin">Admin</option>                     
+            </select>
+          </div>
+          {errorRole && <p className='error-message2'>{errorRole}</p>}
           <div className='password-container1'>
             <div>
           <input 
@@ -223,16 +254,16 @@ const Login = () => {
           </div>
         </div>
         <div className='button1' >
-          <button className='button-edit1' onClick={handleSubmit}>Sign Up</button>
+          <button className='button-edit1' onClick={handleSubmit}>Add</button>
         </div>
         {fielderrorMessage && <p className='error-message3'>{fielderrorMessage}</p>}
         {userCreationStatus === 'success' && <p className='success-message'>User created successfully!</p>}
-        <div className='signin-text'>
+        {/* <div className='signin-text'>
           <p>Already have an Account? <a href='/'>Sign in</a></p>
-        </div>
+        </div> */}
         
         </div>
-        <div className='right1'>
+        {/* <div className='right1'>
           <div className='UM1'>
             <h1>Umbrella Solutions</h1>
             
@@ -245,7 +276,7 @@ const Login = () => {
               <div className='Ellipse1'>
                 <img src={Ellipse} alt='Ellipse' />
               </div>
-        </div>
+        </div> */}
       </div>
 
     </div>
@@ -253,4 +284,4 @@ const Login = () => {
   )
 }
 
-export default Login;
+export default Signup;
