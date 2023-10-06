@@ -21,6 +21,9 @@
     background: #FFF;
     box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.15);
   }
+  .info-input-field {
+    position: relative;
+  }
 .info-input-field input{
     
     width: 209.548px;
@@ -246,6 +249,7 @@ transform: scale(1.05);
   z-index: 1;
   background-color: #ffffff;
   border: 1px solid #ccc;
+  border-radius: 10px;
   width: 210px;
   max-height: 150px; /* Set a maximum height for the dropdown */
   overflow-y: auto; /* Enable vertical scrolling if options exceed the maximum height */

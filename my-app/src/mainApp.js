@@ -15,6 +15,8 @@ import AddRole from './Role/addRole';
 import ViewRole from './Role/viewRole';
 import Layout from './Layout';
 import ViewDepartment from './Company/viewDepartment';
+import EmployeeList from './Employee/employeeList';
+import CustomDropdown from './CustomerDetails/InfoComponents/customDropdown';
 // import CVContainer from './CustomerDetails/CVtemplate/CVData';
 // import { configureStore } from '@reduxjs/toolkit';
 // import authReducer from './Redux/reducers';
@@ -64,6 +66,8 @@ return (
               <Route path="/addRole" element={<AddRole />} />
               <Route path="/viewRole" element={<ViewRole />} />
               <Route path="/viewDepartment" element={<ViewDepartment />} />
+              <Route path="/employeeList" element={<EmployeeList />} />
+              <Route path="/customDropdown" element={<CustomDropdown />} />
 
     
     </Routes>

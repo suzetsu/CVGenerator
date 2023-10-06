@@ -1,14 +1,15 @@
 import axios from 'axios';
 import * as actionTypes from './actionTypes';
 
-export const createCompany = (PAN, name, email, address) => async (dispatch) => {
+export const createCompany = (PAN, name, email, address, departments) => async (dispatch) => {
     try {
         const response = await axios.post(
             "http://192.168.0.104:7270/api/Company",
                 PAN,
                 name,
                 address,
-                email
+                email,
+                departments
            
         );
         if (response.status === 201) {

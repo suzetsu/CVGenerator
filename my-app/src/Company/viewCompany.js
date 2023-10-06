@@ -108,6 +108,7 @@ console.log(companyDetails)
 
 
 
+
   const handleEditClick = (company) => {
     setShowDetailsPopup(true);
     setSelectedCompany(company);
@@ -125,11 +126,11 @@ console.log(companyDetails)
   }, [])
 
   const CompanyId = selectedCompany?.companyId
-  console.log(CompanyId)
+  
  
   const handleDeleteCompany = (company) => {  
     const CompanyId = company.companyId
-    console.log(CompanyId)
+    
 
     dispatch(deleteCompanyInfo(CompanyId))
   }
@@ -155,8 +156,11 @@ console.log(companyDetails)
   };
 
   const viewDepartment = (company) => {
-    // setSelectedCompany(company)
-    history('/viewDepartment', { state: { company } })
+    
+    setSelectedCompany(company)
+    
+    
+    history('/viewDepartment', {state: company})
   }
  
 

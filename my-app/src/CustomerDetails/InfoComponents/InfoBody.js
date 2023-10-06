@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import {Form, useNavigate} from 'react-router-dom'
 import axios from 'axios'
 import './infoStyles.css'
@@ -8,7 +8,9 @@ import { fetchClientInfo } from '../../Redux/actions';
 import CVTemp from '../CVtemplate/CVTemp';
 import EditUpdate from './EditUpdate'
 import { allProvinces } from './dropdownMenu'
+import { nepalDistricts } from './dropdownMenu'
 import Swal from 'sweetalert2'
+import { fetchCompanyInfo } from '../../Redux/companyActions'
 
 const InfoBody = () => {
     const [clientName, setName] = useState('')
@@ -75,7 +77,11 @@ const InfoBody = () => {
     }
 
     const [showOptions, setShowOptions] = useState(false);
-    const [filteredOptions, setFilteredOptions] = useState([]);
+    const [showDistricts, setShowDistricts] = useState(false);
+    const [selectedOption, setSelectedOption] = useState("");
+    const dropdownRef = useRef(null);
+
+    
     
 
     // All available options
@@ -93,11 +99,70 @@ const InfoBody = () => {
 
     useEffect(() => {
         dispatch(fetchClientInfo());
+        dispatch(fetchCompanyInfo());
     }, [])
 
+    const [showCompanyOptions, setShowCompanyOptions] = useState(false);
+    const [selectedCompany, setSelectedCompany] = useState("");
     const clientDetails = useSelector((state) => state.auth.clientData);
-    // const [matchedUser, setMatchedUser] = useState(null);
-    // console.log(clientDetails)
+    const companyDetails = useSelector((state) => state.company.companyData);
+    // console.log(companyDetails)
+    const companyInfo = companyDetails.$values;
+    const companyNames = Array.isArray(companyInfo) ? companyInfo.map((company) => company.name) : [];
+
+    const [showDepartmentOptions, setShowDepartmentOptions] = useState(false);
+    const [selectedDepartment, setSelectedDepartment] = useState("");
+    const departmentInfo = Array.isArray(companyInfo) ? companyInfo.map((company) => company.departments) : [];
+    // console.log(departmentInfo)
+    const departmentNames = Array.isArray(departmentInfo) ? departmentInfo.map((department) => department.$values) : [];
+    const filteredDepartmentNames = departmentNames.filter(
+      (departments, index) => companyNames[index] === companyName
+    );
+    const flattenedDepartmentNames = [].concat(...filteredDepartmentNames);
+  
+    
+    const handleDepartmentInputChange = (e) => {
+      setAllErrors({...allErrors, departmentNameFieldError: '' })
+    const departmentValue = e.target.value;
+    setDepartment(departmentValue);
+    
+    setSelectedOption("");
+    }
+    const handleDepartmentFocus = (e) => {
+      setShowDepartmentOptions(!showDepartmentOptions);
+    }
+    const filterDepartmentNamesByDepartments = flattenedDepartmentNames.filter ((department) => {
+      return department.toLowerCase().includes(departmentName.toLowerCase());
+    })
+    const handleDepartmentClick = (option) => {
+      setDepartment(option)
+      setSelectedDepartment(option);
+      setShowDepartmentOptions(false);
+      
+    }
+    
+    const handleCompanyClick = (option) => {
+        // Handle the selection of companies from the dropdown
+        setCompany(option);
+        setSelectedCompany(option);
+        setShowCompanyOptions(false);
+    }
+    const handleCompanyInputChange = (e) => {
+      setAllErrors({...allErrors, companyNameFieldError: '' })
+      const companyValue = e.target.value;
+      setCompany(companyValue);
+      
+      setSelectedOption("");
+
+    }
+    const filteredCompanyNames = companyNames.filter((company) => {
+      return company.toLowerCase().includes(companyName.toLowerCase());
+    })
+    const handleCompanyFocus = (e) => {
+      setShowCompanyOptions(!showCompanyOptions);
+    }
+    
+  
 
     let emailExistsErrorMessage = useSelector((state) => state.auth.emailError);
     const clientCreationStatus = useSelector(state => state.auth.clientCreationStatus);
@@ -130,12 +195,6 @@ const InfoBody = () => {
         setSelectedSkills([...skills, selectedRole]);
       };
     
-    //   const removeRole = (index) => {
-    //     // Remove a role from the selected roles
-    //     const updatedSkills= [...selectedSkills];
-    //     updatedSkills.splice(index, 1);
-    //     setSelectedSkills(updatedSkills);
-    //   };
     
       const handleKeyPress = (e) => {
         // Handle keypress in the input field
@@ -165,36 +224,68 @@ const InfoBody = () => {
             /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
           );
       };
-    
+       
+      const handleDistrictChange = (e) => {
+        setAllErrors({...allErrors, districtFieldError: '' })
+        const districtValue = e.target.value;
+        setDistrict(districtValue);
+        setSelectedOption("");
+      }
+      const filteredDistricts = nepalDistricts.filter((option) =>
+          option.toLowerCase().includes(district.toLowerCase())
+        );
+      const handleDistrictClick = (option) => {
+        // setFilteredOptions(option)
+        setDistrict(option);
+        setShowDistricts(false);
+        setSelectedOption(option);
+        // console.log(option);
+      }
+      const handleDistrictFocus = () => {
+          
+        setShowDistricts(!showDistricts);
+      }
     
       const handleInputChange = (e) => {
         setAllErrors({...allErrors, provinceFieldError: '' })
         const inputValue = e.target.value;
         setProvince(inputValue);
-    
-        // Filter options based on the input value
-        const filtered = allProvinces.filter((option) =>
-          option.toLowerCase().startsWith(inputValue.toLowerCase())
-        );
-    
-        setFilteredOptions(filtered);
-        setShowOptions(true);
+        setSelectedOption("");
       }
+      const filteredOptions = allProvinces.filter((option) =>
+          option.toLowerCase().includes(province.toLowerCase())
+        );
       const handleInputFocus = () => {
-          setFilteredOptions(allProvinces);
-          setShowOptions(true);
+          // setFilteredOptions(allProvinces);
+          setShowOptions(!showOptions);
 
       };
+      // const handleInputBlur = () => {
+      //     setShowOptions(false);
+      // }
     
-      const handleInputBlur = () => {
-        setShowOptions(false);
-      };
+      
       const handleOptionClick = (option) => {
-        console.log("handleOptionClick called with option:", option);
+        // setFilteredOptions(option)
         setProvince(option);
         setShowOptions(false);
+        setSelectedOption(option);
         // console.log(option);
       }
+      
+      
+        const handleClickOutside = (event) => {
+          if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+            setShowOptions(false);
+          }
+        }
+        
+    useEffect(() => {
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+          document.removeEventListener("mousedown", handleClickOutside);
+        };
+      }, []);
       
     
       const handleSubmit = async (e) => {
@@ -203,45 +294,11 @@ const InfoBody = () => {
         setFieldErrorMessage('');
         setErrorEmail('');
 
-         
-         
-        //   Clear the form fields
-        
-        // setProjectDesc({
-        //     firstProject: "",
-        //     secondProject: "",
-        //     firstProjectDescription: "",
-        //     secondProjectDescription: ""
-        // })
 
         // })
         // setAllErrors(errors); 
 
-        // const employeeData = {
-        //   clientName,
-        //   companyName,
-        //   departmentName, 
-        //   email, 
-        //   phone, 
-        //   clientPANNO,
-        //   municipality,
-        //   municipalityNumber,
-        //   district,
-        //   province,
-        //   role, 
-        //   university, 
-        //   college, 
-        //   level, 
-        //   degree,
-        //   skills,
-        //   description,
-        //   firstOrganizationName,
-        //   secondOrganizationName,
-        //   firstDuration,
-        //   secondDuration,
-        //   firstTitle,
-        //   secondTitle,
-        // }
+     
         // const formData = new FormData();
         // for (const key in ClientInfo) {
         //   formData.append(key, ClientInfo[key]);
@@ -421,7 +478,24 @@ const InfoBody = () => {
                         <div className='flex flex-col gap-1 pt-2'>
                             <p className='p-0 m-0 font-helvetica text-xs font-semibold'>Company Name</p>
                             <div className={` ${allErrors.companyNameFieldError? 'error-input' : 'info-input-field'}`}>
-                                <input type='text' value={companyName} placeholder='Company Name' onChange={(e) => {setCompany(e.target.value); setAllErrors({...allErrors, companyNameFieldError: ''});}} />
+                                <input type='text' 
+                                value={companyName} 
+                                placeholder='Company Name' 
+                                onChange = {handleCompanyInputChange}
+                                onFocus={handleCompanyFocus}
+                                />
+                                {showCompanyOptions && (
+                                    <div className='absolute'>
+                                    <div className='autocomplete-options'>
+                                      {filteredCompanyNames.map((option) => (
+                                        <div key={option} className='option' onClick={() => handleCompanyClick(option)} >
+                                          {option}
+                                          
+                                        </div>
+                                      ))}
+                                    </div>
+                                    </div>
+                                  )}
                             </div>
                             { allErrors.companyNameFieldError && <p className=' field-error-message'>{allErrors.companyNameFieldError}</p> }
                         </div>
@@ -429,7 +503,26 @@ const InfoBody = () => {
                         <div className='flex flex-col gap-1 pt-2'>
                             <p className='p-0 m-0 font-helvetica text-xs font-semibold'>Department Name</p>
                             <div className={` ${allErrors.departmentNameFieldError? 'error-input' : 'info-input-field'}`}>
-                                <input type='text' value={departmentName} placeholder='Company Name' onChange={(e) => {setDepartment(e.target.value); setAllErrors({...allErrors, departmentNameFieldError: ''});}} />
+                                <input 
+                                type='text' 
+                                value={departmentName} 
+                                placeholder='Department Name' 
+                                onChange = {handleDepartmentInputChange}
+                                onFocus={handleDepartmentFocus}
+                                />
+                                {showDepartmentOptions && (
+                                    <div className='absolute'>
+                                    <div className='autocomplete-options'>
+                                      {filterDepartmentNamesByDepartments.map((option) => (
+                                        <div key={option} className='option' onClick={() => handleDepartmentClick(option)} >
+                                          {option}
+                                          </div>
+                                      ))}
+                                      </div>
+                                    </div>
+                                )}
+                                    
+                                  
                             </div>
                             { allErrors.departmentNameFieldError && <p className=' field-error-message'>{allErrors.departmentNameFieldError}</p> }
                         </div>
@@ -495,7 +588,8 @@ const InfoBody = () => {
                                 placeholder='province' 
                                 onChange={ handleInputChange}
                                 onFocus={handleInputFocus}
-                                onBlur={handleInputBlur}
+                                
+                                
                                 />
                                 
                                 {showOptions && (
@@ -522,7 +616,26 @@ const InfoBody = () => {
                     <div className='flex flex-col gap-1 pt-2'>
                             <p className='p-0 m-0 font-helvetica text-xs font-semibold'>District</p>
                             <div className={` ${allErrors.districtFieldError ? 'error-input' : 'info-input-field'}`}>
-                                <input type='text'  value={district}  placeholder='district' onChange={(e) => {setDistrict(e.target.value); setAllErrors({...allErrors, districtFieldError: '' })}}/>
+                                <input type='text'  
+                                value={district}  
+                                placeholder='district' 
+                                onChange={ handleDistrictChange}
+                                onFocus={handleDistrictFocus}
+                                />
+                                {
+                                  showDistricts && (
+                                    <div>
+                                    <div className='autocomplete-options'>
+                                      {filteredDistricts.map((option) => (
+                                        <div key={option} className='option' onClick={() => handleDistrictClick(option)} >
+                                          {option}
+                                        </div>
+                                      ))}
+                                    </div>
+                                    </div>
+                                  )
+                                }
+
                             </div>
                             { allErrors.districtFieldError && <p className='field-error-message'>{allErrors.districtFieldError}</p> }
                         </div>

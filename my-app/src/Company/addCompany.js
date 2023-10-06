@@ -11,10 +11,10 @@ import Logo from '../images/Logo.png'
 const AddCompany = () => {
 
     const [PAN, setPAN] = useState('')
-    const [name, setName] = useState('')
+    const [name, setName] = useState('') 
     const [email, setEmail] = useState('')
     const [address, setAddress] = useState('')
-    const [department, setSelectedDepartment] = useState([]);
+    const [departments, setSelectedDepartment] = useState([]);
     const [currentDepartment, setCurrentDepartment] = useState(''); // Store current input department
     const [error, setError] = useState('')
     const successStatus = useSelector(state => state.company.companyCreationStatus)
@@ -27,7 +27,7 @@ const AddCompany = () => {
         e.preventDefault();
         const departmentToAdd = currentDepartment.trim();
         if (departmentToAdd) {
-          setSelectedDepartment([...department, departmentToAdd]);
+          setSelectedDepartment([...departments, departmentToAdd]);
           setCurrentDepartment('');
           
         }
@@ -36,7 +36,7 @@ const AddCompany = () => {
   
     const removeDepartment = (index) => {
       // Remove a role from the roles array
-      const updatedDepartment = [...department];
+      const updatedDepartment = [...departments];
       updatedDepartment.splice(index, 1);
       setSelectedDepartment(updatedDepartment);
 
@@ -44,7 +44,7 @@ const AddCompany = () => {
     const handleDepartmentSelect = (e) => {
       // Handle the selection of roles from the dropdown
       const selectedDepartment = e.target.value;
-      setSelectedDepartment([...department, selectedDepartment]);
+      setSelectedDepartment([...departments, selectedDepartment]);
     };
     const handlePanChange = (e) => {
       setPAN(e.target.value)
@@ -81,7 +81,7 @@ const AddCompany = () => {
         setError('Invalid Email')
       }
       else{
-        dispatch(createCompany({ PAN, name, address, email } ));
+        dispatch(createCompany({ PAN, name, address, email, departments } ));
         setError('') 
       }
       if (successStatus === 'success'){
@@ -130,7 +130,7 @@ const AddCompany = () => {
     </select>
     </div>
           <div className='flex gap-2'>
-                            {department.map((department, index) => (
+                            {departments.map((department, index) => (
                                 
                         <div key={index} className='selected-company'>
                             

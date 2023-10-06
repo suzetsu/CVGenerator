@@ -1,35 +1,93 @@
 
 
-table {
+/* table {
     margin: 5rem auto;
     border-radius: 0.5rem;
     border: 1rem hidden #443C68;
     border-collapse: collapse;
     box-shadow: 0 0 0 1px black;
     overflow: hidden;
-    /* max-width: 50rem; */
-  }
+    /* max-width: 50rem;
+  } */
   
   /* li, p, a, td{
     font-size: 1.6rem;
     line-height: 1.6;
   } */
   
-  thead {
+  /* thead {
     font-size: 1rem;
     background-color: #443C68;
     color: #fff;
     height: 4rem;
-  }
+  } */
   
-  th,
+  /* th,
   td {
     border: 1px solid #443C68;
-    /* min-width: 30rem; */
+    /* min-width: 30rem; 
     padding: 1rem;
-    /* line-height: 1.7; */
+    /* line-height: 1.7; 
+  } */
+  
+  /* td {
+    font-size: 1rem;
+  } */
+
+  table {
+    margin: 0 1rem;
+    border-radius: 0rem;
+    border: 1rem hidden #443C68;
+    border-collapse: collapse;
+    box-shadow: 0 0 0 1px black;
+    overflow: hidden;
+    max-width: 800px;
   }
   
-  td {
+  thead {
+    
+    border-bottom: 1px solid #ccc;
     font-size: 1rem;
+    font-weight: bold;
+    color: #666;
   }
+  th{
+    background-color: #B4DBFA;
+    
+  }
+  
+  th, td {
+    border: 1px solid #808080;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    white-space: nowrap;
+    text-align: center;
+  }
+  
+  tr:nth-child(odd) {
+    background-color: #fff;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #eee;
+  }
+  
+  .edit-button, .delete-button {
+    background-color: #f0f4f3;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px 16px;
+    cursor: pointer;
+  }
+  
+  .edit-button {
+    color: #007bff;
+  }
+  
+  .delete-button {
+    color: #dc3545;
+  }
+  
+  

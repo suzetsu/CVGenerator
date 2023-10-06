@@ -29,7 +29,7 @@ const handleClick = () => {
             <h1 className='logo-text font-helvetica'>JPortal</h1>
             </div>
         </div>
-        <div className='nav-links space-x-8 pl-24 font-helvetica'>
+        <div className='nav-links space-x-10 pl-24 font-helvetica'>
             
             <div className='hoverNav' onClick={handleClick}>Home</div>
             <div className='hoverNav-company'>
@@ -39,7 +39,7 @@ const handleClick = () => {
                 <div><a href='/viewCompany' className='menu-item'>View Company</a></div>
               </div>
             </div>
-            <div className='hoverNav'>CV category</div>
+            
             <div className='hoverNav'>CV Template List</div>
             {/* {userRole === 'Admin' || userRole === 'SuperAdmin' ? (
           <div className='hoverNav'>User Management</div>
