@@ -4,7 +4,7 @@ import * as actionTypes from './actionTypes';
 export const createCompany = (PAN, name, email, address, departments) => async (dispatch) => {
     try {
         const response = await axios.post(
-            "http://192.168.0.104:7270/api/Company",
+            "http://192.168.0.102:7270/api/Company",
                 PAN,
                 name,
                 address,
@@ -12,6 +12,7 @@ export const createCompany = (PAN, name, email, address, departments) => async (
                 departments
            
         );
+        dispatch({ type: actionTypes.COMPANY_CREATE_SUCCESS });
         if (response.status === 201) {
             dispatch({ type: actionTypes.COMPANY_CREATE_SUCCESS });
         }
@@ -27,7 +28,7 @@ export const createCompany = (PAN, name, email, address, departments) => async (
 export const fetchCompanyInfo = () => async (dispatch) => {
     try {
         const response = await axios.get(
-            "http://192.168.0.104:7270/api/Company/GetAll"
+            "http://192.168.0.102:7270/api/Company/GetAll"
         );
         if (response.status === 200) {
             const companyData = response.data;
@@ -43,7 +44,7 @@ export const fetchCompanyInfo = () => async (dispatch) => {
 
 export const updateCompanyInfo = (CompanyId, updatedcompany) => async (dispatch) => {
     try {
-        const response = await axios.put(`http://192.168.0.104:7270/api/Company/${CompanyId}`,
+        const response = await axios.put(`http://192.168.0.102:7270/api/Company/${CompanyId}`,
         updatedcompany,
         {
             headers: {
@@ -53,7 +54,8 @@ export const updateCompanyInfo = (CompanyId, updatedcompany) => async (dispatch)
         );
         if (response.status === 200) {
             dispatch({ type: actionTypes.COMPANY_UPDATE_SUCCESS });
-        } else {
+        } 
+        else {
             dispatch({ type: actionTypes.COMPANY_UPDATE_FAILURE });
         }
     } catch (error) {
@@ -63,7 +65,7 @@ export const updateCompanyInfo = (CompanyId, updatedcompany) => async (dispatch)
 
 export const deleteCompanyInfo = (CompanyId) => async (dispatch) => {
     try {
-        const response = await axios.delete(`http://192.168.0.104:7270/api/Company/${CompanyId}`);
+        const response = await axios.delete(`http://192.168.0.102:7270/api/Company/${CompanyId}`);
         if (response.status === 200) {
             dispatch({ type: actionTypes.COMPANY_DELETE_SUCCESS });
         } else {

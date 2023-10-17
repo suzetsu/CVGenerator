@@ -13,28 +13,40 @@ import profileIcon from '../../images/business-icon.png'
 
 function ThirdCVTemp() {
     const location = useLocation();
-    const matchedUser = location.state?.matchedUser;
-    const name = matchedUser? matchedUser.clientName : "no client";
-    const role = matchedUser? matchedUser.role : "no role";
-    const email = matchedUser? matchedUser.email : "no email";
-    const phone = matchedUser? matchedUser.phone : "no phone";
-    const PANNO = matchedUser? matchedUser.clientPANNO : "no PAN";
-    const municipality = matchedUser? matchedUser.municipality : "no municipality";
-    const municipalityNumber = matchedUser? matchedUser.municipalityNumber : "no municipality";
-    const district = matchedUser? matchedUser.district : "no district";
-    const province = matchedUser? matchedUser.province : "no province";
-    const university = matchedUser? matchedUser.university : "no university";
-    const college = matchedUser? matchedUser.college : "no college";
-    const level = matchedUser? matchedUser.level : "no level";
-    const degree = matchedUser? matchedUser.degree : "no degree";
-    const description = matchedUser? matchedUser.description : "no description";
-    const firstProject = matchedUser? matchedUser.firstProject : "no first project";
-    const secondProject = matchedUser? matchedUser.secondProject : "no second project";
-    const firstProjectDescription = matchedUser? matchedUser.firstProjectDescription : "no first project";
-    const secondProjectDescription = matchedUser? matchedUser.secondProjectDescription : "no second project";
+    const employee = location.state;
     
-    const skills = matchedUser? matchedUser.skills : "no skills";
-    const skillSets= skills.$values
+    const employeeInfo = employee.employee
+    console.log(employeeInfo)
+    const {
+        clientName,
+        email,
+        clientPANNO,
+        designation,
+        clientInformationID,
+        companyName,
+        departmentName,
+        municipality,
+        province,
+        district,
+        phone,
+        municipalityNumber,
+        university,
+        college,
+        level,
+        degree,
+        description,
+        firstOrganizationName,
+        firstDuration,
+        firstTitle,
+        secondOrganizationName,
+        secondDuration,
+        secondTitle,
+        imagePath
+        
+      } = employeeInfo
+    
+      const skillSets = employeeInfo.skills.$values
+      console.log(skillSets)
 
     const [loader, setLoader] = useState(false);
 
@@ -64,7 +76,8 @@ function ThirdCVTemp() {
                     <div className='w-[30%] bg-[#e5f1ff] '>
                         <div className='p-2 flex flex-col gap-10'>
                             <div>
-                            <div className='circle-image-thirdCV' style={{ backgroundImage: `url(${handshake})` }}></div>
+                            <div className='circle-image-thirdCV' style={{ backgroundImage: `url(${imagePath})` }}></div>
+                            
                             </div>
                             <div className='flex flex-col pl-3'>
                             
@@ -120,7 +133,7 @@ function ThirdCVTemp() {
                                     <div className='flex flex-col gap-2'>
                                         <div className='text-sm opacity-70'>2020-2023</div>
                                         <div className='text-sm opacity-90'>Masters of Information and Technology</div>
-                                        <div className='text-sm opacity-70'>Tribhuvan University</div>
+                                        <div className='text-sm opacity-70'>{university}</div>
                                     </div>
                                 </div>
 
@@ -132,8 +145,8 @@ function ThirdCVTemp() {
                     <div className='w-[70%] p-6'>
                         <div className='flex flex-col gap-11 pt-12'>
                             <div className='flex flex-col'>
-                                <h1 className='m-0 p-0 font-bold text-4xl text-[#0268d7]'>{name}</h1>
-                                <p className='m-0 p-0 opacity-70 text-lg font-helvetica'>{role}</p>
+                                <h1 className='m-0 p-0 font-bold text-4xl text-[#0268d7]'>{clientName}</h1>
+                                <p className='m-0 p-0 opacity-70 text-lg font-helvetica'>{designation}</p>
                             </div>
                         <div className='flex flex-col gap-6'>
                             <div className='flex flex-col gap-4 font-helvetica'>
@@ -142,41 +155,41 @@ function ThirdCVTemp() {
                             </div>
                             <div className='flex flex-col gap-2'>
                                 <div className='flex gap-8'>
-                                    <div className='p-0 m-0 text-sm font-semibold'>Company Name</div>
-                                    <div className='m-0 p-0 text-sm opacity-70'>April 2020 - Jan 2022</div>
+                                    <div className='p-0 m-0 text-sm font-semibold'>{firstOrganizationName}</div>
+                                    <div className='m-0 p-0 text-sm opacity-70'>{firstDuration}</div>
                                 </div>
-                                <p className='m-0 p-0 text-xs font-thin opacity-70'>Role</p>
-                                <li className='m-0 p-0 text-sm font-thin '>Work Description</li>
+                                {/* <p className='m-0 p-0 text-xs font-thin opacity-70'>Role</p> */}
+                                <li className='m-0 p-0 text-sm font-thin '>{firstTitle}</li>
                             </div>
                             <div className='flex flex-col gap-2'>
                                 <div className='flex gap-8'>
-                                    <div className='p-0 m-0 text-sm font-semibold'>Company Name</div>
-                                    <div className='m-0 p-0 text-sm opacity-70'>April 2020 - Jan 2022</div>
+                                    <div className='p-0 m-0 text-sm font-semibold'>{secondOrganizationName}</div>
+                                    <div className='m-0 p-0 text-sm opacity-70'>{secondDuration}</div>
                                 </div>
-                                <p className='m-0 p-0 text-xs font-thin opacity-70'>Role</p>
-                                <li className='m-0 p-0 text-sm font-thin '>Work Description</li>
+                                {/* <p className='m-0 p-0 text-xs font-thin opacity-70'>Role</p> */}
+                                <li className='m-0 p-0 text-sm font-thin '>{secondTitle}</li>
                             </div>
                             
                             </div>
 
                             <div>
-                            <div className='flex flex-col gap-4 font-helvetica'>
+                            {/* <div className='flex flex-col gap-4 font-helvetica'>
                             <div className='text-[#0268d7] font-bold'>
-                                Projects
+                                Work Experience
                             </div>
                             <div className='flex flex-col gap-4'>
                                 <div className='flex flex-col gap-1'>
-                                <div className='p-0 m-0 text-sm font-semibold'>{firstProject}</div>
-                                <li className='m-0 p-0 text-sm font-thin '>{firstProjectDescription}</li>
+                                <div className='p-0 m-0 text-sm font-semibold'>{`${firstOrganizationName} (${firstDuration})`}</div>
+                                <li className='m-0 p-0 text-sm font-thin '>{firstTitle}</li>
                                 </div>
                                 <div className='flex flex-col gap-1'>
-                                <div className='p-0 m-0 text-sm font-semibold'>{secondProject}</div>
-                                <li className='m-0 p-0 text-sm font-thin '>{secondProjectDescription}</li>
+                                <div className='p-0 m-0 text-sm font-semibold'>{`${secondOrganizationName} (${secondDuration})`}</div>
+                                <li className='m-0 p-0 text-sm font-thin '>{secondTitle}</li>
                                 </div>
                             
                             
                             </div>
-                            </div>
+                            </div> */}
                             </div>
                             <div className='flex flex-col gap-3 font-helvetica'>
                             <div className='text-[#0268d7] font-bold'>

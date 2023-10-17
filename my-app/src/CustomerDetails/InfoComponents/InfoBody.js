@@ -8,9 +8,14 @@ import { fetchClientInfo } from '../../Redux/actions';
 import CVTemp from '../CVtemplate/CVTemp';
 import EditUpdate from './EditUpdate'
 import { allProvinces } from './dropdownMenu'
-import { nepalDistricts } from './dropdownMenu'
+import Experience from './experience'
+
 import Swal from 'sweetalert2'
 import { fetchCompanyInfo } from '../../Redux/companyActions'
+import { GetAllDistricts } from '../../Redux/departmentActions'
+import EducationForm from './education'
+import addIcon from '../../images/addIcon.png'
+import closeIcon from '../../images/closeIcon.png'
 
 const InfoBody = () => {
     const [clientName, setName] = useState('')
@@ -21,7 +26,17 @@ const InfoBody = () => {
     const [municipalityNumber, setMUNno] = useState('')
     const [district, setDistrict] = useState('')
     const [province, setProvince] = useState('')
-
+    const [clientJoiningDate, setJoiningDate] = useState('')
+    const [experiences, setExperiences] = useState([
+      {
+        organizationName: '',
+        duration: '',
+        title: '',
+      },
+    ]);
+    const [organizationName, setOrganization] = useState('');
+    const [duration, setDuration] = useState('');
+    const [title, setTitle] = useState('');
     
     
     const [designation, setDesignation] = useState('')
@@ -36,16 +51,11 @@ const InfoBody = () => {
     
     const [currentSkill, setCurrentSkill] = useState(''); // Store current input role
     const [description, setDescription] = useState('')
-    const [firstOrganizationName, setFirstOrganizationName] = useState('')
-    const [secondOrganizationName, setSecondOrganizationName] = useState('')
-    const [firstTitle, setFirstTitle] = useState('')
-    const [secondTitle, setSecondTitle] = useState('')
-    const [firstDuration, setFirstDuration] = useState('')
-    const [secondDuration, setSecondDuration] = useState('')
     const [previewImage, setPreviewImage] = useState('')
     const [uploadedImage, setUploadedImage] = useState(null)
+    const [bloodGroup, setBloodGroup] = useState('')
 
-    console.log(firstDuration, secondDuration, firstOrganizationName, secondOrganizationName, firstTitle, secondTitle)
+
     
     const [fielderrorMessage, setFieldErrorMessage] = useState('')
 
@@ -67,16 +77,26 @@ const InfoBody = () => {
         degreeFieldError: '',
         skillsFieldError: '',
         descriptionFieldError: '',
-        firstDurationFieldError : '',
-        secondDurationFieldError : '',
-        firstOrganizationNameFieldError: '',
-        secondDurationOrganizationNameFieldError: '',
-        firstTitleFieldError: '',
-        secondTitleFieldError: '',
+        bloodGroupFieldError: '',
+        educationFieldError: '',
+        // organizationNameFieldError: '',
+        // durationFieldError: '',
+        // titleFieldError: '',
+        // clientJoiningDateFieldError: '', 
 
     }
 
     const [showOptions, setShowOptions] = useState(false);
+
+    const districtData = useSelector(state => state.company.districtData)
+    
+    const districtValues = districtData?.$values
+    // console.log(districtData);
+    const districtNames = Array.isArray(districtValues)? districtValues.map((district) => district.districtName)
+    : [];
+    
+   
+    
     const [showDistricts, setShowDistricts] = useState(false);
     const [selectedOption, setSelectedOption] = useState("");
     const dropdownRef = useRef(null);
@@ -92,6 +112,7 @@ const InfoBody = () => {
     
 
     const [errorMail, setErrorEmail] = useState('')
+    const [educationError, setErrorEducation] = useState('')
    
 
     const dispatch = useDispatch()
@@ -100,6 +121,7 @@ const InfoBody = () => {
     useEffect(() => {
         dispatch(fetchClientInfo());
         dispatch(fetchCompanyInfo());
+        dispatch (GetAllDistricts())
     }, [])
 
     const [showCompanyOptions, setShowCompanyOptions] = useState(false);
@@ -107,7 +129,7 @@ const InfoBody = () => {
     const clientDetails = useSelector((state) => state.auth.clientData);
     const companyDetails = useSelector((state) => state.company.companyData);
     // console.log(companyDetails)
-    const companyInfo = companyDetails.$values;
+    const companyInfo = companyDetails?.$values;
     const companyNames = Array.isArray(companyInfo) ? companyInfo.map((company) => company.name) : [];
 
     const [showDepartmentOptions, setShowDepartmentOptions] = useState(false);
@@ -161,6 +183,7 @@ const InfoBody = () => {
     const handleCompanyFocus = (e) => {
       setShowCompanyOptions(!showCompanyOptions);
     }
+    
     
   
 
@@ -231,9 +254,7 @@ const InfoBody = () => {
         setDistrict(districtValue);
         setSelectedOption("");
       }
-      const filteredDistricts = nepalDistricts.filter((option) =>
-          option.toLowerCase().includes(district.toLowerCase())
-        );
+      
       const handleDistrictClick = (option) => {
         // setFilteredOptions(option)
         setDistrict(option);
@@ -255,6 +276,10 @@ const InfoBody = () => {
       const filteredOptions = allProvinces.filter((option) =>
           option.toLowerCase().includes(province.toLowerCase())
         );
+
+        const filteredDistrictNames = districtNames.filter ((option) => 
+          option.toLowerCase().includes(district.toLowerCase())
+        ) 
       const handleInputFocus = () => {
           // setFilteredOptions(allProvinces);
           setShowOptions(!showOptions);
@@ -293,21 +318,52 @@ const InfoBody = () => {
         e.preventDefault();
         setFieldErrorMessage('');
         setErrorEmail('');
+        setErrorEducation('');
 
+        const experiencesJson = JSON.stringify(experiences);
+        // const experienceString = experiencesJson.stringify(experiences);
+        // console.log(experienceString);
+        const experiencesString = experiences.map(item => `${item.organizationName}, ${item.duration}, ${item.title}`).join(', ');
+
+        // console.log(experiencesJson);
+        
+        console.log(experiences);
+        console.log(skills)
 
         // })
         // setAllErrors(errors); 
+        const clientInfo = {clientName,
+          clientPANNO,
+          companyName,
+          departmentName,
+          designation,
+          municipality,
+          municipalityNumber,
+          province,
+          district,
+          email,
+          phone,
+          // university,
+          // college,
+          // level,
+          // degree,
+          description,
+          experiences:experiencesJson,
+          skills,
+          bloodGroup}
 
      
-        // const formData = new FormData();
-        // for (const key in ClientInfo) {
-        //   formData.append(key, ClientInfo[key]);
-        // }
+        const formData = new FormData();
+        for (const key in clientInfo) {
+          formData.append(key, clientInfo[key]);
+        }
 
+        formData.append("ImageFile", uploadedImage)
         // const imageAsString = btoa(String.fromCharCode(...new Uint8Array(uploadedImage)));
         // formData.append('imagePath', uploadedImage);
 
-        
+        console.log(formData);
+        console.log(uploadedImage);
 
         
       const requiredField = [
@@ -321,22 +377,25 @@ const InfoBody = () => {
         {name: 'phone', label : 'Phone'},
         {name: 'email', label : 'Email'},
         {name: 'university', label : 'University'},
-        {name: 'college', label : 'College'},
-        {name: 'level', label : 'Level'},
-        {name: 'degree', label : 'Degree'},
-        {name: 'skills', label : 'Skills'},
+        // {name: 'college', label : 'College'},
+        // {name: 'level', label : 'Level'},
+        // {name: 'degree', label : 'Degree'},
+        // {name: 'skills', label : 'Skills'},
         {name: 'description', label : 'Description'},
-        {name: 'firstOrganizationName', label : 'Organization Name'},
-        {name: 'firstDuration', label : 'Project Duration'},
-        {name: 'firstTitle', label : 'Title'},
-        {name: 'companyName', label : 'Company Name'},
         {name: 'departmentName', label : 'Department Name'},
+        {name: 'bloodGroup', label : 'Blood Group'},
+        {name: 'education', label : 'Education Detail'},
+        // {name: 'clientJoiningDate', label : 'Joined Date'},
+        // {name: 'organizationName', label : 'Organization Name'},
+        // {name: 'duration', label : 'Duration'},
+        // {name: 'title', label : 'Title'},
+
       ]
       requiredField.forEach((field) => {
         const fieldName = field.name;
         const fieldValue = eval(fieldName);
         if (!fieldValue) {
-          setAllErrors((prevErrors) => ({...prevErrors, [`${fieldName}FieldError`]: `${field.label} is required`}))
+          setAllErrors((prevErrors) => ({...prevErrors, [`${fieldName}FieldError`]: `${field.label} is required field`}))
         }
          
       })
@@ -349,29 +408,13 @@ const InfoBody = () => {
       }
 
       else{
-        dispatch(storeClientInfo( {clientName,
-        clientPANNO,
-        companyName,
-        departmentName,
-        designation,
-        municipality,
-        municipalityNumber,
-        province,
-        district,
-        email,
-        phone,
-        university,
-        college,
-        level,
-        degree,
-        description,
-        firstOrganizationName,
-        firstDuration,
-        firstTitle,
-        secondOrganizationName,
-        secondDuration,
-        secondTitle,
-        skills}));
+        dispatch(storeClientInfo( formData));
+      }
+      if (clientCreationStatus === 'success'){
+        alert('Client Created Successfully')
+      }
+      else if (clientCreationStatus === 'failure'){
+        alert('Client Creation Failed')
       }
     
             // setName('');
@@ -395,20 +438,20 @@ const InfoBody = () => {
        
     }
  
-
+let imagePreviewURL = null
     const handlePhotoUpload = (e) => {
       const imageFile = e.target.files[0]; // Get the selected image fil
       // if(imageFile){
       //   setUploadedImage(imageFile);
       // }
       const imgURL = URL.createObjectURL(imageFile);
-      console.log(imgURL)
+      
       
   if (imageFile) {
     // Optional: You can preview the image if needed
     const reader = new FileReader();
     reader.onload = (event) => {
-      const imagePreviewURL = event.target.result;
+       imagePreviewURL = event.target.result;
       setPreviewImage(imagePreviewURL); // Store the image preview URL in state
       console.log(`Previewing ${imagePreviewURL}`);
     };
@@ -422,10 +465,84 @@ const InfoBody = () => {
   }
 }
 
+console.log(university, college, level, degree)
+
+
+const addExperience = () => {
+  setExperiences([...experiences, { organizationName: '', duration: '', title: '' }]);
+};
+const removeExperience = (index) => {
+  const updatedExperiences = [...experiences];
+  updatedExperiences.splice(index, 1);
+  setExperiences(updatedExperiences);
+};
+
+const handleOrganizationNameChange = (value, index) => {
+  const updatedExperiences = [...experiences];
+  updatedExperiences[index].organizationName = value;
+  setExperiences(updatedExperiences);
+};
+
+const handleDurationChange = (value, index) => {
+  const updatedExperiences = [...experiences];
+  updatedExperiences[index].duration = value;
+  setExperiences(updatedExperiences);
+};
+
+const handleTitleChange = (value, index) => {
+  const updatedExperiences = [...experiences];
+  updatedExperiences[index].title = value;
+  setExperiences(updatedExperiences);
+};
+const [education, setEducation] = useState([
+  {
+    college: '',
+    level: '',
+    degree: '',
+    university: '',
+  },
+]);
+
+
+const addEducation = () => {
+  setEducation([...education, { college: '', level: '', degree: '', university: ''}]);
+};
+const removeEducation = (index) => {
+  const updatedEducation = [...education];
+  updatedEducation.splice(index, 1);
+  setEducation(updatedEducation);
+};
+
+const handleUniversityChange = (value, index) => {
+  const updatedEducation = [...education];
+  updatedEducation[index].university = value;
+  setEducation(updatedEducation);
+  setAllErrors({...allErrors, universityFieldError: '' })
+};
+
+const handleCollegeChange = (value, index) => {
+  const updatedEducation = [...education];
+  updatedEducation[index].college = value;
+  setEducation(updatedEducation);
+};
+
+const handleLevelChange = (value, index) => {
+  const updatedEducation = [...education];
+  updatedEducation[index].level = value;
+  setEducation(updatedEducation);
+};
+const handleDegreeChange = (value, index) => {
+  const updatedEducation = [...education];
+  updatedEducation[index].degree = value;
+  setEducation(updatedEducation);
+};
+
+
 
 
 
   return (
+    <>
     <div className='  flex justify-center pt-12 bg-[#F8F8F8] pb-10'>
         <div className='flex flex-col'>
             <div className='w-[815px]  info-div '> 
@@ -434,7 +551,7 @@ const InfoBody = () => {
                     <hr></hr>
                     <div className='flex flex-col gap-6 pt-2'>
                     <div>
-                    <p className=" m-0 pb-4 font-roboto font-bold" style={{color:"#1670B2", fontSize:"16px",}}>Client Information</p>
+                    <p className=" m-0 pb-4 font-roboto font-bold" style={{color:"#1670B2", fontSize:"16px",}}>Basic Information</p>
                     <div className=' flex flex-col pl-2'>
                     <div className='flex gap-14'>
                         
@@ -445,10 +562,10 @@ const InfoBody = () => {
                             </div>
                             { allErrors.clientNameFieldError && <p className=' field-error-message'>{allErrors.clientNameFieldError}</p> }
                         </div>
-                        <div className='flex flex-col gap-1 pt-2'>
+                        <div className='flex flex-col gap-1 pt-2 '>
                             <p className='p-0 m-0 font-helvetica text-xs font-semibold'>Client PAN No.</p>
                             <div className={` ${allErrors.clientPANNOfieldError ? 'error-input' : 'info-input-field'}`}>
-                                <input type='number' value={clientPANNO}  placeholder='PAN No.' onChange={(e) => {setPAN(e.target.value); setAllErrors({...allErrors, clientPANNOfieldError: ''})}}/>
+                                <input type='text' value={clientPANNO}  placeholder='PAN No.' onChange={(e) => {setPAN(e.target.value); setAllErrors({...allErrors, clientPANNOfieldError: ''})}}/>
                             </div>
                             { allErrors.clientPANNOfieldError && <p className='field-error-message'>{allErrors.clientPANNOfieldError}</p> }
                         </div>
@@ -508,7 +625,7 @@ const InfoBody = () => {
                                 value={departmentName} 
                                 placeholder='Department Name' 
                                 onChange = {handleDepartmentInputChange}
-                                onFocus={handleDepartmentFocus}
+                                onFocus={handleDepartmentFocus} 
                                 />
                                 {showDepartmentOptions && (
                                     <div className='absolute'>
@@ -526,8 +643,27 @@ const InfoBody = () => {
                             </div>
                             { allErrors.departmentNameFieldError && <p className=' field-error-message'>{allErrors.departmentNameFieldError}</p> }
                         </div>
+                        <div className='flex flex-col gap-1 pt-2'>
+                            <p className='p-0 m-0 font-helvetica text-xs font-semibold'>Blood Group</p>
+                            <div className={` ${allErrors.bloodGroupFieldError ? 'error-input' : 'info-input-field flex gap-1'}`}>
+                                <input type='text' value={bloodGroup}  placeholder='Client Blood Group' onChange={(e) => {setBloodGroup(e.target.value); setAllErrors({...allErrors, bloodGroupFieldError: '' }) }}
+                                
+                                />
+                                <select value={bloodGroup} onChange={(e) => setBloodGroup(e.target.value)}>
+                                    <option value=""></option>
+                                    <option value="A +ve">A +ve</option>
+                                    <option value="A -ve">A -ve</option>
+                                    <option value="O +ve">O +ve</option>
+                                    <option value="O -ve">A -ve</option>
+                                    <option value="AB +ve">AB +ve</option>
+                                    <option value="AB -ve">AB -ve</option>
+                                </select>
+                            </div>
+                            { allErrors.bloodGroupFieldError && <p className='field-error-message'>{allErrors.bloodGroupFieldError}</p> }
+                        </div>
                       </div>
-                    
+                    < div className='flex gap-14'>
+                      
                     <div className='flex flex-col gap-1 pt-2'>
                             <p className='p-0 m-0 font-helvetica text-xs font-semibold'>Skills</p>
                             <div className={` ${allErrors.skillsFieldError ? 'error-input' : 'info-input-field flex gap-1'}`}>
@@ -556,13 +692,29 @@ const InfoBody = () => {
                         </div>))}
                         </div>
                         </div>
+                        <div className='flex flex-col gap-1 pt-2'>
+                        <p className='p-0 m-0 font-helvetica text-xs font-semibold'>Client Joining Date</p>
+                              <div className={` ${allErrors.clientJoiningDateFieldError ? 'error-input' : 'info-input-field'}`}>
+                                <input
+                                  type='date' // Use 'date' type for date input
+                                  value={clientJoiningDate}
+                                  onChange={(e) => {
+                                    setJoiningDate(e.target.value);
+                                    setAllErrors({ ...allErrors, clientJoiningDateFieldError: '' });
+                                  }}
+                                />
+                              </div>
+                              {allErrors.clientJoiningDateFieldError && <p className='field-error-message'>{allErrors.clientJoiningDateFieldError}</p>}
+                        </div>
+                        
+                        </div>
                         
 
                     </div>
                     
                     </div>
                     <div>
-                    <p className=" m-0 pb-4 font-roboto font-bold" style={{color:"#1670B2", fontSize:"16px",}}>Client Address Information</p>
+                    <p className=" m-0 pb-4 font-roboto font-bold" style={{color:"#1670B2", fontSize:"16px",}}>Address Information</p>
                     <div className='flex flex-col pl-2'>
                     <div className='flex  gap-14'>
                         <div className='flex flex-col gap-1 pt-2'>
@@ -626,11 +778,11 @@ const InfoBody = () => {
                                   showDistricts && (
                                     <div>
                                     <div className='autocomplete-options'>
-                                      {filteredDistricts.map((option) => (
+                                      {Array.isArray(filteredDistrictNames)? (filteredDistrictNames.map((option) => (
                                         <div key={option} className='option' onClick={() => handleDistrictClick(option)} >
                                           {option}
                                         </div>
-                                      ))}
+                                      ))) : null}
                                     </div>
                                     </div>
                                   )
@@ -645,7 +797,7 @@ const InfoBody = () => {
                     </div>
 
                     <div>
-                    <p className=" m-0 pb-4 font-roboto font-bold" style={{color:"#1670B2", fontSize:"16px",}}>Client Contact Information</p>
+                    <p className=" m-0 pb-4 font-roboto font-bold" style={{color:"#1670B2", fontSize:"16px",}}>Contact Information</p>
                     <div className=' pl-2'>
                     <div className='flex  gap-14'>
                         <div className='flex flex-col gap-1 pt-2'>
@@ -673,44 +825,159 @@ const InfoBody = () => {
                     </div>
 
                     <div>
-                    <p className=" m-0 pb-4 font-roboto font-bold" style={{color:"#1670B2", fontSize:"16px",}}>Client Academic Information</p>
-                    <div className='flex flex-col pl-2'>
-                    <div className='flex  gap-14'>
-                        <div className='flex flex-col gap-1 pt-2'>
-                            <p className='p-0 m-0 font-helvetica text-xs font-semibold'>University</p>
-                            <div className={` ${ allErrors.universityFieldError ? 'error-input' : 'info-input-field'}`}>
-                                <input type='text' value={university} placeholder='university' onChange={(e) => {setUni(e.target.value); setAllErrors({...allErrors, universityFieldError: '' }) }}/>
-                            </div>
-                            { allErrors.universityFieldError && <p className='field-error-message'>{allErrors.universityFieldError}</p> }
-                        </div>
-                        <div className='flex flex-col gap-1 pt-2'>
-                            <p className='p-0 m-0 font-helvetica text-xs font-semibold'>College</p>
-                            <div className={` ${allErrors.collegeFieldError ? 'error-input' : 'info-input-field'}`}>
-                                <input type='text' value={college}  placeholder='college' onChange={(e) => {setCollege(e.target.value); setAllErrors({...allErrors, collegeFieldError: '' })}}/>
-                            </div>
-                            { allErrors.collegeFieldError && <p className='field-error-message'>{allErrors.collegeFieldError}</p> }
-                        </div>
-                        <div className='flex flex-col gap-1 pt-2'>
-                            <p className='p-0 m-0 font-helvetica text-xs font-semibold'>Level</p>
-                            <div className={` ${allErrors.levelFieldError ? 'error-input' : 'info-input-field'}`}>
-                                <input type='text'value={level}  placeholder='level'  onChange={(e) => {setLevel(e.target.value); setAllErrors({...allErrors, levelFieldError: '' })}}/>
-                            </div>
-                            {allErrors.levelFieldError && <p className='field-error-message'>{allErrors.levelFieldError}</p>}
-                        </div>
-                        <div>
+                    <p className="m-0 pb-4 font-roboto font-bold" style={{ color: "#1670B2", fontSize: "16px" }}>
+                        Education Details
+                      </p>
+                      <div className='pl-2 pb-4 flex flex-col gap-2' >
+                        {education.map((educations, index) => (
+                          <div key={index} className='flex gap-14 p-2' style={{border: '1px solid black', outline: 'none'}}>
+                            <div className='flex flex-col gap-4'>
+                            <div className='flex gap-14'>
+                                <div className='flex flex-col gap-2'>
+                                <p className='p-0 m-0 font-helvetica text-xs font-semibold'>University</p>
+                                <div className={` ${ educationError ? 'error-input' : 'info-input-field'}`}>
+                                    <input
+                                    type='text'
+                                    value={educations.university}
+                                    placeholder='Enter University name'
+                                    onChange={(e) => handleUniversityChange(e.target.value, index)}
+                                    />
+                                </div>
+                                </div>
+                              <div className='flex flex-col gap-2'>
+                              <p className='p-0 m-0 font-helvetica text-xs font-semibold'>College</p>
+                              <div className= 'info-input-field'>
+                                <input
+                                  type='text'
+                                  value={educations.college}
+                                  placeholder='Enter college name'
+                                  onChange={(e) => handleCollegeChange(e.target.value, index)}
+                                />
+                              </div>
+                              </div>
+                              <div className='flex flex-col gap-2'>
+                              <p className='p-0 m-0 font-helvetica text-xs font-semibold'>Level</p>
+                              <div className= 'info-input-field'>
+                                <input
+                                  type='text'
+                                  value={educations.level}
+                                  placeholder='Enter Level...'
+                                  onChange={(e) => handleLevelChange(e.target.value, index)}
+                                />
+                              </div>
+                              </div>
+                              </div>
                             
+                              <div className='flex flex-col gap-2'>
+                                <p className='p-0 m-0 font-helvetica text-xs font-semibold'>Degree</p>
+                                <div className='info-input-field'>
+                                    <input
+                                    type='text'
+                                    value={educations.degree}
+                                    placeholder='Enter degree'
+                                    onChange={(e) => handleDegreeChange(e.target.value, index)}
+                                    />
+                                </div>
+                                </div>
+                            
+                            </div>
+                            {index > 0 && (
+                                
+                                <div className='mb-[1rem] ml-[-4.3rem] mt-[-0.4rem]'>
+                                <div className='flex gap-1 justify-center items-center bg-[red] w-[18px] h-[20px] rounded-[6px] cursor-pointer' onClick={() => removeEducation(index)}>
+                                    <img src={closeIcon} alt="closeIcon" className='h-[15px] m-0 p-0'/>
+                                
+                          
                         </div>
+                        </div>
+                        )}
+                          </div>
+                          
+                          
+                          
+                        ))}
+                        
+                        <div className='flex gap-1 justify-center items-center bg-[blue] w-[130px] h-[32px] rounded-[6px] cursor-pointer' onClick={addEducation}>
+                        {/* <button onClick={addExperience}>Add Experience</button> */}
+                        <img src={addIcon} alt="addIcon" className='w-[20px] h-[20px] m-0 p-0'/>
+                        <p  className='m-0 p-0 font-helvetica font-bold text-white text-xs'>Add Education</p>
+
+                        </div>
+                        
+                      </div>
+                      { allErrors.educationFieldError && <p className='field-error-message'>{allErrors.educationFieldError}</p> }
                     </div>
                     <div>
-                    <div className='flex flex-col gap-1 pt-2'>
-                            <p className='p-0 m-0 font-helvetica text-xs font-semibold'>Degree</p>
-                            <div className={` ${ allErrors.degreeFieldError ? 'error-input' : 'info-input-field'}` }>
-                                <input type='text' value={degree}  placeholder='degree' onChange={(e) => {setdegree(e.target.value); setAllErrors({...allErrors, degreeFieldError: '' })}}/>
-                            </div>
-                            <div className='flex items-start'>{allErrors.degreeFieldError && <p className='field-error-message'>{allErrors.degreeFieldError}</p>}</div>
-                        </div>
-                    </div>
-                    </div>
+                      
+                      <p className="m-0 pb-4 font-roboto font-bold" style={{ color: "#1670B2", fontSize: "16px" }}>
+        Professional Experiences
+      </p>
+      <div className='pl-2 pb-4 flex flex-col gap-2' >
+        {experiences.map((experience, index) => (
+          <div key={index} className='flex gap-14 p-2' style={{border: '1px solid black', outline: 'none'}}>
+            <div className='flex flex-col gap-4'>
+            <div className='flex gap-20'>
+            <div className='flex flex-col gap-2'>
+              <p className='p-0 m-0 font-helvetica text-xs font-semibold'>Organization Name</p>
+              <div className='info-input-field'>
+                <input
+                  type='text'
+                  value={experience.organizationName}
+                  placeholder='Enter Organization name'
+                  onChange={(e) => handleOrganizationNameChange(e.target.value, index)}
+                />
+              </div>
+              </div>
+              <div className='flex flex-col gap-2'>
+              <p className='p-0 m-0 font-helvetica text-xs font-semibold'>Work Duration</p>
+              <div className= 'info-input-field'>
+                <input
+                  type='text'
+                  value={experience.duration}
+                  placeholder='Enter work duration'
+                  onChange={(e) => handleDurationChange(e.target.value, index)}
+                />
+              </div>
+              </div>
+              </div>
+              <div className='flex flex-col gap-2'>
+              <p className='p-0 m-0 font-helvetica text-xs font-semibold'>Work Description</p>
+              <div className='info-input-field-project-desc'>
+              
+                <textarea
+                  type='text'
+                  value={experience.title}
+                  placeholder='Enter your work details...'
+                  onChange={(e) => handleTitleChange(e.target.value, index)}
+                  rows={3}
+                  cols={40}
+                ></textarea>
+              </div>
+              </div>
+             
+            </div>
+            {index > 0 && (
+                <div className='pl-[10.5rem] pb-4'>
+        <div className='flex gap-1 justify-center items-center bg-[red] w-[20px] h-[20px] rounded-[6px] cursor-pointer' onClick={() => removeExperience(index)}>
+            <img src={closeIcon} alt="closeIcon" className='h-[15px] m-0 p-0'/>
+           
+        </div>
+        </div>
+        )}
+          </div>
+          
+          
+          
+        ))}
+        
+        <div className='flex gap-1 justify-center items-center bg-[blue] w-[130px] h-[32px] rounded-[6px] cursor-pointer' onClick={addExperience}>
+        {/* <button onClick={addExperience}>Add Experience</button> */}
+        <img src={addIcon} alt="addIcon" className='w-[20px] h-[20px] m-0 p-0'/>
+        <p  className='m-0 p-0 font-helvetica font-bold text-white text-xs'>Add Experience</p>
+
+        </div>
+        
+      </div>
                     </div>
 
                     <div>
@@ -723,82 +990,30 @@ const InfoBody = () => {
                      </div>
                     </div>
                     <div>
-                    <p className=" m-0 pb-4 font-roboto font-bold" style={{color:"#1670B2", fontSize:"16px",}}>Professional Experiences</p>
-                    <div className=' pl-2'>
-                        <div className='flex  gap-14'>
-                        <div className='flex  flex-col gap-2'>
-                        
-                        <p className='p-0 m-0 font-helvetica text-xs font-semibold'>Organization Name</p>
-                        <div className={` ${ allErrors.firstOrganizationNameFieldError ? 'error-input' : 'info-input-field'}`}>
-                                <input type='text'value={firstOrganizationName}  placeholder='Enter Organization name'  onChange={(e) => {setFirstOrganizationName(e.target.value); setAllErrors({...allErrors, firstOrganizationNameFieldError: '' })}}/>
-                        </div>
-
-                        <div>{allErrors.firstTitleFieldError && <p className='field-error-message'>{allErrors.firstTitleFieldError}</p>}</div>
-
-                        <p className='p-0 m-0 font-helvetica text-xs font-semibold'>Work Duration</p>
-                        <div className={` ${allErrors.firstDurationFieldError ? 'error-input' : 'info-input-field'}`}>
-                            <input type='text' value={firstDuration} placeholder='Enter work duration' onChange={(e) => { setFirstDuration(e.target.value); setAllErrors({ ...allErrors, workDurationFieldError: '' }) }} />
-                        </div>
-                        <div>{allErrors.firstDurationFieldError && <p className='field-error-message'>{allErrors.firstDurationFieldError}</p>}</div>
-
-                        <div className= {` ${ allErrors.firstTitleFieldError ? 'error-input-project-desc' : 'info-input-field-project-desc'}`}>
-                                <textarea type='text' value={firstTitle} placeholder='Enter your work details...' onChange={(e) => {setFirstTitle(e.target.value); setAllErrors({...allErrors, firstTitleFieldError: '' })}} rows={3} cols={40}></textarea>
-                        </div>
-                        {allErrors.firstTitleFieldError && <p className='field-error-message'>{allErrors.firstTitleFieldError}</p>}
-                        </div>
-                        <div className='flex  flex-col gap-2'>
-                        <p className='p-0 m-0 font-helvetica text-xs font-semibold'>Organization name</p>
-                        <div className='info-input-field'>
-                                <input type='text'value={secondOrganizationName}  placeholder='Enter Organization name'  onChange={(e) => {setSecondOrganizationName(e.target.value); setAllErrors({...allErrors, secondDurationOrganizationNameFieldError: '' }) }}/>
-                        </div>
-                        
-
-                        <p className='p-0 m-0 font-helvetica text-xs font-semibold'>Work Duration</p>
-                        <div className='info-input-field'>
-                            <input type='text' value={secondDuration} placeholder='Enter work duration' onChange={(e) => { setSecondDuration(e.target.value); setAllErrors({ ...allErrors, secondDurationFieldError: '' }) }} />
-                        </div>
-
-                        <div className='info-input-field-project-desc'>
-                                <textarea type='text' value={secondTitle} placeholder='Enter your work details...' onChange={(e) => {setSecondTitle(e.target.value); setAllErrors({...allErrors, secondProjectDescriptionFieldError: '' })}} rows={3} cols={40}></textarea>
-                        </div>
-                        {allErrors.secondTitleFieldError && <p className='field-error-message'>{allErrors.secondTitleFieldError}</p>}
-
-                        </div>
-                        </div>
-                    </div>
+                    
                     </div>
                     <div>
                   <input type = 'file' accept='image/*' onChange = {handlePhotoUpload}/>
+                  <div className='image-container' style={{ backgroundImage: {imagePreviewURL}}}></div>
                   
                     </div>
 
                     <div className='flex justify-center'>
                         <button className='btn-info' onClick={handleSubmit}>Submit</button>
                     </div>
-                    {clientCreationStatus ==='success' && <p className='success-message1'>User created successfully!</p>}
+                    {clientCreationStatus==='success' && <p className='success-message1'>User created successfully!</p>}
                     { fielderrorMessage && <p className='field-error-message'>{fielderrorMessage}</p>}
                     
 
                     </div>
                 </div>
 
-            </div>
-
-         {/* Input filled        */}
-         <div className='pt-4 pl-2 flex justify-end'>
-                <a href='/CVGenerate' className=' m-0 pb-4 font-roboto font-bold' style={{ color: '#1670B2', fontSize: '16px' }}>
-                  Clicke Here To Generate CV
-                </a>
-            </div>
-            {
-               userRole === 'Admin' && (
-                   <EditUpdate/>
-               )
-            }                     
+            </div>                   
             
             
         </div>
     </div>
+    </>
   )
 }
 

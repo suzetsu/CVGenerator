@@ -9,7 +9,7 @@ import {login} from '../Redux/actions';
 import Swal from 'sweetalert2';
 
 
-const Login = () => {
+const Login = ({isLoggedIn}) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -17,6 +17,7 @@ const Login = () => {
   const [errorPW, seterrorPW] = useState('');
   const history = useNavigate();
   const dispatch = useDispatch();
+  console.log(isLoggedIn);
   // const userCreationStatus = useSelector(state => state.auth.userCreationStatus);
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -34,8 +35,9 @@ const Login = () => {
     } else if (isValidEmail(email) && password) {
       
         const loginResult = await dispatch(login(email, password));
-        if (loginResult.success) {
-          history('/Main');
+       
+        if (loginResult.success === true) {
+          history('/main');
         } 
       else {
           Swal.fire({
@@ -88,9 +90,9 @@ const Login = () => {
         <div className='button' >
           <button className='button-edit' onClick={handleSubmit}>Sign in</button>
         </div>
-        <div className='signup-text'>
+        {/* <div className='signup-text'>
           <p>Need an Account? <a href='/signup'>Register</a></p>
-        </div>
+        </div> */}
         </div>
         <div className='right'>
           <div className='UM'>

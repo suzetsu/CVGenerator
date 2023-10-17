@@ -7,39 +7,45 @@ import jsPDF from 'jspdf'
 
 
 
-
-// import axios from 'axios';
-// import Template from './template'
-// import { useSelector, useDispatch } from 'react-redux';
-// import { selectClientInformation } from '../../Redux/slector';
-// import { fetchClientInfo } from '../../Redux/actions';
-
 const CVTemp = () => {
 
 const location = useLocation();
-const matchedUser = location.state?.matchedUser;
-    const name = matchedUser? matchedUser.clientName : "no client";
-    const role = matchedUser? matchedUser.role : "no role";
-    const email = matchedUser? matchedUser.email : "no email";
-    const phone = matchedUser? matchedUser.phone : "no phone";
-    const PANNO = matchedUser? matchedUser.clientPANNO : "no PAN";
-    const municipality = matchedUser? matchedUser.municipality : "no municipality";
-    const municipalityNumber = matchedUser? matchedUser.municipalityNumber : "no municipality";
-    const district = matchedUser? matchedUser.district : "no district";
-    const province = matchedUser? matchedUser.province : "no province";
-    const university = matchedUser? matchedUser.university : "no university";
-    const college = matchedUser? matchedUser.college : "no college";
-    const level = matchedUser? matchedUser.level : "no level";
-    const degree = matchedUser? matchedUser.degree : "no degree";
-    const description = matchedUser? matchedUser.description : "no description";
-    const firstProject = matchedUser? matchedUser.firstProject : "no first project";
-    const secondProject = matchedUser? matchedUser.secondProject : "no second project";
-    const firstProjectDescription = matchedUser? matchedUser.firstProjectDescription : "no first project";
-    const secondProjectDescription = matchedUser? matchedUser.secondProjectDescription : "no second project";
+const employee = location.state;
+
+const employeeInfo = employee.employee
+console.log(employeeInfo)
+const {
+    clientName,
+    email,
+    clientPANNO,
+    designation,
+    clientInformationID,
+    companyName,
+    departmentName,
+    municipality,
+    province,
+    district,
+    phone,
+    municipalityNumber,
+    university,
+    college,
+    level,
+    degree,
+    description,
+    firstOrganizationName,
+    firstDuration,
+    firstTitle,
+    secondOrganizationName,
+    secondDuration,
+    secondTitle,
+    imageData
     
-    const skills = matchedUser? matchedUser.skills : "no skills";
-    const skillSets= skills.$values
-    console.log(skillSets)
+  } = employeeInfo
+
+  const skillSets = employeeInfo.skills.$values
+  console.log(imageData)
+
+  
   
     // console.log(matchedUser)
 // console.log(skills)
@@ -71,12 +77,17 @@ const matchedUser = location.state?.matchedUser;
                 <div className='flex flex-col p-2 download-pdf'>
                     <div className='bg-[#121214] h-[10rem] flex gap-56 pl-8 items-center'>
                         <div className='w-[400px] '>
-                        <h1 className='text-[#48a7ff] font-helvetica m-0 p-0'>{name}</h1> 
-                        <h4 className='mt-1 p-0 text-white font-helvetica'>{ role}</h4>
+                        <h1 className='text-[#48a7ff] font-helvetica m-0 p-0'>{clientName}</h1> 
+                        <h4 className='mt-1 p-0 text-white font-helvetica'>{ designation}</h4>
                         <p className='text-white font-helvetica '>{description}</p>
                         </div>
                     <div>
-                    <div className='circle-image' style={{ backgroundImage: `url(${handshake})` }}></div>
+                    <div className='circle-image' >
+                        {/* <img src={`data:image/jpg;base64,${imageData}`} alt= 'location' className=' w-16 h-16  '/> */}
+                        <div className='image-container' style={{ backgroundImage: `url(data:image/jpg;base64,${imageData})` }}></div>
+                        
+                    </div>
+                    
                     </div>
                     </div>
                     
@@ -136,14 +147,20 @@ const matchedUser = location.state?.matchedUser;
                             </div>
                         </div>
                         <div className='w-[65%]'>
-                            <div className='flex flex-col pl-6 pt-1'>
-                                <div className='flex flex-col gap-1'>
-                                <h3 className='text-[#265683] m-0 p-0'>Project Works</h3>
+                            <div className='flex flex-col pl-6 pt-1 gap-6'>
+                                <div className='flex flex-col gap-3'>
+                                <h3 className='text-[#265683] m-0 p-0'>Current Company</h3>
                                 <hr className='h-[2px] w-[5rem] m-0'></hr>
-                                <h4 className='p-0 m-0 text-[#1b1b1b] text-sm font-semibold'>{firstProject}</h4>
-                                <li className='p-0 m-0 text-sm font-thin'>{firstProjectDescription}</li>
-                                <h5 className='p-0 m-0 text-[#1b1b1b] text-sm font-semibold'>{secondProject}</h5>
-                                <li className='p-0 m-0 text-sm font-thin'>{secondProjectDescription}</li>
+                                <h4 className='p-0 m-0 text-[#1b1b1b] font-semibold'>{companyName}</h4>
+
+                                </div>
+                                <div className='flex flex-col gap-3'>
+                                <h3 className='text-[#265683] m-0 p-0'>Work Experiences</h3>
+                                <hr className='h-[2px] w-[5rem] m-0'></hr>
+                                <h5 className='p-0 m-0 text-[#1b1b1b] font-semibold'>{`${firstOrganizationName} (${firstDuration})`}</h5>
+                                <li className='p-0 m-0 text-sm font-thin'>{firstTitle}</li>
+                                <h5 className='p-0 m-0 text-[#1b1b1b] font-semibold'>{`${secondOrganizationName} (${secondDuration})`}</h5>
+                                <li className='p-0 m-0 text-sm font-thin'>{secondTitle}</li>
                                 </div>
 
                             </div>

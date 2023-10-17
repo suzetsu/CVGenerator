@@ -221,6 +221,7 @@ const IsSameEmail = (email) => {
                                     <option value=""></option>
                                     <option value="User">User</option>
                                     <option value="Admin">Admin</option>                     
+                                    <option value="SuperAdmin">SuperAdmin</option>                     
             </select>
           </div>
           {errorRole && <p className='error-message2'>{errorRole}</p>}

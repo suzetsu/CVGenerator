@@ -18,22 +18,24 @@ export const login = (email, password) => async (dispatch) => {
   // };
   try {
     const response = await axios.post(
-      "http://192.168.0.104:7270/api/Authentication/Login",
+      "http://192.168.0.102:7270/api/Authentication/Login",
       { email, password },
-      // {
-        
-      //   headers: { 'Authorization': 'Bearer UmbrellaSolutions'},
-      // }
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
     );
 
     const token = response.data.token;
     // console.log(token);
     const role = response.data.roleName
-    console.log(role);
+    // console.log(role);
    
     if (token) {
       dispatch({ type: actionTypes.LOGIN_SUCCESS, payload: token });
       dispatch({type:actionTypes.SET_USER_ROLE, payload:role})
+      localStorage.setItem('tokendata', JSON.stringify({token, role})); 
       // dispatch(setUserRole(userRole));
       return { success: true };
     } else {
@@ -46,63 +48,26 @@ export const login = (email, password) => async (dispatch) => {
     return { success: false };
   }
 };
+export const logout = () => (dispatch) => {
+  // Clear the token and role by dispatching LOGOUT action
+  dispatch({ type: actionTypes.LOGOUT });
+
+  // Perform any other necessary logout actions (e.g., clearing local storage)
+
+  // Redirect the user to the login page
+  // history.push('/login'); // Replace with your actual route
+};
 
 
 
-export const storeClientInfo = (clientName,
-  clientPANNO,
-  companyName,
-  departmentName,
-  designation,
-  municipality,
-  municipalityNumber,
-  province,
-  district,
-  email,
-  phone,
-  university,
-  college,
-  level,
-  degree,
-  description,
-  firstOrganizationName,
-  firstDuration,
-  firstTitle,
-  secondOrganizationName,
-  secondDuration,
-  secondTitle,
-  skills) => async (dispatch) => {
+export const storeClientInfo = (formData) => async (dispatch) => {
   try {
     const response = await axios.post(
-      "http://192.168.0.104:7270/api/Client",
+      "http://192.168.0.102:7270/api/Client",
       
-        clientName,
-        clientPANNO,
-        companyName,
-        departmentName,
-        designation,
-        municipality,
-        municipalityNumber,
-        province,
-        district,
-        email,
-        phone,
-        university,
-        college,
-        level,
-        degree,
-        description,
-        firstOrganizationName,
-        firstDuration,
-        firstTitle,
-        secondOrganizationName,
-        secondDuration,
-        secondTitle,
-        skills,
+        formData,
       {
-        headers: { 
-          "Content-Type": "application/json",
-        }
+        
       }
       
       
@@ -128,7 +93,7 @@ export const storeClientInfo = (clientName,
 
 export const fetchClientInfo = () => async (dispatch) => {
   try {
-    const response = await axios.get("http://192.168.0.104:7270/api/Client/GetAllClients");
+    const response = await axios.get("http://192.168.0.102:7270/api/Client/GetAllClients");
 
     if (response.status === 200) {
       // Assuming the response data contains the client information
@@ -149,7 +114,7 @@ export const fetchClientInfo = () => async (dispatch) => {
 
 export const deleteClientInfo = (clientInformationID) => async (dispatch) => {
   try {
-    const response = await axios.delete(`http://192.168.0.104:7270/api/Client/${clientInformationID}`);
+    const response = await axios.delete(`http://192.168.0.102:7270/api/Client/${clientInformationID}`);
     if (response.status === 200) {
       dispatch({ type: actionTypes.CLIENT_INFO_DELETE_SUCCESS });
     }
@@ -160,7 +125,7 @@ export const deleteClientInfo = (clientInformationID) => async (dispatch) => {
 
 export const updateClientInfo = (clientInformationID, updatedClient) => async (dispatch) => {
   try {
-    const response = await axios.put(`http://192.168.0.104:7270/api/Client/${clientInformationID}`,
+    const response = await axios.put(`http://192.168.0.102:7270/api/Client/${clientInformationID}`,
     updatedClient,
     {
       headers: { 

@@ -17,7 +17,7 @@ const initialState = {
   errorUsermail : null,
 
   // matchingClient: null,
-  // role: "",
+  
 };
 
 
@@ -26,9 +26,17 @@ const authReducer = (state = initialState, action) => {
 
     //Login action
     case actionTypes.LOGIN_SUCCESS:
-      return { ...state, token: action.payload };
+      return { ...state, token: action.payload, role: action.payload };
+
     case actionTypes.LOGIN_FAILURE:
-      return { ...state, token: null };
+      return { ...state, token: null, role : null };
+
+      case actionTypes.LOGOUT:
+      return {
+        ...state,
+        token: null,
+        role: null,
+      };
 
       //Role Creation
     case actionTypes.USER_CREATE_SUCCESS:

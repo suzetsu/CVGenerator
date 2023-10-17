@@ -79,4 +79,10 @@ $primary-color: #dbdbdb;
     color: #4a5568;
   }
 }
-
+.logout-text{
+  &:hover{
+    cursor: pointer;
+    color: #f13a49;
+    
+  }
+}

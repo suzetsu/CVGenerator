@@ -9,6 +9,7 @@ import { updateCompanyInfo } from '../Redux/companyActions';
 import {deleteCompanyInfo} from '../Redux/companyActions'
 import '../Role/roletable.css'
 import ViewDepartment from './viewDepartment';
+import { login } from '../Redux/actions';
 
 
 const CompanyDetailsPopup = ({ companyInfo, onClose, onUpdate }) => {
@@ -35,8 +36,8 @@ const CompanyDetailsPopup = ({ companyInfo, onClose, onUpdate }) => {
   };
 
   return (
-    <div className=''>
-      <div className='popup-content'>
+    <div className='popup-container-edit'>
+      <div className='popup-content-edit'>
         <h2>Edit Company Details</h2>
         <div className='flex flex-col gap-2'>
         <div className='info-input-field'>
@@ -92,10 +93,21 @@ const CompanyDetailsPopup = ({ companyInfo, onClose, onUpdate }) => {
   );
 };
 
-const ViewCompany = () => {
+const ViewCompany = ({ isLoggedIn}) => {
 
     const [showDetailsPopup, setShowDetailsPopup] = useState(false);
     const [selectedCompany, setSelectedCompany] = useState(null);
+    const role= JSON.parse(localStorage.getItem("tokendata")).role;
+
+    console.log(role);
+    
+     const roleName = useSelector(state => state.auth.role);
+     useEffect (() => {
+       dispatch(login())
+     }, [])
+     console.log(isLoggedIn)
+
+     
     
 
 
@@ -133,6 +145,7 @@ console.log(companyDetails)
     
 
     dispatch(deleteCompanyInfo(CompanyId))
+    window.location.reload()
   }
     
   
@@ -167,20 +180,19 @@ console.log(companyDetails)
   
 
   return (
-    <div className='flex flex-col bg-[#F0F4F3] h-[100vh] '>
-      <div>
-        <Navbar />
-      </div>
+    <div className='bg-[#F0F4F3] h-[100vh]'>
+    <div className='flex flex-col '>
+     
       
       <div className='flex flex-col justify-center pt-32 items-center'>
-      <div className='text-[#666] pt-[3rem] font-helvetica pl-4 text-lg font-bold'>
+      <div className='text-[#666] font-helvetica pl-4 text-lg font-bold'>
         Company Details
       </div>
 
                   <table className='m-[1rem]'>
                     <thead>
                     <tr>
-                        <th colSpan={1}>I.D.</th>
+                        <th colSpan={1}>S.N.</th>
                         <th>Company Name</th>
                         <th>Email</th>
                         <th>Address</th>
@@ -191,10 +203,13 @@ console.log(companyDetails)
                   
                         {/* <RoleTable Users={Users} /> */}
                     {
-                    Array.isArray(companyDetails.$values) && companyDetails.$values.map((company, index) => {
+                    Array.isArray(companyDetails.$values) ? 
+                    ( 
+                      companyDetails.$values.map((company, index) => {
                         const name = company.name;
                         const email = company.email;
                         const address = company.address
+                    
                         
                     return (
                         <tbody>
@@ -206,7 +221,7 @@ console.log(companyDetails)
                                 <td>
                                     <div className='flex gap-2'>
                                     <p className='m-0 p-0 underline border-b-2 cursor-pointer' onClick={() => handleEditClick(company)}>Edit</p>
-                                    <p className='m-0 p-0 underline cursor-pointer'onClick={() => handleDeleteCompany(company)}>Delete</p>
+                                    {role === 'SuperAdmin' && <p className='m-0 p-0 underline border-b-2 cursor-pointer' onClick={() => handleDeleteCompany(company)}>Delete</p>}
                                     </div>
                                 </td>
                                 <td>
@@ -216,8 +231,11 @@ console.log(companyDetails)
                                 </td>
                             </tr>
                         </tbody>
-                    )
-                    })}
+                    );
+                    })
+                  ) : (
+                    'No Data'
+                  )}
 
                   </table>
 
@@ -233,6 +251,7 @@ console.log(companyDetails)
       )}
       
       
+</div>
 </div>
   )
 }

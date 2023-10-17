@@ -11,28 +11,39 @@ import jsPDF from 'jspdf'
 function SecondCVTemp() {
 
     const location = useLocation();
-    const matchedUser = location.state?.matchedUser;
-    const name = matchedUser? matchedUser.clientName : "no client";
-    const role = matchedUser? matchedUser.role : "no role";
-    const email = matchedUser? matchedUser.email : "no email";
-    const phone = matchedUser? matchedUser.phone : "no phone";
-    const PANNO = matchedUser? matchedUser.clientPANNO : "no PAN";
-    const municipality = matchedUser? matchedUser.municipality : "no municipality";
-    const municipalityNumber = matchedUser? matchedUser.municipalityNumber : "no municipality";
-    const district = matchedUser? matchedUser.district : "no district";
-    const province = matchedUser? matchedUser.province : "no province";
-    const university = matchedUser? matchedUser.university : "no university";
-    const college = matchedUser? matchedUser.college : "no college";
-    const level = matchedUser? matchedUser.level : "no level";
-    const degree = matchedUser? matchedUser.degree : "no degree";
-    const description = matchedUser? matchedUser.description : "no description";
-    const firstProject = matchedUser? matchedUser.firstProject : "no first project";
-    const secondProject = matchedUser? matchedUser.secondProject : "no second project";
-    const firstProjectDescription = matchedUser? matchedUser.firstProjectDescription : "no first project";
-    const secondProjectDescription = matchedUser? matchedUser.secondProjectDescription : "no second project";
+const employee = location.state;
+
+const employeeInfo = employee.employee
+console.log(employeeInfo)
+const {
+    clientName,
+    email,
+    clientPANNO,
+    designation,
+    clientInformationID,
+    companyName,
+    departmentName,
+    municipality,
+    province,
+    district,
+    phone,
+    municipalityNumber,
+    university,
+    college,
+    level,
+    degree,
+    description,
+    firstOrganizationName,
+    firstDuration,
+    firstTitle,
+    secondOrganizationName,
+    secondDuration,
+    secondTitle,
     
-    const skills = matchedUser? matchedUser.skills : "no skills";
-    const skillSets= skills.$values
+  } = employeeInfo
+
+  const skillSets = employeeInfo.skills.$values
+  console.log(skillSets)
 
     const [loader, setLoader] = useState(false);
 
@@ -90,7 +101,7 @@ function SecondCVTemp() {
                     <div className='flex flex-col'>
                         <div className='flex flex-col gap-2'>
                             <div className=' font-helvetica font-bold text-lg '>
-                                {name}
+                                {clientName}
                             </div>
                             <div className='flex gap-10 pb-0'>
                             <div className='flex'>
@@ -159,20 +170,20 @@ function SecondCVTemp() {
                                 </div>
                                 <div className='w-[25rem]'>
                                     <h2 className=' m-0 p-0 font-helvetica font-bold text-lg text-[#5f0aa8]'>
-                                        PROJECTS
+                                        Currently Working
                                     </h2>
                                     <hr className='h-[3px]  bg-[#5f0aa8]' ></hr>
                                 </div>
                                 <div>
                                     <div className='flex flex-col gap-1 font-helvetica'>
-                                        <div className='text-sm font-semibold'>{firstProject}</div>
-                                        <div className=' text-xs '>{firstProjectDescription}</div>
+                                        <div className='text-sm font-semibold'>{companyName}</div>
+                                        {/* <div className=' text-xs '>{firstTitle}</div> */}
                                     </div>
                                 </div>
                                 <div>
                                     <div className='flex flex-col gap-1 font-helvetica'>
-                                        <div className='text-sm font-semibold'>{secondProject}</div>
-                                        <div className=' text-xs '>{secondProjectDescription}</div>
+                                        <div className='text-sm font-semibold'></div>
+                                        <div className=' text-xs '></div>
                                     </div>
                                 </div>
                                 <div className='w-[25rem]'>
@@ -221,14 +232,14 @@ function SecondCVTemp() {
                                 </div>
                                 <div>
                                     <div className='flex flex-col gap-1 font-helvetica'>
-                                        <div className='text-sm font-semibold'>ABC at ABC</div>
-                                        <div className=' text-xs '>ABC work Description</div>
+                                        <div className='text-sm font-semibold'>{`${firstOrganizationName} (${firstDuration})`}</div>
+                                        <div className=' text-xs '>{firstTitle}</div>
                                     </div>
                                 </div>
                                 <div>
                                     <div className='flex flex-col gap-1 font-helvetica'>
-                                        <div className='text-sm font-semibold'>ABC at ABC</div>
-                                        <div className=' text-xs '>ABC Work Description</div>
+                                        <div className='text-sm font-semibold'>{`${secondOrganizationName} (${secondDuration})`}</div>
+                                        <div className=' text-xs '>{secondTitle}</div>
                                     </div>
                                 </div>
                                 <div>

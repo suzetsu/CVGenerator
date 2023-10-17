@@ -22,7 +22,7 @@ import { useSelector } from 'react-redux';
 
 const ProtectedRoute = ({ isLoggedIn, children }) => {
   if (!isLoggedIn) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/" />;
   }
   else {
     return children;

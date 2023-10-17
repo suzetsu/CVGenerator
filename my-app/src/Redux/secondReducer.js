@@ -1,10 +1,12 @@
 import * as actionTypes from './actionTypes';
 
 const initialState = {
-    companyCreationStatus: null,
+    companyCreationStatus: '',
     companyData: '',
     companyUpdateStatus : null,
     companyDeleteStatus : null,
+    departmentData: '',
+    districtData: ''
 }
 
 const companyReducer = (state = initialState, action) => {
@@ -16,7 +18,7 @@ const companyReducer = (state = initialState, action) => {
         case actionTypes.FETCH_COMPANY_INFO_SUCCESS:
             return { ...state, companyData: action.payload };
         case actionTypes.FETCH_COMPANY_INFO_FAILURE:
-            return { ...state, companyData: 'error' };
+            return { ...state, companyData: null };
         case actionTypes.COMPANY_UPDATE_SUCCESS:
             return { ...state, companyUpdateStatus: 'success' };
         case actionTypes.COMPANY_UPDATE_FAILURE:
@@ -25,6 +27,14 @@ const companyReducer = (state = initialState, action) => {
             return { ...state, companyDeleteStatus: 'success' };
         case actionTypes.COMPANY_DELETE_FAILURE:
             return { ...state, companyDeleteStatus: 'failure' };
+        case actionTypes.GET_ALL_DEPARTMENTS_SUCCESS:
+            return { ...state, departmentData: action.payload };
+        case actionTypes.GET_ALL_DEPARTMENTS_FAILURE:
+            return { ...state, departmentData: null };
+        case actionTypes.GET_ALL_DISTRICT_SUCCESS:
+            return { ...state, districtData: action.payload };
+        case actionTypes.GET_ALL_DISTRICT_FAILURE:
+            return { ...state, districtData: null };
         default:
             return state;
     }

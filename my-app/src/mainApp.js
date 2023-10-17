@@ -1,4 +1,3 @@
-import React, { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './Login/LoginPage'
 import Signup from './Signup/signup';
@@ -11,69 +10,76 @@ import CVGenerate from './CustomerDetails/CVtemplate/CVGenerate';
 import Update from './CustomerDetails/InfoComponents/Update';
 import AddCompany from './Company/addCompany';
 import ViewCompany from './Company/viewCompany';
-import AddRole from './Role/addRole';
 import ViewRole from './Role/viewRole';
-import Layout from './Layout';
 import ViewDepartment from './Company/viewDepartment';
 import EmployeeList from './Employee/employeeList';
 import CustomDropdown from './CustomerDetails/InfoComponents/customDropdown';
-// import CVContainer from './CustomerDetails/CVtemplate/CVData';
-// import { configureStore } from '@reduxjs/toolkit';
-// import authReducer from './Redux/reducers';
-import store from './Redux/store';
-import RoleSelect from './RoleSelection/roleSelect';
-import ProtectedRoute from './ProtectedRoutes';
-import { useSelector } from 'react-redux';
-import { Navigate } from 'react-router-dom';
-
-// const store = configureStore({
-//   reducer: authReducer
-// })
+import ViewAllEmployee from './Employee/viewAllEmployee';
+import NavBar from './Dashboard/Navbar';
+import TemplateList from './CustomerDetails/CVtemplate/templateList';
 
 
-const MainApp = (props) => {
-//   const { isLoggedIn} = useAuth();
-const isLoggedIn = useSelector((state) => state.auth.token);
-console.log(isLoggedIn);
 
-console.log(isLoggedIn);
+const MainApp = () => {
+
+
 
 return (
-    <Routes>
-             <Route path="/" element={<Login />} />
-             <Route path="/signup" element={<Signup />} />
-             
-
-        
-        {/* <Route
-            path="/Info"
-            element={
-                <ProtectedRoute isLoggedIn={isLoggedIn}>
-                <Info />
-                </ProtectedRoute>
-            }
-            /> */}
-            <Route path="/Main" element={<Main />} />
-              <Route path="/Info" element={<Info />} />
-              <Route path="/CVGenerate" element={<CVGenerate />} />         
-              <Route path="/Update" element={<Update />} />
-              <Route path="/CVTemp" element={<CVTemp />} />
-              <Route path="/SecondCVTemp" element={<SecondCVTemp />} />
-              <Route path="/ThirdCVTemp" element={<ThirdCVTemp />} />
-              <Route path="/addCompany" element={<AddCompany />} />
-              <Route path="/RoleSelect" element={<RoleSelect />} />
-              <Route path="/viewCompany" element={<ViewCompany />} />
-              <Route path="/addRole" element={<AddRole />} />
-              <Route path="/viewRole" element={<ViewRole />} />
-              <Route path="/viewDepartment" element={<ViewDepartment />} />
-              <Route path="/employeeList" element={<EmployeeList />} />
-              <Route path="/customDropdown" element={<CustomDropdown />} />
-
     
-    </Routes>
-)
+        <Routes>
+           
+                
+                <Route path="/login" element={<Login />} />
+                
+                <Route path = '/' element={<NavBar   />}>
+                    <Route path="main" element={<Main  />}/>
+                    
+                    <Route path="Info" element={<Info  />} />
+                   
+                    <Route path="CVGenerate" element={<CVGenerate    />} />         
+                    <Route path="Update" element={<Update />} />
+                   
+                    <Route path="addCompany" element={<AddCompany   />} />
+                    
+                    <Route path="viewCompany" element={<ViewCompany />} />
+                    <Route path="viewRole" element={<ViewRole  />} />
+                    <Route path="viewDepartment" element={<ViewDepartment  />} />
+                    <Route path="employeeList" element={<EmployeeList  />} />
+                    <Route path="customDropdown" element={<CustomDropdown />} />
+                    <Route path="viewAllEmployee" element={<ViewAllEmployee  />} /> 
+                    <Route path="signup" element={<Signup />} />
+                    <Route path="TemplateList" element={<TemplateList />} />
 
-}
+                </Route>
+               
+                <Route path="CVTemp" element={<CVTemp />} />
+                    <Route path="SecondCVTemp" element={<SecondCVTemp />} />
+                    <Route path="ThirdCVTemp" element={<ThirdCVTemp />} />
+                
+                {/*            
+                <Route
+                    path="/main"
+                    element={
+                        <ProtectedRoute isLoggedIn={isLoggedIn}>
+                        <Main />
+                        
+                        </ProtectedRoute>
+                    }
+                    /> */}
+                
+                
+
+
+      
+            
+    
+                </Routes>
+             
+             )
+
+            }
+        
+
 export default MainApp;
         
       

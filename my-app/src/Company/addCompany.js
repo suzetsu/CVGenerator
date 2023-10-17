@@ -1,14 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { createCompany } from '../Redux/companyActions'
 import { fetchCompanyInfo } from '../Redux/companyActions'
+import { GetAllDepartments, GetAllDistricts } from '../Redux/departmentActions'
 import Navbar from '../Dashboard/Navbar'
 import './styleCompany.css'
 import Logo from '../images/Logo.png'
+import '../CustomerDetails/InfoComponents/infoStyles.css'
 
 
 
-const AddCompany = () => {
+const AddCompany = ({token}) => {
 
     const [PAN, setPAN] = useState('')
     const [name, setName] = useState('') 
@@ -18,8 +20,46 @@ const AddCompany = () => {
     const [currentDepartment, setCurrentDepartment] = useState(''); // Store current input department
     const [error, setError] = useState('')
     const successStatus = useSelector(state => state.company.companyCreationStatus)
+    const companyData = useSelector(state => state.company.companyData)
+
+    const departmentData = useSelector(state => state.company.departmentData)
+    let departmentNames = Array.isArray(departmentData.$values)
+  ? departmentData.$values.map((department) => department.departmentName)
+  : [];
+    const [showDepartmentOptions, setShowDepartmentOptions] = useState(false);
+
+    const IsSameName = (name) => {
+      if (companyData && companyData.$values) {
+         const matchingName = companyData.$values.find(
+           (client) => client.companyName === name
+         )
+         return matchingName;
+        
+     }
+     return null
+     
+ }
+  
+    
+    
 
     const dispatch = useDispatch()
+
+    // const token = useSelector((state)=> state.auth.token)
+    console.log(token)
+    
+    
+    useEffect(() => {
+        
+        dispatch(GetAllDepartments())
+        dispatch(GetAllDistricts())
+    }, [])
+
+    
+ 
+    const handleDepartmentInputChange = (e) => {
+      setCurrentDepartment(e.target.value);
+    }
 
     const handleKeyPress = (e) => {
       // Handle keypress in the input field
@@ -33,18 +73,23 @@ const AddCompany = () => {
         }
       }
     };
-  
+  const handleDepartmentInputChangeFocus = (e) => {
+    // Handle focus in the input field
+    setShowDepartmentOptions(!showDepartmentOptions);
+
+  }
     const removeDepartment = (index) => {
-      // Remove a role from the roles array
+      // Remove a department from the roles array
       const updatedDepartment = [...departments];
       updatedDepartment.splice(index, 1);
       setSelectedDepartment(updatedDepartment);
 
     };
-    const handleDepartmentSelect = (e) => {
+    const handleDepartmentSelect = (option) => {
       // Handle the selection of roles from the dropdown
-      const selectedDepartment = e.target.value;
-      setSelectedDepartment([...departments, selectedDepartment]);
+      
+      setSelectedDepartment([...departments, option]);
+      setShowDepartmentOptions(false);
     };
     const handlePanChange = (e) => {
       setPAN(e.target.value)
@@ -70,39 +115,36 @@ const AddCompany = () => {
         );
     }
 
-
+  
 
     const handleClick = (e) => {
+      
       e.preventDefault();
-      if (PAN === '' || name === '' || email === '' || address === '') {
+      
+      setError('');
+      if (!PAN || !name || !email || !address || !departments) {
         setError('Please fill all the fields')
       }
       else if (!isValidEmail(email)){
         setError('Invalid Email')
       }
+      else if (IsSameName(name)){
+        setError('Company name already exists')
+      }
       else{
         dispatch(createCompany({ PAN, name, address, email, departments } ));
+        console.log(successStatus)
         setError('') 
-      }
-      if (successStatus === 'success'){
-        setName('')
-        setEmail('')
-        setAddress('')
-        setPAN('')
-        alert('Company Added Successfully')
-      }else if (successStatus === 'failure'){
-        alert('Company Not Added')
-      }
-        
+    }
     }
     
 
   return (
     // <div className='flex justify-center h-[100vh] items-center bg-[#F0F4F3]'>
       <div className='flex flex-col bg-[#F0F4F3] h-[100vh] '>
-      <div>
+      {/* <div>
         <Navbar />
-      </div>
+      </div> */}
     <div className='flex justify-center pt-32'>
     <div className='shadow-paper flex flex-col justify-center items-center bg-white pl-10 pr-10 pb-5 pt-5'>
     <div>
@@ -118,16 +160,25 @@ const AddCompany = () => {
     <div>
     <div className=' flex flex-col gap-2 pt-4 pb-4 '>
     <div className='info-input-field-company'>
-    <input type='text' value={currentDepartment} onKeyPress={handleKeyPress} placeholder='Choose Department' onChange={(e) =>{ setCurrentDepartment(e.target.value)}}/>
-    <select value={currentDepartment} onChange={handleDepartmentSelect} className='info-input-field-select'>
-                                    <option value=""></option>
-                                    <option value="Development">Development</option>
-                                    <option value="Design">Design</option>
-                                    <option value="QA">QA</option>
-                                    <option value="Human Resource">Human Resource</option>
-                                    <option value="Technical">Technical</option>
-                                    
-    </select>
+    <input 
+                                type='text' 
+                                value={currentDepartment} 
+                                placeholder='Department Name' 
+                                onChange = {handleDepartmentInputChange}
+                                onFocus={handleDepartmentInputChangeFocus}
+                                onKeyPress={handleKeyPress}
+                                />
+                                {showDepartmentOptions && (
+                                    <div className='absolute'>
+                                    <div className='autocomplete-options'>
+                                      {departmentNames.map((option) => (
+                                        <div key={option} className='option' onClick={() => handleDepartmentSelect(option)} >
+                                          {option}
+                                          </div>
+                                      ))}
+                                      </div>
+                                    </div>
+                                )}
     </div>
           <div className='flex gap-2'>
                             {departments.map((department, index) => (
@@ -141,7 +192,7 @@ const AddCompany = () => {
                           
                         </div>))}
         </div>
-            <div className='info-input-field-company w-10'><input type='number' value={PAN} placeholder='Company PAN NO.' onChange={handlePanChange} /></div>
+            <div className='info-input-field-company w-10'><input type='text' value={PAN} placeholder='Company PAN NO.' onChange={handlePanChange} /></div>
             <div className='info-input-field-company'><input type='text' value={name} placeholder='Company Name' onChange={handleNameChange}/></div>
             <div className='info-input-field-company'><input type='text' value={address} placeholder='Company Address' onChange={handleAddressChange} /></div>
             <div className='info-input-field-company'><input type='email' value={email} placeholder='Company Email' onChange={handleEmailChange} /></div>
@@ -152,6 +203,7 @@ const AddCompany = () => {
         <button type='submit' className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer' onClick={handleClick}>Add Company</button>
     </div>
     {error && <p className='error-message flex justify-center'>{error}</p>}
+    {successStatus && <div className='success-message flex justify-center'>Company Added Successfully</div>}
     
     </div>
     </div>

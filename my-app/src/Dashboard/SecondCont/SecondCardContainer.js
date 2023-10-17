@@ -62,10 +62,10 @@ const SecondCardContainer = () => {
                       <div className='pt-3 pl-28'>
                           <img src={lot} alt='logo'/>
                       </div>
-                      <div className='pl-2 flex flex-col gap-3'>
+                      {/* <div className='pl-2 flex flex-col gap-3'>
                         <div className='font-helvetica text-sm font-semibold'>Vacant Jobs</div>
                         <div className='font-helvetica text-sm font-semibold'>04</div>
-                      </div>
+                      </div> */}
                     </div>
                     
                   </div>
@@ -76,7 +76,7 @@ const SecondCardContainer = () => {
         </div>
         <div>
             <div className='card5'>
-              <div className='flex flex-col pl-8 pt-16'>
+              {/* <div className='flex flex-col pl-8 pt-16'>
                 <div className='font-helvetica font-bold text-2xl'>Job Vacancy</div>
                 <div className='flex pt-6 gap-6'>
                   <div className='flex flex-col gap-3'>
@@ -115,7 +115,7 @@ const SecondCardContainer = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
         </div>
         <div>

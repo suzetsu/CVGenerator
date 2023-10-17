@@ -14,6 +14,7 @@ const ViewRole = () => {
         dispatch(fetchUserInfo());
     }, [])
     const Users = useSelector(state => state.auth.userData);
+    console.log(Users)
 
     console.log(Users)
 

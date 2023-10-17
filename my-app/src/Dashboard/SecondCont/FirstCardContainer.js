@@ -1,12 +1,50 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import './cards.scss'
 import circle from '../../images/blueCircle.png'
 import circle1 from '../../images/orangeCircle.png'
 import circle2 from '../../images/purpleCircle.png'
 import circle3 from '../../images/greenCircle.png'
 import parcels from '../../images/parcels.png'
+import { fetchClientInfo } from '../../Redux/actions'
+import { fetchCompanyInfo } from '../../Redux/companyActions'
+import { useDispatch, useSelector} from 'react-redux'
+import { UseSelector } from 'react-router-dom'
 
 const FirstCardContainer = () => {
+    const dispatch = useDispatch()
+
+    const clientInfo = useSelector(state => state.auth.clientData)
+    const companyInfo = useSelector(state => state.company.companyData)
+    const allCompany= companyInfo.$values
+    const allClients = clientInfo.$values
+    
+    
+    const getEmployeeCount = Array.isArray(clientInfo.$values)?clientInfo.$values.length:0
+        const getCompanyCount = Array.isArray(companyInfo.$values)?companyInfo.$values.length:0
+        function getTotalDepartmentCount(companyInfo) {
+            let totalCount = 0;
+          
+            if (companyInfo.$values && Array.isArray(companyInfo.$values)) {
+                companyInfo.$values.forEach(company => {
+                  if (company.departments && company.departments.$values) {
+                    totalCount += company.departments.$values.length;
+                  }
+                });
+              }
+          
+            return totalCount;
+          }
+          
+          // Call the function to get the total count of departments
+          const totalDepartmentCount = getTotalDepartmentCount(companyInfo);
+          
+    
+    
+    useEffect (() => {
+        dispatch(fetchClientInfo())
+        dispatch(fetchCompanyInfo())
+    },[])
+
   return (
     <div>
     <div className='first-card-container space-x-2'>
@@ -19,10 +57,10 @@ const FirstCardContainer = () => {
                             <img className='center-image' src={parcels} alt='parcels'/>
                         </div>
                     </div>
-                    <div className='inside-text pl-4 pt-12 text-white font-helvetica'>
-                        <div className='mb-2 '>User</div>
-                        <div className='text-xl font-bold mb-2'>450</div>
-                        <div className='mb-2'>60% Increase in 28 Days</div>
+                    <div className='inside-text pl-4 pt-16 text-white font-helvetica'>
+                        <div className='mb-2 '>Total Employees</div>
+                        <div className='text-xl font-bold mb-2'>{getEmployeeCount}</div>
+                        {/* <div className='mb-2'>60% Increase in 28 Days</div> */}
                     </div>
                 </div>
             </div>
@@ -36,10 +74,10 @@ const FirstCardContainer = () => {
                             <img className='center-image' src={parcels} alt='parcels'/>
                         </div>
                     </div>
-                    <div className='inside-text pl-4 pt-12 text-white '>
-                        <div className='mb-2 font-helvetica'>New Users</div>
-                        <div className='text-xl font-bold mb-2 font-helvetica'>155</div>
-                        <div className='mb-2 font-helvetica'>40% Increase in 28 Days</div>
+                    <div className='inside-text pl-4 pt-16 text-white '>
+                        <div className='mb-2 font-helvetica'>Total Company</div>
+                        <div className='text-xl font-bold mb-2 font-helvetica'>{getCompanyCount}</div>
+                        {/* <div className='mb-2 font-helvetica'>40% Increase in 28 Days</div> */}
                     </div>
                 </div>
 
@@ -54,10 +92,10 @@ const FirstCardContainer = () => {
                             <img className='center-image' src={parcels} alt='parcels'/>
                         </div>
                     </div>
-                    <div className='inside-text pl-4 pt-12 text-white '>
-                        <div className='mb-2 font-helvetica'>Jobs</div>
-                        <div className='text-xl font-bold mb-2 font-helvetica'>52</div>
-                        <div className='mb-2 font-helvetica'>80% Increase in 28 Days</div>
+                    <div className='inside-text pl-4 pt-16 text-white '>
+                        <div className='mb-2 font-helvetica'>Total Departments</div>
+                        <div className='text-xl font-bold mb-2 font-helvetica'>{totalDepartmentCount}</div>
+                        {/* <div className='mb-2 font-helvetica'>80% Increase in 28 Days</div> */}
                     </div>
                 </div>
             </div>
@@ -72,9 +110,9 @@ const FirstCardContainer = () => {
                         </div>
                     </div>
                     <div className='inside-text pl-4 pt-12 text-white '>
-                        <div className='mb-2 font-helvetica'>Hired</div>
+                        {/* <div className='mb-2 font-helvetica'>Hired</div>
                         <div className='text-xl font-bold mb-2 font-helvetica'>Rs. 20,00,000</div>
-                        <div className='mb-2 font-helvetica'>60% Increase in 28 Days</div>
+                        <div className='mb-2 font-helvetica'>60% Increase in 28 Days</div> */}
                     </div>
                 </div>
             </div>
