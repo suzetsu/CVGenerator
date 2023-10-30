@@ -38,7 +38,8 @@ const {
     secondOrganizationName,
     secondDuration,
     secondTitle,
-    imageData
+    imageData,
+    experiences
     
   } = employeeInfo
 
@@ -162,6 +163,17 @@ const {
                                 <h5 className='p-0 m-0 text-[#1b1b1b] font-semibold'>{`${secondOrganizationName} (${secondDuration})`}</h5>
                                 <li className='p-0 m-0 text-sm font-thin'>{secondTitle}</li>
                                 </div>
+                                {/* <div className='flex flex-col gap-3'>
+                                    <h3 className='text-[#265683] m-0 p-0'>Work Experiences</h3>
+                                    <hr className='h-[2px] w-[5rem] m-0'></hr>
+                                    {experiences.map((experience, index) => (
+                                        <div>
+                                        <h5 className='p-0 m-0 text-[#1b1b1b] font-semibold'>{`${experience.organizationName} (${experience.duration})`}</h5>
+                                        <li className='p-0 m-0 text-sm font-thin'>{experience.title}</li>
+                                        </div>
+                                    ))}
+                                    
+                                </div> */}
 
                             </div>
                         </div>

@@ -70,3 +70,17 @@
 .next-button {
   margin-left: 10px; /* Adjust the spacing between buttons */
 }
+
+.pagination span {
+  font-size: 16px;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+/* Style for the page number dropdown */
+.pagination-dropdown {
+  padding: 4px 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}

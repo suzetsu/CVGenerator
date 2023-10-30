@@ -28,6 +28,7 @@ const ViewAllEmployee = () => {
     // console.log(clientData.$values.map((image) => image.imageData));
     // const imageData = Array.isArray(clientData.$values) ? clientData.$values.map((image) => image.imageData): [];
     // console.log(imageData);
+    
     // Function to get the data for the current page
   const getCurrentPageData = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -120,7 +121,24 @@ const ViewAllEmployee = () => {
         setSelectedEmployeeInfo(client);
         setIsCVGeneratePopupOpen(true);
       }
+// Calculate the total number of pages
+const totalPages = Math.ceil(filteredClientData.length / itemsPerPage);
 
+// Function to generate an array of page numbers
+const getPageNumbers = () => {
+  const pageNumbers = [];
+  for (let i = 1; i <= totalPages; i++) {
+    pageNumbers.push(i);
+  }
+  return pageNumbers;
+};
+
+const pageNumbers = getPageNumbers();
+
+// Function to handle selecting a specific page
+const handlePageSelect = (page) => {
+  setCurrentPage(page);
+};
 
   return (
     <div  className='flex flex-col gap-9'>
@@ -172,29 +190,11 @@ const ViewAllEmployee = () => {
 
         <div className=' flex flex-col gap-4'>
 
-          <div className="pagination flex gap-[43rem] justify-center ">
-            <div>
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              className="pagination-button previous-button"
-            >
-              &larr; Previous
-            </button>
-            </div>
-            <div>
-            <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage * itemsPerPage >= filteredClientData.length}
-              className="pagination-button next-button"
-            >
-              Next &rarr;
-            </button>
-            </div>
-          </div>
+          
+            <div className='flex flex-col justify-center items-center pb-8 gap-4'>
+            
        
-            <div className='flex justify-center items-center pb-8'>
-          <table className='m-0 p-0'>
+          <table className='m-0 p-0' >
             <thead>
             <tr>
                 <th colSpan={1}>S.N.</th>
@@ -242,6 +242,47 @@ const ViewAllEmployee = () => {
             }): null}
             
           </table>
+          {/* Pagination navigation */}
+      
+          <div className="pagination flex gap-[1rem] justify-center ">
+            <div>
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="pagination-button previous-button"
+            >
+              &larr; Previous
+            </button>
+            </div>
+       <div className='pagination flex gap-2 justify-center pt-1'>
+        <div>
+          <span>Page {currentPage} of {totalPages}</span>
+        </div>
+        <div>
+          {/* Dropdown to select a specific page */}
+          <select
+            value={currentPage}
+            onChange={(e) => handlePageSelect(Number(e.target.value))}
+            className='pagination-dropdown'
+          >
+            {pageNumbers.map((page) => (
+              <option key={page} value={page}>
+                {page}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+            <div>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage * itemsPerPage >= filteredClientData.length}
+              className="pagination-button next-button"
+            >
+              Next &rarr;
+            </button>
+            </div>
+          </div>
           </div>
         
 

@@ -1,0 +1,115 @@
+@font-face {
+    font-family: 'Sole Sans Extended'; /* You can use any name you want */
+    src: url('https://fonts.google.com/noto/specimen/Noto+Sans?query=Sans') format('woff2'); /* Update the path to your font file */
+}
+
+.main-cont{
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.image-css img{
+    height: 245px;
+    width: 100%;
+    object-fit: cover;
+    position: absolute  ;
+}
+.image-css p{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    color: #FFF;
+    font-family: Sole Sans Extended;
+    font-size: 50px;
+    font-style: normal;
+    font-weight: 900;
+    line-height: normal;
+}
+.second-cont {
+    background-color: #E9E5E5;
+    
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+.second-cont-child{
+    display: flex;
+    justify-content: center;
+    
+}
+.intro-part{
+    display: flex;
+
+}
+.left-text{
+    display: flex;
+    flex-direction: column;
+    width: 436px;
+    padding-top: 4rem;
+
+}
+.right-text{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 436px;
+    /* padding-top: 4rem; */
+}
+.butwal-hiils{
+    color: #58595A;
+    font-family: Sole Sans Extended;
+    font-size: 55px;
+    font-style: normal;
+    font-weight: 900;
+    line-height: normal;
+    margin: 0;
+    padding: 0;
+}
+.all-texts{
+    color: #58595A;
+    display: flex;
+    font-family: Sole Sans Extended;
+    font-size: 55px;
+    font-style: normal;
+    font-weight: 900;
+    line-height: normal;
+    margin: 0;
+    padding: 0;
+}
+.break-sentence{
+    display: flex;
+    gap : 1rem;
+    font-family: 'Poppins';
+    color: #000;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    text-transform: uppercase;
+}
+.break-sentence p{
+    margin: 0;
+    padding: 0;
+}
+.break-sentence img{
+    width: 3px;
+    height: 37px;
+    margin-top: 5px;
+    padding: 0;
+}
+.images{
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+    flex-wrap: wrap;
+}
+.images img{
+    width: 237px;
+    height: 267px;
+    flex-shrink: 0;
+    
+}

@@ -17,6 +17,7 @@ import CustomDropdown from './CustomerDetails/InfoComponents/customDropdown';
 import ViewAllEmployee from './Employee/viewAllEmployee';
 import NavBar from './Dashboard/Navbar';
 import TemplateList from './CustomerDetails/CVtemplate/templateList';
+import About from './Extra/about';
 
 
 
@@ -49,6 +50,7 @@ return (
                     <Route path="viewAllEmployee" element={<ViewAllEmployee  />} /> 
                     <Route path="signup" element={<Signup />} />
                     <Route path="TemplateList" element={<TemplateList />} />
+                   
 
                 </Route>
                
@@ -71,7 +73,7 @@ return (
 
 
       
-            
+                <Route path="about" element={<About />} />
     
                 </Routes>
              

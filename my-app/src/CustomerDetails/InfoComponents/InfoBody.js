@@ -313,14 +313,14 @@ const InfoBody = () => {
       }, []);
       
     
-      const handleSubmit = async (e) => {
-        
+      const handleSubmit = async (e) => {       
         e.preventDefault();
         setFieldErrorMessage('');
         setErrorEmail('');
         setErrorEducation('');
 
         const experiencesJson = JSON.stringify(experiences);
+        const educationJson = JSON.stringify(education);
         // const experienceString = experiencesJson.stringify(experiences);
         // console.log(experienceString);
         const experiencesString = experiences.map(item => `${item.organizationName}, ${item.duration}, ${item.title}`).join(', ');
@@ -349,6 +349,7 @@ const InfoBody = () => {
           // degree,
           description,
           experiences:experiencesJson,
+          education:educationJson,
           skills,
           bloodGroup}
 
@@ -637,17 +638,14 @@ const handleDegreeChange = (value, index) => {
                                       ))}
                                       </div>
                                     </div>
-                                )}
-                                    
-                                  
+                                )}  
                             </div>
-                            { allErrors.departmentNameFieldError && <p className=' field-error-message'>{allErrors.departmentNameFieldError}</p> }
+                            {allErrors.departmentNameFieldError && <p className=' field-error-message'>{allErrors.departmentNameFieldError}</p> }
                         </div>
                         <div className='flex flex-col gap-1 pt-2'>
                             <p className='p-0 m-0 font-helvetica text-xs font-semibold'>Blood Group</p>
                             <div className={` ${allErrors.bloodGroupFieldError ? 'error-input' : 'info-input-field flex gap-1'}`}>
                                 <input type='text' value={bloodGroup}  placeholder='Client Blood Group' onChange={(e) => {setBloodGroup(e.target.value); setAllErrors({...allErrors, bloodGroupFieldError: '' }) }}
-                                
                                 />
                                 <select value={bloodGroup} onChange={(e) => setBloodGroup(e.target.value)}>
                                     <option value=""></option>
@@ -910,8 +908,8 @@ const handleDegreeChange = (value, index) => {
                     <div>
                       
                       <p className="m-0 pb-4 font-roboto font-bold" style={{ color: "#1670B2", fontSize: "16px" }}>
-        Professional Experiences
-      </p>
+                        Professional Experiences
+                      </p>
       <div className='pl-2 pb-4 flex flex-col gap-2' >
         {experiences.map((experience, index) => (
           <div key={index} className='flex gap-14 p-2' style={{border: '1px solid black', outline: 'none'}}>
