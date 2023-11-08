@@ -4,7 +4,7 @@ import axios from 'axios'
 export const GetAllDepartments = () => async (dispatch) => {
     try {
         const response = await axios.get(
-            "http://192.168.0.102:7270/api/MasterDepartments/GetAll"
+            "http://192.168.0.104:7270/api/MasterDepartments/GetAll"
         );
         if (response.status === 200) {
             const departmentData = response.data;
@@ -25,7 +25,7 @@ export const GetAllDepartments = () => async (dispatch) => {
 export const GetAllDistricts = () => async (dispatch) => {
     try {
         const response = await axios.get(
-            "http://192.168.0.102:7270/api/MasterDepartments/District/GetAll"
+            "http://192.168.0.104:7270/api/MasterDepartments/District/GetAll"
         );
         if (response.status === 200) {
             const districtData = response.data;
@@ -42,3 +42,24 @@ export const GetAllDistricts = () => async (dispatch) => {
         dispatch({ type: actionTypes.GET_ALL_DISTRICT_FAILURE });
     }
 }
+export const GetAllDesignation = () => async (dispatch) => {
+    try {
+        const response = await axios.get(
+            "http://192.168.0.104:7270/api/MasterDepartments/Designation/GetAll"
+        );
+        if (response.status === 200) {
+            const districtData = response.data;
+            
+            
+            dispatch({
+                type: actionTypes.GET_ALL_DESIGNATION_SUCCESS,
+                payload: districtData,
+            });
+        } else {
+            dispatch({ type: actionTypes.GET_ALL_DESIGNATION_FAILURE });
+        }
+    } catch (error) {
+        dispatch({ type: actionTypes.GET_ALL_DESIGNATION_FAILURE });
+    }
+}
+

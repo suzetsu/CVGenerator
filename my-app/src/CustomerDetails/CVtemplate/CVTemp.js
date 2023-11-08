@@ -29,28 +29,34 @@ const {
     municipalityNumber,
     university,
     college,
+    joiningDate,
+    clientLeavingDate,
+    bloodGroup,
     level,
     degree,
     description,
-    firstOrganizationName,
-    firstDuration,
-    firstTitle,
-    secondOrganizationName,
-    secondDuration,
-    secondTitle,
     imageData,
-    experiences
+    experiences,
+    educations,
+    age
     
   } = employeeInfo
 
   const skillSets = employeeInfo.skills.$values
-  console.log(imageData)
+  console.log(skillSets);
+
+const date = new Date(joiningDate);
+const options = { year: "numeric", month: "long", day: "numeric" };
+const formattedJoiningDate = date.toLocaleDateString("en-US", options);
+
+const leavedate = new Date(clientLeavingDate);
+const leavedateOptions = { year: "numeric", month: "long", day: "numeric" };
+const formattedLeavingDate = leavedate.toLocaleDateString("en-US", leavedateOptions);
+
 
   
-  
-    // console.log(matchedUser)
-// console.log(skills)
-
+  const experienceJSON = JSON.parse(experiences)
+  const educationJSON = JSON.parse(educations)
     const [loader, setLoader] = useState(false);
 
     const downloadPDF = () => {
@@ -78,7 +84,8 @@ const {
                 <div className='flex flex-col p-2 download-pdf'>
                     <div className='bg-[#121214] h-[10rem] flex gap-56 pl-8 items-center'>
                         <div className='w-[400px] '>
-                        <h1 className='text-[#48a7ff] font-helvetica m-0 p-0'>{clientName}</h1> 
+                        <h1 className='text-[#48a7ff] font-helvetica m-0 p-0'>{clientName} </h1> 
+                        <h4 className='mt-1 p-0 text-white font-helvetica'>Age { age}</h4>
                         <h4 className='mt-1 p-0 text-white font-helvetica'>{ designation}</h4>
                         <p className='text-white font-helvetica '>{description}</p>
                         </div>
@@ -115,21 +122,34 @@ const {
                                     <p className='p-0 m-0 text-sm font-thin'>{phone}</p>
                                 </div>
                                 <div className='flex flex-col gap-1'>
+                                    <h4 className='p-0 m-0 text-[#666360] font-semibold'>Age</h4>
+                                    <p className='p-0 m-0 text-sm font-thin'>{age}</p>
+                                </div>
+                                <div className='flex flex-col gap-1'>
                                 <h3 className='text-[#265683] m-0 p-0'>Education Details</h3>
                                 <hr className='h-[2px] w-[4rem] m-0'></hr>
                                 </div>
-                                <div className='flex flex-col gap-1'>
-                                    <h4 className='p-0 m-0 text-[#666360] font-semibold'>University</h4>
-                                    <p className='p-0 m-0 text-sm font-thin'>{university}</p>
-                                </div>
-                                <div className='flex flex-col gap-1'>
-                                    <h4 className='p-0 m-0 text-[#666360] font-semibold'>College</h4>
-                                    <p className='p-0 m-0 text-sm font-thin'>{college}</p>
-                                </div>
-                                <div className='flex flex-col gap-1'>
-                                    <h4 className='p-0 m-0 text-[#666360] font-semibold'>Degree</h4>
-                                    <p className='p-0 m-0 text-sm font-thin'>{degree}</p>
-                                </div>
+                                { (educationJSON   && Array.isArray(educationJSON) && educationJSON.length >0)  ?educationJSON.map((education) => (
+                                   <div>
+                                   <div className='flex flex-col gap-1'>
+                                       <h4 className='p-0 m-0 text-[#666360] font-semibold'>University</h4>
+                                       <p className='p-0 m-0 text-sm font-thin'>{education.university}</p>
+                                   </div>
+                                   <div className='flex flex-col gap-1'>
+                                       <h4 className='p-0 m-0 text-[#666360] font-semibold'>College</h4>
+                                       <p className='p-0 m-0 text-sm font-thin'>{education.college}</p>
+                                   </div>
+                                   <div className='flex flex-col gap-1'>
+                                       <h4 className='p-0 m-0 text-[#666360] font-semibold'>Degree</h4>
+                                       <p className='p-0 m-0 text-sm font-thin'>{education.degree}</p>
+                                   </div>
+                                   <div className='flex flex-col gap-1'>
+                                       <h4 className='p-0 m-0 text-[#666360] font-semibold'>Level</h4>
+                                       <p className='p-0 m-0 text-sm font-thin'>{education.level}</p>
+                                   </div>
+                                   </div> 
+                                )): "No education details available"
+                                    }
 
                                 <div className='flex flex-col gap-1'>
                                 <h3 className='text-[#265683] m-0 p-0'>Skills</h3>
@@ -156,24 +176,36 @@ const {
 
                                 </div>
                                 <div className='flex flex-col gap-3'>
+                                <h3 className='text-[#265683] m-0 p-0'>Work Duration</h3>
+                                <hr className='h-[2px] w-[5rem] m-0'></hr>
+                                <h4 className='p-0 m-0 text-[#1b1b1b] font-semibold'>{formattedJoiningDate} - {formattedLeavingDate}</h4>
+
+                                </div>
+                                {/* <div className='flex flex-col gap-3'>
                                 <h3 className='text-[#265683] m-0 p-0'>Work Experiences</h3>
                                 <hr className='h-[2px] w-[5rem] m-0'></hr>
                                 <h5 className='p-0 m-0 text-[#1b1b1b] font-semibold'>{`${firstOrganizationName} (${firstDuration})`}</h5>
                                 <li className='p-0 m-0 text-sm font-thin'>{firstTitle}</li>
                                 <h5 className='p-0 m-0 text-[#1b1b1b] font-semibold'>{`${secondOrganizationName} (${secondDuration})`}</h5>
                                 <li className='p-0 m-0 text-sm font-thin'>{secondTitle}</li>
-                                </div>
-                                {/* <div className='flex flex-col gap-3'>
+                                </div> */}
+                                <div className='flex flex-col gap-3'>
                                     <h3 className='text-[#265683] m-0 p-0'>Work Experiences</h3>
                                     <hr className='h-[2px] w-[5rem] m-0'></hr>
-                                    {experiences.map((experience, index) => (
+                                    {(experienceJSON   && Array.isArray(experienceJSON) && experienceJSON.length >0) ?experienceJSON.map((experience, index) => (
                                         <div>
                                         <h5 className='p-0 m-0 text-[#1b1b1b] font-semibold'>{`${experience.organizationName} (${experience.duration})`}</h5>
                                         <li className='p-0 m-0 text-sm font-thin'>{experience.title}</li>
                                         </div>
-                                    ))}
+                                    )): "No Experience found"}
                                     
-                                </div> */}
+                                </div>
+                                <div className='flex flex-col gap-3'>
+                                <h3 className='text-[#265683] m-0 p-0'>Blood Group</h3>
+                                <hr className='h-[2px] w-[5rem] m-0'></hr>
+                                <h4 className='p-0 m-0 text-[#1b1b1b] font-semibold'>{bloodGroup}</h4>
+
+                                </div>
 
                             </div>
                         </div>

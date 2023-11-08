@@ -6,8 +6,14 @@ import RoleTable from './RoleTable'
 import EditUserPopup from './editRole'
 import {updateRoleInfo} from '../Redux/roleActions'
 import { deleteRoleInfo } from '../Redux/roleActions'
+import deleteIcon from "../images/delete.png";
+import editIcon from "../images/editing.png";
+
 
 const ViewRole = () => {
+  const role =
+    localStorage.getItem("tokendata") &&
+    JSON.parse(localStorage.getItem("tokendata")).role;
 
     const dispatch = useDispatch();
     useEffect(() => {
@@ -83,7 +89,7 @@ const ViewRole = () => {
             Array.isArray(Users.$values) && Users.$values.map((user, index) => {
                 const name = user.fullName;
                 const email = user.email;
-                const role = user.roleName
+                const roleName = user.roleName
                 const id = user.id;
             return (
                 <tbody>
@@ -91,11 +97,15 @@ const ViewRole = () => {
                         <td>{id}</td>
                         <td>{name}</td>
                         <td>{email}</td>
-                        <td>{role}</td>
+                        <td>{roleName}</td>
                         <td>
                             <div className='flex gap-2'>
-                            <p className='m-0 p-0 underline cursor-pointer' onClick={() => handleEditClick(user)}>Edit</p>
-                            <p className='m-0 p-0 underline cursor-pointer' onClick={() => handleDeleteUser(user)}>Delete</p>
+                            <p className='m-0 p-0 underline cursor-pointer' onClick={() => handleEditClick(user)}>
+                            {(role === "SuperAdmin" || role === "Admin") &&<img src={editIcon} alt="edit" className='w-5 h-5'/>}
+                            </p>
+                            <p className='m-0 p-0 underline cursor-pointer' onClick={() => handleDeleteUser(user)}>
+                            {role === "SuperAdmin" && <img src={deleteIcon} alt="delete" className='w-5 h-5'/>}
+                            </p>
                             </div>
                         </td>
                     </tr>

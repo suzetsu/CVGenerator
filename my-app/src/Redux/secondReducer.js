@@ -6,7 +6,10 @@ const initialState = {
     companyUpdateStatus : null,
     companyDeleteStatus : null,
     departmentData: '',
-    districtData: ''
+    districtData: '',
+    designationData: '',
+    companyError: null,
+    
 }
 
 const companyReducer = (state = initialState, action) => {
@@ -14,7 +17,7 @@ const companyReducer = (state = initialState, action) => {
         case actionTypes.COMPANY_CREATE_SUCCESS:
             return { ...state, companyCreationStatus: 'success' };
         case actionTypes.COMPANY_CREATE_FAILURE:
-            return { ...state, companyCreationStatus: 'failure' };
+            return { ...state, companyCreationStatus: 'failure', companyError: action.payload };
         case actionTypes.FETCH_COMPANY_INFO_SUCCESS:
             return { ...state, companyData: action.payload };
         case actionTypes.FETCH_COMPANY_INFO_FAILURE:
@@ -35,6 +38,10 @@ const companyReducer = (state = initialState, action) => {
             return { ...state, districtData: action.payload };
         case actionTypes.GET_ALL_DISTRICT_FAILURE:
             return { ...state, districtData: null };
+        case actionTypes.GET_ALL_DESIGNATION_SUCCESS:
+            return { ...state, designationData: action.payload };
+        case actionTypes.GET_ALL_DESIGNATION_FAILURE:
+            return { ...state, designationData: null };
         default:
             return state;
     }

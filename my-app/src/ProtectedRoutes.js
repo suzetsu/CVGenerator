@@ -20,9 +20,10 @@ import { useSelector } from 'react-redux';
   // );
 // };
 
-const ProtectedRoute = ({ isLoggedIn, children }) => {
+const ProtectedRoute = ({ children }) => {
+  const isLoggedIn = localStorage.getItem('tokendata');
   if (!isLoggedIn) {
-    return <Navigate to="/" />;
+    return <Navigate to="/login" />;
   }
   else {
     return children;

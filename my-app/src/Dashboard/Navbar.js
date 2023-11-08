@@ -13,9 +13,13 @@ const NavBar = () => {
   const history = useNavigate();
   // const userRole = useSelector(state => state.auth.role);
   const dispatch = useDispatch();
-  const role= JSON.parse(localStorage.getItem("tokendata")).role;
+  const role=  localStorage.getItem("tokendata") &&   JSON.parse(localStorage.getItem("tokendata")).role;
 
-  console.log(role);
+  useEffect(() => {
+    if(!localStorage.getItem("tokendata")){
+      window.location.href = "/login";
+    }
+  }, []);
 
   
 
@@ -42,9 +46,9 @@ const handleClick = () => {
         <div className='nav-links space-x-9 font-helvetica pl-1'>
             
             <div className='hoverNav' onClick={handleClick}>Home</div>
-            <div className='hoverNav-company'>
+            <div className='hoverNav-company '>
               Company Details
-              <div className='dropdown-menu hidden absolute top-10 left-0 bg-white shadow-md py-2 '>
+              <div className='dropdown-menu hidden absolute shadow-md py-2 '>
                 <div className='pb-2'><a href='/addCompany' className='menu-item'>Add Company</a></div>
                 <div><a href='/viewCompany' className='menu-item' >View Company</a></div>
               </div>

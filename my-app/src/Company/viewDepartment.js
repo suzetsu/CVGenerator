@@ -4,6 +4,7 @@ import NavBar from '../Dashboard/Navbar';
 import EmployeeList from '../Employee/employeeList';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchClientInfo } from '../Redux/actions';
+import viewIcon from "../images/green-eye.png";
 
 const ViewDepartment = () => {
   const dispatch = useDispatch();
@@ -76,7 +77,7 @@ const ViewDepartment = () => {
                           className='m-0 p-0 underline cursor-pointer'
                           onClick={() => viewEmployee(department)}
                         >
-                          View
+                          <img src={viewIcon} alt='view' className='w-5 h-5' />
                         </p>
                       </div>
                     </td>

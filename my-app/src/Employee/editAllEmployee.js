@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../Role/editContainer.css'
 
 const EditAllEmployeePopup = ({ client, onClose, onSave }) => {
   const [editedEmployee, setEditedEmployee] = useState(client);
   console.log(client)
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -27,51 +28,50 @@ const EditAllEmployeePopup = ({ client, onClose, onSave }) => {
         municipalityNumber,
         university,
         college,
+        joiningDate,
+        clientLeavingDate,
+        bloodGroup,
         level,
         degree,
         description,
-        firstOrganizationName,
-        firstDuration,
-        firstTitle,
-        secondOrganizationName,
-        secondDuration,
-        secondTitle,
+        experiences,
+        educations,
         skills,
         imageFile, 
-        imagePath
+        imagePath,
+        clientDOB
         
       } = editedEmployee
 
-    console.log(imageFile, imagePath);
+   
 
     const updatedClient = {
-      clientName, 
-      email, 
-      clientPANNO, 
-      designation,
-      companyName,
-      departmentName,
-      designation,
-      municipality,
-      municipalityNumber,
-      province,
-      district,
-      email,
-      phone,
-      university,
-      college,
-      level,
-      degree,
-      description,
-      firstOrganizationName,
-      firstDuration,
-      firstTitle,
-      secondOrganizationName,
-      secondDuration,
-      secondTitle,
-      skills,
-      imageFile, 
-      imagePath
+      ...editedEmployee,
+      // clientName, 
+      // email, 
+      // clientPANNO, 
+      // designation,
+      // companyName,
+      // departmentName,
+      // designation,
+      // municipality,
+      // municipalityNumber,
+      // province,
+      // district,
+      // email,
+      // phone,
+      // university,
+      // college,
+      // level,
+      // degree,
+      // description,
+      // experiences,
+      // educations,
+      // skills,
+      // joiningDate,
+      // bloodGroup,
+      // imageFile, 
+      // imagePath
     }
     // console.log(clientInformationID, clientName, email, clientPANNO, designation)
     // const id = editedUser.id
@@ -120,6 +120,15 @@ const EditAllEmployeePopup = ({ client, onClose, onSave }) => {
             type='text'
             name='designation'
             value={editedEmployee.designation}
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className='info-input-field'>
+          <label className='pr-1'>District:</label>
+          <input
+            type='text'
+            name='district'
+            value={editedEmployee.district}
             onChange={handleInputChange}
           />
         </div>

@@ -1,7 +1,4 @@
-@font-face {
-    font-family: 'Sole Sans Extended'; /* You can use any name you want */
-    src: url('https://fonts.google.com/noto/specimen/Noto+Sans?query=Sans') format('woff2'); /* Update the path to your font file */
-}
+
 
 .main-cont{
     display: flex;
@@ -55,11 +52,12 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    /* align-items: center; */
     width: 436px;
+    align-items: self-end;
     /* padding-top: 4rem; */
 }
-.butwal-hiils{
+/* .butwal-hiils{
     color: #58595A;
     font-family: Sole Sans Extended;
     font-size: 55px;
@@ -68,7 +66,7 @@
     line-height: normal;
     margin: 0;
     padding: 0;
-}
+} */
 .all-texts{
     color: #58595A;
     display: flex;
@@ -112,4 +110,69 @@
     height: 267px;
     flex-shrink: 0;
     
+}
+
+@media (max-width: 768px) {
+    .main-cont {
+        /* Adjust styles for smaller screens */
+    }
+
+    .image-css img {
+        /* Adjust styles for smaller screens */
+    }
+
+    .second-cont {
+        /* Adjust styles for smaller screens */
+    }
+    .second-cont-child{
+
+    }
+    .intro-part{
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+    .intro-part img{
+        display: none;
+    }
+    .images img{
+        display: flex;
+        flex-direction: column;
+    }
+    .left-text, .right-text {
+        width: 100%; /* Use full width for smaller screens */
+    }
+    .butwal-hiils, .all-texts {
+        font-size: 40px; /* Reduce font size for readability on smaller screens */
+    }
+    .break-sentence {
+        font-size: 24px; /* Reduce font size for readability on smaller screens */
+    }
+}
+
+/* For even smaller screens (e.g., mobile devices) */
+@media (max-width: 480px) {
+    .main-cont {
+        /* Further adjustments for smaller screens */
+    }
+
+    .image-css img {
+        /* Further adjustments for smaller screens */
+    }
+
+    .second-cont {
+        /* Further adjustments for smaller screens */
+    }
+
+    .left-text, .right-text {
+        /* Further adjustments for smaller screens */
+    }
+
+    .butwal-hiils, .all-texts {
+        font-size: 32px; /* Further font size reduction for smaller screens */
+    }
+
+    .break-sentence {
+        font-size: 20px; /* Further font size reduction for smaller screens */
+    }
 }

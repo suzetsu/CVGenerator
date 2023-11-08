@@ -14,9 +14,11 @@ const initialState = {
 
   errorMail:null,
   role : null,
-  errorUsermail : null,
+  
+  roleError: null,
 
   // matchingClient: null,
+  editEmployee: null,
   
 };
 
@@ -42,7 +44,7 @@ const authReducer = (state = initialState, action) => {
     case actionTypes.USER_CREATE_SUCCESS:
       return { ...state, userCreationStatus: 'success' };
     case actionTypes.USER_CREATE_FAILURE:
-      return { ...state, userCreationStatus: 'failure' };
+      return { ...state, userCreationStatus: 'failure', roleError: action.payload };
     case actionTypes.FETCH_USER_INFO_SUCCESS:
       return { ...state, userData: action.payload };
     case actionTypes.FETCH_USER_INFO_FAILURE:
@@ -60,15 +62,19 @@ const authReducer = (state = initialState, action) => {
     case actionTypes.SET_USER_ROLE:
       return {...state, role: action.payload };
 
+      //store employee
+    case actionTypes.GET_ALL_EMPLOYEE:
+      return { ...state, editEmployee: action.payload };
+
     //Employe creation
     case actionTypes.CLIENT_INFO_SUCCESS:
       return { ...state, clientCreationStatus: 'success' };
     case actionTypes.CLIENT_INFO_FAILURE:
-      return { ...state, clientCreationStatus: "failure" };
-    case actionTypes.CLIENT_INFO_EMAIL_ERROR:
-      return { ...state, errorMail: action.payload };
-    case actionTypes.USER_INFO_EMAIL_ERROR:
-      return { ...state, errorUsermail: action.payload };
+      return { ...state, clientCreationStatus: "failure", errorMail: action.payload };
+    // case actionTypes.CLIENT_INFO_EMAIL_ERROR:
+    //   return { ...state, errorMail: action.payload };
+    // case actionTypes.USER_INFO_EMAIL_ERROR:
+    //   return { ...state, errorUsermail: action.payload };
     case actionTypes.FETCH_CLIENT_INFO_SUCCESS:
       return { ...state, clientData: action.payload };
       

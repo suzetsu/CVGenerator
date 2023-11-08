@@ -1,126 +1,139 @@
-import React, { useEffect, useState } from 'react'
-import NavBar from '../Dashboard/Navbar'
-import { useDispatch, useSelector } from 'react-redux'
-import { useLocation } from 'react-router-dom'
-import { fetchClientInfo } from '../Redux/actions'
-import { fetchCompanyInfo } from '../Redux/companyActions'
-import EditEmployeePopup from './employeeEdit'
-import {updateClientInfo} from '../Redux/actions'
-import {deleteClientInfo} from '../Redux/actions'
-import CVGenerate from '../CustomerDetails/CVtemplate/CVGenerate'
+import React, { useEffect, useState } from "react";
+import NavBar from "../Dashboard/Navbar";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
+import { fetchClientInfo } from "../Redux/actions";
+import { fetchCompanyInfo } from "../Redux/companyActions";
+import EditEmployeePopup from "./employeeEdit";
+import { updateClientInfo } from "../Redux/actions";
+import { deleteClientInfo } from "../Redux/actions";
+import CVGenerate from "../CustomerDetails/CVtemplate/CVGenerate";
+import deleteIcon from "../images/delete.png";
+import editIcon from "../images/editing.png";
+import viewIcon from "../images/view.png";
 
 const EmployeeList = () => {
-    const location = useLocation();
-    const department = location.state.department;
-    const companyName = location.state.companyName;
-    const [selectedEmployee, setSelectedEmployee] = useState(null); // Track selected user
-    const [isPopupOpen, setIsPopupOpen] = useState(false); // Track popup open/close
-    const [isCVGeneratePopupOpen, setIsCVGeneratePopupOpen] = useState(false);
-    const dispatch = useDispatch();
+  const location = useLocation();
+  const department = location.state.department;
+  const companyName = location.state.companyName;
+  const [selectedEmployee, setSelectedEmployee] = useState(null); // Track selected user
+  const [isPopupOpen, setIsPopupOpen] = useState(false); // Track popup open/close
+  const [isCVGeneratePopupOpen, setIsCVGeneratePopupOpen] = useState(false);
+  const dispatch = useDispatch();
 
-    useEffect(() => {
-        dispatch(fetchCompanyInfo());
-        dispatch(fetchClientInfo());
-    }, []);
+  useEffect(() => {
+    dispatch(fetchCompanyInfo());
+    dispatch(fetchClientInfo());
+  }, []);
 
-    const employeeDetails = useSelector((state) => state.auth.clientData);
-    // const clientInformationID = selectedEmployee?.id
-    
+  const employeeDetails = useSelector((state) => state.auth.clientData);
+  // const clientInformationID = selectedEmployee?.id
 
-    let filteredEmployees = [];
+  let filteredEmployees = [];
 
-    // Filter employeeDetails based on department and companyName
-    if (employeeDetails && employeeDetails.$values){
-     filteredEmployees = employeeDetails.$values.filter((employee) => {
-        return (
-            employee.departmentName === department && 
-            employee.companyName === companyName
-        );
-    
-    
-    })
-  }else {
+  // Filter employeeDetails based on department and companyName
+  if (employeeDetails && employeeDetails.$values) {
+    filteredEmployees = employeeDetails.$values.filter((employee) => {
+      return (
+        employee.departmentName === department &&
+        employee.companyName === companyName
+      );
+    });
+  } else {
     return 0;
-    }
-    
-    
-    const handleEmployeeEdit = (employee) => {
-        setSelectedEmployee(employee);
-        setIsPopupOpen(true);
-      };
-      
-    
-      // Function to handle closing the popup
-      const handleClosePopup = () => {
-        setSelectedEmployee(null);
-        setIsPopupOpen(false);
-      };
-      const handleSaveEmployee = (clientInformationID, updatedClient) => {
-        
-        
-      dispatch(updateClientInfo(clientInformationID, updatedClient));
-      setSelectedEmployee(null);
-      setIsPopupOpen(false);
-        console.log(updatedClient)
-      }
-      const handleDelete = (clientInformationID) => {
-        
-        dispatch(deleteClientInfo(clientInformationID));
-      }
-      const handleView = (employee) => {
-        setSelectedEmployee(employee);
-        setIsCVGeneratePopupOpen(true);
-      }
+  }
 
-    return (
-        <div className='flex flex-col gap-9'>
-            <div>
-                <NavBar />
-            </div>
-            <div className='text-[#666] pt-[5rem] flex justify-center font-helvetica pl-4 text-lg font-bold'>
-                Employee Details
-            </div>
-            <div className='flex justify-center items-center'>
-                <table className='m-0 p-0'>
-                    <thead>
-                        <tr>
-                            <th colSpan={1}>S.N.</th>
-                            <th>Employee Name</th>
-                            <th>Email</th>
-                            <th>Edit</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {filteredEmployees.map((employee, index) => (
-                            <tr key={index}>
-                                <td>{index + 1}</td>
-                                <td>{employee.clientName}</td>
-                                <td>{employee.email}</td>
-                                <td>
-                                    <div className='flex gap-2'>
-                                        <p className='m-0 p-0 underline cursor-pointer' onClick={() => handleView(employee)}>View</p>
-                                        <p className='m-0 p-0 underline cursor-pointer' onClick={() => handleEmployeeEdit(employee)}>Edit</p>
-                                        <p className='m-0 p-0 underline cursor-pointer' onClick={() => handleDelete(employee)}>Delete</p>
-                                    </div>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-            {isPopupOpen && (
-            <EditEmployeePopup
+  const handleEmployeeEdit = (employee) => {
+    setSelectedEmployee(employee);
+    setIsPopupOpen(true);
+  };
+
+  // Function to handle closing the popup
+  const handleClosePopup = () => {
+    setSelectedEmployee(null);
+    setIsPopupOpen(false);
+  };
+  const handleSaveEmployee = (clientInformationID, updatedClient) => {
+    dispatch(updateClientInfo(clientInformationID, updatedClient));
+    setSelectedEmployee(null);
+    window.location.reload();
+    setIsPopupOpen(false);
+    console.log(updatedClient);
+  };
+  const handleDelete = (clientInformationID) => {
+    dispatch(deleteClientInfo(clientInformationID));
+  };
+  const handleView = (employee) => {
+    setSelectedEmployee(employee);
+    setIsCVGeneratePopupOpen(true);
+  };
+
+  return (
+    <div className="flex flex-col gap-9">
+      <div>
+        <NavBar />
+      </div>
+      <div className="text-[#666] pt-[5rem] flex justify-center font-helvetica pl-4 text-lg font-bold">
+        Employee Details
+      </div>
+      <div className="flex justify-center items-center">
+        <table className="m-0 p-0">
+          <thead>
+            <tr>
+              <th colSpan={1}>S.N.</th>
+              <th>Employee Name</th>
+              <th>Email</th>
+              <th>Edit</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredEmployees.map((employee, index) => (
+              <tr key={index}>
+                <td>{index + 1}</td>
+                <td>{employee.clientName}</td>
+                <td>{employee.email}</td>
+                <td>
+                  <div className="flex gap-2">
+                    <p
+                      className="m-0 p-0 underline cursor-pointer"
+                      onClick={() => handleView(employee)}
+                    >
+                      <img src={viewIcon} alt="view" className="w-5 h-5"/>
+                    </p>
+                    <p
+                      className="m-0 p-0 underline cursor-pointer"
+                      onClick={() => handleEmployeeEdit(employee)}
+                    >
+                      <img src={editIcon} alt="edit" className="w-5 h-5"/>
+                    </p>
+                    <p
+                      className="m-0 p-0 underline cursor-pointer"
+                      onClick={() => handleDelete(employee)}
+                    >
+                      <img src={deleteIcon} alt="delete" className="w-5 h-5"/>
+                    </p>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {isPopupOpen && (
+        <EditEmployeePopup
           employee={selectedEmployee}
           onClose={handleClosePopup}
           onSave={handleSaveEmployee}
         />
       )}
       {isCVGeneratePopupOpen && (
-        <CVGenerate employee={selectedEmployee} onClose={() => setIsCVGeneratePopupOpen(false)} />
+        <CVGenerate
+          employee={selectedEmployee}
+          onClose={() => setIsCVGeneratePopupOpen(false)}
+        />
       )}
-        </div>
-        
-    )
-}
+    </div>
+  );
+};
 
 export default EmployeeList;

@@ -32,6 +32,7 @@ const Signup = () => {
   const history = useNavigate();
   const dispatch = useDispatch();
   const userCreationStatus = useSelector(state => state.auth.userCreationStatus);
+  const roleError = useSelector(state => state.auth.roleError);
   const emailExistsError = useSelector(state => state.auth.errorUsermail);
   
 
@@ -124,10 +125,7 @@ const IsSameEmail = (email) => {
       if (!isValidEmail(email)) {
         setErrormail('Invalid email');
       } 
-      else if (IsSameEmail(email)) {
-        setErrormail('Email already exists');
-        
-      }
+      
       
       else if (!IsPasswordVald(passwords.password)) {
         seterrorPW('Password must have a special character, number, uppercase letter, and 6 characters');
@@ -141,12 +139,10 @@ const IsSameEmail = (email) => {
           fullName,
           roleName
         }));
-        Swal.fire({
-          icon: 'success',
-          title: 'Account Created Successfully',
-          showConfirmButton: false,
-          timer: 1500
-        })
+        if (roleError) {
+          setErrorRole(roleError);
+        }
+       
         
         
       }
@@ -207,7 +203,7 @@ const IsSameEmail = (email) => {
           value={email} onChange={handleEmailChange} 
           className='typeStyle'
           />
-          {errorMails && <p className='error-message1'>{errorMails}</p>}
+          {errorRole && <p className='error-message2'>{errorRole}</p>}
           {/* {errorMail && <p className='error-message1'>{errorMail}</p>} */}
           <div className='info-input-field-dropdown '>
           <input 
@@ -258,7 +254,11 @@ const IsSameEmail = (email) => {
           <button className='button-edit1' onClick={handleSubmit}>Add</button>
         </div>
         {fielderrorMessage && <p className='error-message3'>{fielderrorMessage}</p>}
-        {userCreationStatus === 'success' && <p className='success-message'>User created successfully!</p>}
+        {userCreationStatus === "success" && (
+                  <div className="success-message flex justify-center">
+                    Role Added Successfully
+                  </div>
+                )}
         {/* <div className='signin-text'>
           <p>Already have an Account? <a href='/'>Sign in</a></p>
         </div> */}

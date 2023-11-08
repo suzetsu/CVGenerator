@@ -13,6 +13,7 @@
   .table-wrapper {
     width: 100%;
     overflow-x: auto;
+    /* position: absolute; */
   }
   .table-header {
     display: flex;

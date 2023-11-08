@@ -1,5 +1,6 @@
 import axios from 'axios';
 import * as actionTypes from './actionTypes';
+import { useSelector } from 'react-redux';
 // import jwtDecode from 'jwt-decode';
 
 // export const setUserRole = (role) => {
@@ -18,7 +19,7 @@ export const login = (email, password) => async (dispatch) => {
   // };
   try {
     const response = await axios.post(
-      "http://192.168.0.102:7270/api/Authentication/Login",
+      "http://192.168.0.104:7270/api/Authentication/Login",
       { email, password },
       {
         headers: {
@@ -60,10 +61,15 @@ export const logout = () => (dispatch) => {
 
 
 
-export const storeClientInfo = (formData) => async (dispatch) => {
+export const storeClientInfo = async(formData) => async (dispatch) => {
   try {
+    dispatch({ type: actionTypes.CLIENT_INFO_FAILURE, payload : null });
+    
+    
+    
+    
     const response = await axios.post(
-      "http://192.168.0.102:7270/api/Client",
+      "http://192.168.0.104:7270/api/Client",
       
         formData,
       {
@@ -72,28 +78,24 @@ export const storeClientInfo = (formData) => async (dispatch) => {
       
       
     );
-    if (response.status === 201) {
-      dispatch({ type: actionTypes.CLIENT_INFO_SUCCESS });
-    } else{
-      dispatch({ type: actionTypes.CLIENT_INFO_FAILURE });
-
-    }
+    console.log(response);
+    
+    dispatch({ type: actionTypes.CLIENT_INFO_FAILURE, payload : null });
+    dispatch({ type: actionTypes.CLIENT_INFO_SUCCESS });
+    
+    
   } catch (error) {
-   if (error.response.data.message)
-    { 
-      const Errmessage = error.response.data.message
-      dispatch({ type: actionTypes.CLIENT_INFO_EMAIL_ERROR, payload: Errmessage });
-      console.log(Errmessage);
-    }
-    dispatch({ type: actionTypes.CLIENT_INFO_FAILURE });
-    // console.log(error);
+  
+    const errorMessage = error.response? error.response.data? error.response.data.message?error.response.data.message: 'Error Occurred': 'Error Occurred': 'Error Occurred';
+    dispatch({ type: actionTypes.CLIENT_INFO_FAILURE, payload : errorMessage });
+  
   
   }
 }
 
 export const fetchClientInfo = () => async (dispatch) => {
   try {
-    const response = await axios.get("http://192.168.0.102:7270/api/Client/GetAllClients");
+    const response = await axios.get("http://192.168.0.104:7270/api/Client/GetAllClients");
 
     if (response.status === 200) {
       // Assuming the response data contains the client information
@@ -114,10 +116,14 @@ export const fetchClientInfo = () => async (dispatch) => {
 
 export const deleteClientInfo = (clientInformationID) => async (dispatch) => {
   try {
-    const response = await axios.delete(`http://192.168.0.102:7270/api/Client/${clientInformationID}`);
+    const response = await axios.delete(`http://192.168.0.104:7270/api/Client/${clientInformationID}`);
     if (response.status === 200) {
       dispatch({ type: actionTypes.CLIENT_INFO_DELETE_SUCCESS });
     }
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000)
+    alert("Client information Deleted successfully");
   } catch (error) {
     dispatch({ type: actionTypes.CLIENT_INFO_DELETE_FAILURE });
   }
@@ -125,7 +131,7 @@ export const deleteClientInfo = (clientInformationID) => async (dispatch) => {
 
 export const updateClientInfo = (clientInformationID, updatedClient) => async (dispatch) => {
   try {
-    const response = await axios.put(`http://192.168.0.102:7270/api/Client/${clientInformationID}`,
+    const response = await axios.put(`http://192.168.0.104:7270/api/Client/${clientInformationID}`,
     updatedClient,
     {
       headers: { 
@@ -136,6 +142,10 @@ export const updateClientInfo = (clientInformationID, updatedClient) => async (d
     if (response.status === 200) {
       dispatch({ type: actionTypes.CLIENT_INFO_UPDATE_SUCCESS });
     }
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000)
+    alert("Client information updated successfully");
   } catch (error) {
     console.log(error);
     dispatch({ type: actionTypes.CLIENT_INFO_UPDATE_FAILURE });

@@ -35,14 +35,14 @@ const ThirdCardContainer = () => {
                 <div className='card6'>
                         <div className='pl-4 pt-8 pr-4'>
                             <div className='flex gap-[356px]'>
-                                <div className='font-helvetica font-semibold underline' >New Customers</div>
+                                {/* <div className='font-helvetica font-semibold underline' >New Customers</div>
                                 <div className='flex gap-1 font-helvetica'>
                                     <div className='underline font-semibold'>View All</div>
                                     <div className='font-bold' style={{ letterSpacing: '-0.2em'}}>&gt;&gt;</div>
-                                </div>
+                                </div> */}
                             </div>
                             <div className='flex flex-col pt-6'>
-                                {data.map((item, index) => (
+                                {/* {data.map((item, index) => (
                                     <div key={index}>
                                         <div className='flex font-helvetica gap-32'>
                                             
@@ -63,12 +63,12 @@ const ThirdCardContainer = () => {
                                             
                                         </div>
                                     </div>
-                            ))}   
+                            ))}    */}
                             </div>
                         </div>
                 </div>
                 <div className='card6'>
-                    hi
+                    
                 </div>
                 
             </div>

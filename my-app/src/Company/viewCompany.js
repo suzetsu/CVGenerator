@@ -10,6 +10,9 @@ import {deleteCompanyInfo} from '../Redux/companyActions'
 import '../Role/roletable.css'
 import ViewDepartment from './viewDepartment';
 import { login } from '../Redux/actions';
+import deleteIcon from "../images/delete.png";
+import editIcon from "../images/blue-edit.png";
+import viewIcon from "../images/green-eye.png";
 
 
 const CompanyDetailsPopup = ({ companyInfo, onClose, onUpdate }) => {
@@ -29,7 +32,8 @@ const CompanyDetailsPopup = ({ companyInfo, onClose, onUpdate }) => {
     const name = editedCompany.name;
     const address = editedCompany.address;
     const email = editedCompany.email;
-    onUpdate(PAN, name, address, email);
+    const departments = editedCompany.departments;
+    onUpdate(PAN, name, address, email, departments);
     
 
     onClose(); // Close the popup
@@ -97,7 +101,8 @@ const ViewCompany = ({ isLoggedIn}) => {
 
     const [showDetailsPopup, setShowDetailsPopup] = useState(false);
     const [selectedCompany, setSelectedCompany] = useState(null);
-    const role= JSON.parse(localStorage.getItem("tokendata")).role;
+    const role=  localStorage.getItem("tokendata") &&   JSON.parse(localStorage.getItem("tokendata")).role;
+
 
     console.log(role);
     
@@ -149,14 +154,15 @@ console.log(companyDetails)
   }
     
   
-  const handleUpdateCompany = (PAN, name, address, email) => {
+  const handleUpdateCompany = (PAN, name, address, email, departments) => {
   
     
     const updatedcompany = {
       PAN,
       name,
       address,
-      email
+      email,
+      departments
 
     }
     console.log(name)
@@ -203,7 +209,7 @@ console.log(companyDetails)
                   
                         {/* <RoleTable Users={Users} /> */}
                     {
-                    Array.isArray(companyDetails.$values) ? 
+                    Array.isArray(companyDetails.$values) &&
                     ( 
                       companyDetails.$values.map((company, index) => {
                         const name = company.name;
@@ -220,21 +226,24 @@ console.log(companyDetails)
                                 <td>{address}</td>
                                 <td>
                                     <div className='flex gap-2'>
-                                    <p className='m-0 p-0 underline border-b-2 cursor-pointer' onClick={() => handleEditClick(company)}>Edit</p>
-                                    {role === 'SuperAdmin' && <p className='m-0 p-0 underline border-b-2 cursor-pointer' onClick={() => handleDeleteCompany(company)}>Delete</p>}
+                                    {(role === 'SuperAdmin' || role === 'Admin') && <p className='m-0 p-0 underline border-b-2 cursor-pointer' onClick={() => handleEditClick(company)}>
+                                      <img src={editIcon} alt="edit" className='w-5 h-5' />
+                                    </p>}
+                                    {role === 'SuperAdmin' && <p className='m-0 p-0 underline border-b-2 cursor-pointer' onClick={() => handleDeleteCompany(company)}>
+                                    <img src={deleteIcon} alt="delete" className='w-5 h-5' /></p>}
                                     </div>
                                 </td>
                                 <td>
                                   <div className='flex justify-center'>
-                                  <p className='m-0 p-0 underline border-b-2 cursor-pointer'onClick={() => viewDepartment(company)}>View</p>
+                                  <p className='m-0 p-0 underline border-b-2 cursor-pointer'onClick={() => viewDepartment(company)}>
+                                  <img src={viewIcon} alt="view" className='w-5 h-5' />
+                                  </p>
                                   </div>
                                 </td>
                             </tr>
                         </tbody>
                     );
                     })
-                  ) : (
-                    'No Data'
                   )}
 
                   </table>

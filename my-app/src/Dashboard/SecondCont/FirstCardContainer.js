@@ -8,7 +8,7 @@ import parcels from '../../images/parcels.png'
 import { fetchClientInfo } from '../../Redux/actions'
 import { fetchCompanyInfo } from '../../Redux/companyActions'
 import { useDispatch, useSelector} from 'react-redux'
-import { UseSelector } from 'react-router-dom'
+
 
 const FirstCardContainer = () => {
     const dispatch = useDispatch()
@@ -19,8 +19,8 @@ const FirstCardContainer = () => {
     const allClients = clientInfo.$values
     
     
-    const getEmployeeCount = Array.isArray(clientInfo.$values)?clientInfo.$values.length:0
-        const getCompanyCount = Array.isArray(companyInfo.$values)?companyInfo.$values.length:0
+    const getEmployeeCount = clientInfo.$values && Array.isArray(clientInfo.$values)?clientInfo.$values.length:0
+        const getCompanyCount = companyInfo.$values && Array.isArray(companyInfo.$values)?companyInfo.$values.length:0
         function getTotalDepartmentCount(companyInfo) {
             let totalCount = 0;
           

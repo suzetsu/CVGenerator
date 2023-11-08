@@ -3,8 +3,9 @@ import * as actionTypes from './actionTypes';
 
 export const createRole = (email, password, fullName, roleName) => async (dispatch) => {
     try {
+      dispatch({ type: actionTypes.USER_CREATE_FAILURE, payload : null });
       const response = await axios.post(
-        "http://192.168.0.102:7270/api/Users",
+        "http://192.168.0.104:7270/api/Users",
         email, password, fullName, roleName,
         {
           headers: { 
@@ -22,20 +23,15 @@ export const createRole = (email, password, fullName, roleName) => async (dispat
       }
     } catch (error) {
       
-        if (error.response.data.message){
-          console.log(error.response.data.message)
-          dispatch({ type: actionTypes.USER_INFO_EMAIL_ERROR, payload: error.response.data.message });
-        }
-        else {
-      dispatch({ type: actionTypes.USER_CREATE_FAILURE });
-        }
+      const errorMessage = error.response? error.response.data? error.response.data.message?error.response.data.message: 'Error Occurred': 'Error Occurred': 'Error Occurred';
+      dispatch({ type: actionTypes.USER_CREATE_FAILURE, payload : errorMessage });
     }
   };
   
   export const fetchUserInfo = () => async (dispatch) => {
     try {
       const response = await axios.get(
-        "http://192.168.0.102:7270/api/Users/GetUsers"
+        "http://192.168.0.104:7270/api/Users/GetUsers"
       );
       if (response.status === 200) {
         const userData = response.data;
@@ -50,12 +46,14 @@ export const createRole = (email, password, fullName, roleName) => async (dispat
 
   export const deleteRoleInfo = (id) => async (dispatch) => {
     try {
-      const response = await axios.delete(`http://192.168.0.102:7270/api/Users/${id}`);
+      const response = await axios.delete(`http://192.168.0.104:7270/api/Users/${id}`);
       if (response.status === 200) {
         dispatch({ type: actionTypes.ROLE_DELETE_SUCCESS });
-      } else {
-        dispatch({ type: actionTypes.ROLE_DELETE_FAILURE });
-      }
+      } 
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000)
+      alert("Role deleted successfully");
     } catch (error) {
       dispatch({ type: actionTypes.ROLE_DELETE_FAILURE });
     }
@@ -63,7 +61,7 @@ export const createRole = (email, password, fullName, roleName) => async (dispat
 
   export const updateRoleInfo = (id, updatedUser) => async (dispatch) => {
     try {
-      const response = await axios.put(`http://192.168.0.102:7270/api/Users/${id}`,
+      const response = await axios.put(`http://192.168.0.104:7270/api/Users/${id}`,
       updatedUser,
       {
         headers: {
@@ -73,9 +71,11 @@ export const createRole = (email, password, fullName, roleName) => async (dispat
       );
       if (response.status === 200) {
         dispatch({ type: actionTypes.ROLE_UPDATE_SUCCESS });
-      } else {
-        dispatch({ type: actionTypes.ROLE_UPDATE_FAILURE });
-      }
+      } 
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000)
+      alert("Role updated successfully");
     } catch (error) {
       dispatch({ type: actionTypes.ROLE_UPDATE_FAILURE });
     }
