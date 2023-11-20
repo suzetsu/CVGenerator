@@ -145,6 +145,13 @@ const AddCompany = ({ token }) => {
       if (errorMessage) {
         setError(errorMessage);
       }
+      setAddress('');
+      setPAN('');
+      setName('');
+      setEmail('');
+      // setDepartments([]);
+      setSelectedDepartment([]);
+      
       console.log(successStatus);
      
     }

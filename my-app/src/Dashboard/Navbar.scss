@@ -93,3 +93,17 @@ $primary-color: #dbdbdb;
     
   }
 }
+
+@media screen and (max-width: 768px){
+  .nav-container{
+    // display: none;
+    // display: flex;
+    // align-items: center;
+
+
+  }
+  .main-style{
+    flex-direction: row;
+  }
+
+}

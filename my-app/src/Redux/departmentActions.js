@@ -1,10 +1,11 @@
 import * as actionTypes from './actionTypes'
 import axios from 'axios' 
+import {url} from '../Config'
 
 export const GetAllDepartments = () => async (dispatch) => {
     try {
         const response = await axios.get(
-            "http://192.168.0.104:7270/api/MasterDepartments/GetAll"
+            `${url}/api/MasterDepartments/GetAll`
         );
         if (response.status === 200) {
             const departmentData = response.data;
@@ -25,7 +26,7 @@ export const GetAllDepartments = () => async (dispatch) => {
 export const GetAllDistricts = () => async (dispatch) => {
     try {
         const response = await axios.get(
-            "http://192.168.0.104:7270/api/MasterDepartments/District/GetAll"
+            `${url}/api/MasterDepartments/District/GetAll`
         );
         if (response.status === 200) {
             const districtData = response.data;
@@ -45,7 +46,7 @@ export const GetAllDistricts = () => async (dispatch) => {
 export const GetAllDesignation = () => async (dispatch) => {
     try {
         const response = await axios.get(
-            "http://192.168.0.104:7270/api/MasterDepartments/Designation/GetAll"
+            `${url}/api/MasterDepartments/Designation/GetAll`
         );
         if (response.status === 200) {
             const districtData = response.data;

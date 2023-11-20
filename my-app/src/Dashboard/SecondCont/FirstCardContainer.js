@@ -15,8 +15,7 @@ const FirstCardContainer = () => {
 
     const clientInfo = useSelector(state => state.auth.clientData)
     const companyInfo = useSelector(state => state.company.companyData)
-    const allCompany= companyInfo.$values
-    const allClients = clientInfo.$values
+    
     
     
     const getEmployeeCount = clientInfo.$values && Array.isArray(clientInfo.$values)?clientInfo.$values.length:0

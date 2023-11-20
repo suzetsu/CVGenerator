@@ -14,12 +14,14 @@ const NavBar = () => {
   // const userRole = useSelector(state => state.auth.role);
   const dispatch = useDispatch();
   const role=  localStorage.getItem("tokendata") &&   JSON.parse(localStorage.getItem("tokendata")).role;
+  const token=  localStorage.getItem("tokendata") &&   JSON.parse(localStorage.getItem("tokendata")).token;
+  console.log(token);
 
-  useEffect(() => {
-    if(!localStorage.getItem("tokendata")){
-      window.location.href = "/login";
-    }
-  }, []);
+  // useEffect(() => {
+  //   if(!localStorage.getItem("tokendata")){
+  //     window.location.href = "/login";
+  //   }
+  // }, []);
 
   
 

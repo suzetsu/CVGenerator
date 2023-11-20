@@ -70,3 +70,11 @@
   .home-div{
     display: flex;
   }
+
+  @media  screen and (max-width: 600px) {
+    .first-card-container{
+        display: flex;
+    flex-direction: column-reverse;
+    }
+    
+  }

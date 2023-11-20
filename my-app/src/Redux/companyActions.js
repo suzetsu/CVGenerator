@@ -1,5 +1,6 @@
 import axios from "axios";
 import * as actionTypes from "./actionTypes";
+import { url } from "../Config";
 
 export const createCompany =
   (PAN, name, email, address, departments) => async (dispatch) => {
@@ -7,7 +8,7 @@ export const createCompany =
       console.log("HERE");
       dispatch({ type: actionTypes.COMPANY_CREATE_FAILURE, payload: null });
       const response = await axios.post(
-        "http://192.168.0.104:7270/api/Company",
+        `${url}/api/Company`,
 
         PAN,
         name,
@@ -35,7 +36,7 @@ export const createCompany =
 export const fetchCompanyInfo = () => async (dispatch) => {
   try {
     const response = await axios.get(
-      "http://192.168.0.104:7270/api/Company/GetAll"
+      `${url}/api/Company/GetAll`
     );
     if (response.status === 200) {
       const companyData = response.data;
@@ -56,7 +57,7 @@ export const updateCompanyInfo =
   (CompanyId, updatedcompany) => async (dispatch) => {
     try {
       const response = await axios.put(
-        `http://192.168.0.104:7270/api/Company/${CompanyId}`,
+        `${url}/api/Company/${CompanyId}`,
         updatedcompany
       );
       if (response.status === 200) {
@@ -76,7 +77,7 @@ export const updateCompanyInfo =
 export const deleteCompanyInfo = (CompanyId) => async (dispatch) => {
   try {
     const response = await axios.delete(
-      `http://192.168.0.104:7270/api/Company/${CompanyId}`
+      `${url}/api/Company/${CompanyId}`
     );
     if (response.status === 200) {
       dispatch({ type: actionTypes.COMPANY_DELETE_SUCCESS });

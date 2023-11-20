@@ -71,7 +71,7 @@ const formattedLeavingDate = leavedate.toLocaleDateString("en-US", leavedateOpti
             pdf.addImage(imgData, 'PNG', 0, 0, componentWidth, componentHeight);
 
             setLoader(false)
-            pdf.save('resume.pdf')
+            pdf.save('resume.pdf') 
             
         })
         

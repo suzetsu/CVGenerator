@@ -16,12 +16,13 @@ import CVTemp from '../CustomerDetails/CVtemplate/CVTemp';
 import SecondCVTemp from '../CustomerDetails/CVtemplate/SecondCVTemp';
 import ThirdCVTemp from '../CustomerDetails/CVtemplate/ThirdCVTemp';
 import CVGenerate from '../CustomerDetails/CVtemplate/CVGenerate';
+import './Navbar.scss'
 
 const Main = () => {
   return (
     <div>
     <div className='w-full'>
-       <div className = " flex flex-col" >
+       <div className = "main-style flex flex-col" >
          <div>
          <SecondContainer/>
          </div>

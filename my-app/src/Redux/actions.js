@@ -1,6 +1,7 @@
 import axios from 'axios';
 import * as actionTypes from './actionTypes';
 import { useSelector } from 'react-redux';
+import { url } from '../Config';
 // import jwtDecode from 'jwt-decode';
 
 // export const setUserRole = (role) => {
@@ -19,7 +20,7 @@ export const login = (email, password) => async (dispatch) => {
   // };
   try {
     const response = await axios.post(
-      "http://192.168.0.104:7270/api/Authentication/Login",
+      `${url}/api/Authentication/Login`,
       { email, password },
       {
         headers: {
@@ -69,7 +70,7 @@ export const storeClientInfo = async(formData) => async (dispatch) => {
     
     
     const response = await axios.post(
-      "http://192.168.0.104:7270/api/Client",
+      `${url}/api/Client`,
       
         formData,
       {
@@ -95,7 +96,7 @@ export const storeClientInfo = async(formData) => async (dispatch) => {
 
 export const fetchClientInfo = () => async (dispatch) => {
   try {
-    const response = await axios.get("http://192.168.0.104:7270/api/Client/GetAllClients");
+    const response = await axios.get(`${url}/api/Client/GetAllClients`);
 
     if (response.status === 200) {
       // Assuming the response data contains the client information
@@ -116,7 +117,7 @@ export const fetchClientInfo = () => async (dispatch) => {
 
 export const deleteClientInfo = (clientInformationID) => async (dispatch) => {
   try {
-    const response = await axios.delete(`http://192.168.0.104:7270/api/Client/${clientInformationID}`);
+    const response = await axios.delete(`${url}/api/Client/${clientInformationID}`);
     if (response.status === 200) {
       dispatch({ type: actionTypes.CLIENT_INFO_DELETE_SUCCESS });
     }
@@ -131,7 +132,7 @@ export const deleteClientInfo = (clientInformationID) => async (dispatch) => {
 
 export const updateClientInfo = (clientInformationID, updatedClient) => async (dispatch) => {
   try {
-    const response = await axios.put(`http://192.168.0.104:7270/api/Client/${clientInformationID}`,
+    const response = await axios.put(`${url}/api/Client/${clientInformationID}`,
     updatedClient,
     {
       headers: { 
