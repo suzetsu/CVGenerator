@@ -103,7 +103,7 @@ const formattedLeavingDate = leavedate.toLocaleDateString("en-US", leavedateOpti
                         
                     </div>
                     <div className='flex pl-2 pt-1 font-helvetica'>
-                        <div className='w-[35%] h-[42rem] pl-2 bg-[#c7c7c7] pt-2 pb-2'>
+                        <div className='w-[35%]  pl-2 bg-[#c7c7c7] pt-2 pb-2'>
                             <div className='flex flex-col gap-4'>
                                 <div className='flex flex-col gap-1'>
                                 <h3 className='text-[#265683] m-0 p-0'>Contact Info</h3>

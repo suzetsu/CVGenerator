@@ -35,6 +35,7 @@ const CompanyDetailsPopup = ({ companyInfo, onClose, onUpdate }) => {
     const departments = editedCompany.departments;
     onUpdate(PAN, name, address, email, departments);
     
+    
 
     onClose(); // Close the popup
   };
@@ -47,7 +48,7 @@ const CompanyDetailsPopup = ({ companyInfo, onClose, onUpdate }) => {
         <div className='info-input-field'>
           <label>Company PAN:</label>
           <input
-            type='number'
+            type='string'
             name='pan'
             value={editedCompany.pan}
             onChange={handleInputChange}
@@ -147,10 +148,11 @@ console.log(companyDetails)
  
   const handleDeleteCompany = (company) => {  
     const CompanyId = company.companyId
+    // console.log(CompanyId)
     
 
     dispatch(deleteCompanyInfo(CompanyId))
-    window.location.reload()
+    // window.location.reload()
   }
     
   

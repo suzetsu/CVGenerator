@@ -26,21 +26,21 @@
     filter: blur(2px);
    
   }
-  .main-Container::after {
+  /* .main-Container::after {
     content: '';
     position: absolute;
     top: -470px;
     left:87rem;
 
     border-style: solid;
-    border-width:280px 0 650px 350px; /* Adjust the values to change the size of the polygon */
-    clip-path: polygon(50% 0, 0 0, 100% 0% 20%); /* Create a polygon shape */
+    border-width:280px 0 650px 350px; 
+    
+    clip-path: polygon(50% 0, 0 0, 100% 0% 20%); 
     transform: rotate(280deg);
     filter: blur(2px);
     border-color: transparent transparent transparent #156FB3;
-    /* background: linear-gradient(to bottom, transparent, #6e7ae6); */
-    /* backdrop-filter: blur(2px); */
-}
+    
+} */
 
  
 .second-container{

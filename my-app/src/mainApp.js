@@ -57,7 +57,7 @@ const MainApp = () => {
         />
 
         <Route
-          path="addCompany"
+          path="/addCompany"
           element={
             <ProtectedRoute>
               <AddCompany />

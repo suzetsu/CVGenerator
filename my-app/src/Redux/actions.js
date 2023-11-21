@@ -22,11 +22,7 @@ export const login = (email, password) => async (dispatch) => {
     const response = await axios.post(
       `${url}/api/Authentication/Login`,
       { email, password },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
+      
     );
 
     const token = response.data.token;
@@ -117,7 +113,7 @@ export const fetchClientInfo = () => async (dispatch) => {
 
 export const deleteClientInfo = (clientInformationID) => async (dispatch) => {
   try {
-    const response = await axios.delete(`${url}/api/Client/${clientInformationID}`);
+    const response = await axios.post(`${url}/api/Client/Delete/${clientInformationID}`);
     if (response.status === 200) {
       dispatch({ type: actionTypes.CLIENT_INFO_DELETE_SUCCESS });
     }
@@ -132,7 +128,7 @@ export const deleteClientInfo = (clientInformationID) => async (dispatch) => {
 
 export const updateClientInfo = (clientInformationID, updatedClient) => async (dispatch) => {
   try {
-    const response = await axios.put(`${url}/api/Client/${clientInformationID}`,
+    const response = await axios.post(`${url}/api/Client/Edit/${clientInformationID}`,
     updatedClient,
     {
       headers: { 

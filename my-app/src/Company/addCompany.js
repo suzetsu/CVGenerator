@@ -159,11 +159,11 @@ const AddCompany = ({ token }) => {
 console.log(successStatus);
   return (
     // <div className='flex justify-center h-[100vh] items-center bg-[#F0F4F3]'>
-    <div className="flex flex-col bg-[#F0F4F3] h-[100vh] ">
+    <div className="flex flex-col bg-[#F0F4F3] ">
       {/* <div>
         <Navbar />
       </div> */}
-      <div className="flex justify-center pt-32">
+      <div className=" add-company-css flex justify-center pt-44 pb-10">
         <div className="shadow-paper flex flex-col justify-center items-center bg-white pl-10 pr-10 pb-5 pt-5">
           <div>
             <img src={Logo} alt="" />

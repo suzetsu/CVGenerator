@@ -17,11 +17,11 @@ const NavBar = () => {
   const token=  localStorage.getItem("tokendata") &&   JSON.parse(localStorage.getItem("tokendata")).token;
   console.log(token);
 
-  // useEffect(() => {
-  //   if(!localStorage.getItem("tokendata")){
-  //     window.location.href = "/login";
-  //   }
-  // }, []);
+  useEffect(() => {
+    if(!localStorage.getItem("tokendata")){
+      window.location.href = "/login";
+    }
+  }, []);
 
   
 
@@ -34,6 +34,7 @@ const NavBar = () => {
 const handleClick = () => {
   history('/main');
 }
+
   return (
     <>
     <div className='nav-container w-full shadow-paper flex gap-52 '>
@@ -48,6 +49,7 @@ const handleClick = () => {
         <div className='nav-links space-x-9 font-helvetica pl-1'>
             
             <div className='hoverNav' onClick={handleClick}>Home</div>
+            
             <div className='hoverNav-company '>
               Company Details
               <div className='dropdown-menu hidden absolute shadow-md py-2 '>

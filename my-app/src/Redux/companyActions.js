@@ -56,8 +56,8 @@ export const fetchCompanyInfo = () => async (dispatch) => {
 export const updateCompanyInfo =
   (CompanyId, updatedcompany) => async (dispatch) => {
     try {
-      const response = await axios.put(
-        `${url}/api/Company/${CompanyId}`,
+      const response = await axios.post(
+        `${url}/api/Company/Edit/${CompanyId}`,
         updatedcompany
       );
       if (response.status === 200) {
@@ -76,14 +76,12 @@ export const updateCompanyInfo =
 
 export const deleteCompanyInfo = (CompanyId) => async (dispatch) => {
   try {
-    const response = await axios.delete(
-      `${url}/api/Company/${CompanyId}`
+    const response = await axios.post(
+      `${url}/api/Company/Delete/${CompanyId}`
     );
     if (response.status === 200) {
       dispatch({ type: actionTypes.COMPANY_DELETE_SUCCESS });
-    } else {
-      dispatch({ type: actionTypes.COMPANY_DELETE_FAILURE });
-    }
+    } 
     setTimeout(() => {
       window.location.reload();
     }, 1000);

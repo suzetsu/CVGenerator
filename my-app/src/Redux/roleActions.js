@@ -47,7 +47,7 @@ export const createRole = (email, password, fullName, roleName) => async (dispat
 
   export const deleteRoleInfo = (id) => async (dispatch) => {
     try {
-      const response = await axios.delete(`${url}/api/Users/${id}`);
+      const response = await axios.post(`${url}/api/Users/Delete/${id}`);
       if (response.status === 200) {
         dispatch({ type: actionTypes.ROLE_DELETE_SUCCESS });
       } 
@@ -62,7 +62,7 @@ export const createRole = (email, password, fullName, roleName) => async (dispat
 
   export const updateRoleInfo = (id, updatedUser) => async (dispatch) => {
     try {
-      const response = await axios.put(`${url}/api/Users/${id}`,
+      const response = await axios.post(`${url}/api/Users/Update/${id}`,
       updatedUser,
       {
         headers: {
