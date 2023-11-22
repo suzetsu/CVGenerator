@@ -76,7 +76,7 @@ const ViewRole = () => {
           <table className='m-0 p-0'>
             <thead>
             <tr>
-                <th colSpan={1}>I.D.</th>
+                <th colSpan={1}>S.N.</th>
                 <th>Name</th>
                 <th>Email</th>
                 <th>Role</th>
@@ -90,11 +90,11 @@ const ViewRole = () => {
                 const name = user.fullName;
                 const email = user.email;
                 const roleName = user.roleName
-                const id = user.id;
+                // const id = user.id;
             return (
                 <tbody>
                     <tr key={index}>
-                        <td>{id}</td>
+                        <td>{index+1}</td>
                         <td>{name}</td>
                         <td>{email}</td>
                         <td>{roleName}</td>
