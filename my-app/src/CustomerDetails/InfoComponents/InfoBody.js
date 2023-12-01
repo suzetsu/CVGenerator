@@ -410,10 +410,10 @@ const InfoBody = () => {
 
     };
 
-    console.log(clientInfo);
+   
     const formData = new FormData();
     for (const key in clientInfo) {
-      console.log(key, clientInfo[key]);
+      
       formData.set(key, clientInfo[key]);
     }
 
@@ -424,19 +424,19 @@ const InfoBody = () => {
     console.log(formData.get("education"));
 
     const requiredField = [
-      { name: "clientName", label: "Name" },
-      { name: "clientPANNO", label: "PAN" },
-      { name: "companyName", label: "Company Name" },
-      { name: "municipality", label: "Municipality" },
-      { name: "municipalityNumber", label: "MUN No" },
-      { name: "district", label: "District" },
-      { name: "province", label: "Province" },
-      { name: "designation", label: "Designation" },
-      { name: "phone", label: "Phone" },
+      // { name: "clientName", label: "Name" },
+      // { name: "clientPANNO", label: "PAN" },
+      // { name: "companyName", label: "Company Name" },
+      // { name: "municipality", label: "Municipality" },
+      // { name: "municipalityNumber", label: "MUN No" },
+      // { name: "district", label: "District" },
+      // { name: "province", label: "Province" },
+      // { name: "designation", label: "Designation" },
+      // { name: "phone", label: "Phone" },
       { name: "email", label: "Email" },
-      { name: "description", label: "Description" },
-      { name: "departmentName", label: "Department Name" },
-      { name: "bloodGroup", label: "Blood Group" },
+      // { name: "description", label: "Description" },
+      // { name: "departmentName", label: "Department Name" },
+      // { name: "bloodGroup", label: "Blood Group" },
     ];
     requiredField.forEach((field) => {
       const fieldName = field.name;

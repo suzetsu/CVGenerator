@@ -43,13 +43,34 @@ const {
   } = employeeInfo
 
   const skillSets = employeeInfo.skills.$values
-  const date = new Date(joiningDate);
-  const options = { year: "numeric", month: "long", day: "numeric" };
-  const formattedJoiningDate = date.toLocaleDateString("en-US", options);
+//   const date = new Date(joiningDate);
+//   const options = { year: "numeric", month: "long", day: "numeric" };
+//   const formattedJoiningDate = date.toLocaleDateString("en-US", options);
   
-  const leavedate = new Date(clientLeavingDate);
-  const leavedateOptions = { year: "numeric", month: "long", day: "numeric" };
-  const formattedLeavingDate = leavedate.toLocaleDateString("en-US", leavedateOptions);
+//   const leavedate = new Date(clientLeavingDate);
+//   const leavedateOptions = { year: "numeric", month: "long", day: "numeric" };
+//   const formattedLeavingDate = leavedate.toLocaleDateString("en-US", leavedateOptions);
+const date = new Date(joiningDate);
+const options = { year: "numeric", month: "long", day: "numeric" };
+const formattedJoiningDate = formatDate(date, options);
+
+const leavedate = new Date(clientLeavingDate);
+const leavedateOptions = { year: "numeric", month: "long", day: "numeric" };
+const formattedLeavingDate = formatDate(leavedate, leavedateOptions);
+
+console.log(formattedJoiningDate);
+console.log(formattedLeavingDate);
+
+// Function to format date or return a default value if date is null
+function formatDate(date, options) {
+  if (!isNaN(date.getTime()) && date.toISOString() !== '1970-01-01T00:00:00.000Z') {
+    return date.toLocaleDateString("en-US", options);
+  } else {
+    // You can set a default value or handle it according to your needs
+    return "N/A";
+  }
+}
+
 
     const [loader, setLoader] = useState(false);
 

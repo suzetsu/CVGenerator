@@ -1,41 +1,57 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "../CustomerDetails/InfoComponents/infoStyles.css";
 import { updateClientInfo } from "../Redux/actions";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import addIcon from "../images/addIcon.png";
 import closeIcon from "../images/closeIcon.png";
 
 const EditEmployee = () => {
+  const history = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
   const employeeInfo = location.state;
   const clickedEmployeeInfo = employeeInfo.client;
-  const formattedDate = new Date(clickedEmployeeInfo.clientDOB)
-    .toISOString()
-    .split("T")[0];
-  const formattedJoiningDate = new Date(clickedEmployeeInfo.joiningDate)
-    .toISOString()
-    .split("T")[0];
-  const formattedLeavingDate = new Date(clickedEmployeeInfo.clientLeavingDate)
-    .toISOString()
-    .split("T")[0];
+  const [editedEmployee, setEditedEmployee] = useState(clickedEmployeeInfo); 
+  // console.log(clickedEmployeeInfo);
+  // console.log(editedEmployee);
+  const formattedDate = editedEmployee.clientDOB
+    ? new Date(editedEmployee.clientDOB).toISOString().split("T")[0]
+    : null;
+  const formattedJoiningDate = editedEmployee.joiningDate
+    ? new Date(editedEmployee.joiningDate).toISOString().split("T")[0]
+    : null;
+  const formattedLeavingDate = editedEmployee.clientLeavingDate
+    ? new Date(editedEmployee.clientLeavingDate)
+        .toISOString()
+        .split("T")[0]
+    : null;
+  
 
+  const clientUpdateStatus = useSelector(
+    (state) => state.auth.clientUpdateStatus
+  );
+
+
+  const [uploadedImage, setUploadedImage] = useState(
+    clickedEmployeeInfo.imageData
+  );
   const [bloodGroup, setBloodGroup] = useState(clickedEmployeeInfo.bloodGroup);
   const [clientDOB, setClientDOB] = useState(formattedDate);
   const [joiningDate, setJoiningDate] = useState(formattedJoiningDate);
   const [clientLeavingDate, setClientLeavingDate] =
     useState(formattedLeavingDate);
 
-  const [editedEmployee, setEditedEmployee] = useState(clickedEmployeeInfo); //
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setEditedEmployee({ ...clickedEmployeeInfo, [name]: value });
+    setEditedEmployee({ ...editedEmployee, [name]: value });
+    
   };
 
-  const experienceJSON = JSON.parse(clickedEmployeeInfo.experiences);
-  const educationJSON = JSON.parse(clickedEmployeeInfo.educations);
+  const experienceJSON = JSON.parse(editedEmployee.experiences);
+  const educationJSON = JSON.parse(editedEmployee.educations);
 
   const [experiences, setExperiences] = useState(experienceJSON);
   const [education, setEducation] = useState(educationJSON);
@@ -80,6 +96,23 @@ const EditEmployee = () => {
     updatedEducation[index].degree = value;
     setEducation(updatedEducation);
   };
+  const [imagePreviewURL, setImagePreviewURL] = useState("");
+
+  const handlePhotoUpload = (e) => {
+    const file = e.target.files[0];
+
+    // Assuming you want to preview the selected image
+    if (file) {
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        setUploadedImage(file);
+        setImagePreviewURL(reader.result);
+      };
+
+      reader.readAsDataURL(file);
+    }
+  };
 
   const removeExperience = (index) => {
     const updatedExperiences = [...experiences];
@@ -100,17 +133,13 @@ const EditEmployee = () => {
       { college: "", level: "", degree: "", university: "" },
     ]);
   };
-
+  
   // Function to remove an education
   const removeEducation = (index) => {
     const updatedEducation = [...education];
     updatedEducation.splice(index, 1);
     setEducation(updatedEducation);
   };
-
-  const changedClientDOB = clientDOB.substring(0, 10);
-  const changedJoiningDate = joiningDate.substring(0, 10);
-  const changedClientLeavingDate = clientLeavingDate.substring(0, 10);
 
   const handleUpdate = () => {
     // console.log(JSON.stringify(education));
@@ -141,16 +170,36 @@ const EditEmployee = () => {
       imageFile,
       imagePath,
     } = editedEmployee;
+    console.log(editedEmployee);
 
-    const updatedClient = {
+    const updatedClients = {
       ...editedEmployee,
       experiences: JSON.stringify(experiences),
       educations: JSON.stringify(education),
       joiningDate,
       clientLeavingDate,
       clientDOB,
+      skills: JSON.stringify(skills),
     };
+
+    const updatedClient = new FormData();
+    for (const key in updatedClients) {
+      updatedClient.append(key, updatedClients[key]);
+    }
+
+    if (uploadedImage) {
+      updatedClient.append("imageFile", uploadedImage);
+    }
+
+    // Dispatch the update action with the updated client data
     dispatch(updateClientInfo(clientInformationID, updatedClient));
+
+    // Redirect to the "/main" page after the update if successful
+    if (clientUpdateStatus === "success") {
+      setTimeout(() => {
+        history("/viewAllEmployee");
+      }, 1000);
+    }
   };
 
   return (
@@ -703,7 +752,7 @@ const EditEmployee = () => {
                       </div>
                     ))}
 
-                    {/* <div
+                    <div
                       className="flex gap-1 justify-center items-center bg-[blue] w-[130px] h-[32px] rounded-[6px] cursor-pointer"
                       onClick={addEducation}
                     >
@@ -715,7 +764,7 @@ const EditEmployee = () => {
                       <p className="m-0 p-0 font-helvetica font-bold text-white text-xs">
                         Add Education
                       </p>
-                    </div> */}
+                    </div>
                   </div>
                 </div>
 
@@ -842,17 +891,37 @@ const EditEmployee = () => {
                   </div>
                 </div>
                 <div></div>
-                {/* <div>
+                <div>
                   <input
                     type="file"
                     accept="image/*"
                     onChange={handlePhotoUpload}
                   />
-                  <div
-                    className="image-container"
-                    style={{ backgroundImage: { imagePreviewURL } }}
-                  ></div>
-                </div> */}
+
+                  <div className="image-container">
+                    {imagePreviewURL ? (
+                      <img
+                        src={imagePreviewURL}
+                        alt="Preview"
+                        style={{ maxWidth: "100%", maxHeight: "100%" }}
+                      />
+                    ) : // If no new image is selected, show the existing image
+                    uploadedImage ? (
+                      <img
+                        style={{
+                          backgroundImage: `url(data:image/jpg;base64,${uploadedImage})`,
+                          backgroundSize: "cover", // You can adjust this property as needed
+                          width: "100px",
+                          height: "100px",
+                        }}
+                        alt=""
+                      />
+                    ) : (
+                      // If no existing image, you can display a placeholder or some default content
+                      <p>No image chosen</p>
+                    )}
+                  </div>
+                </div>
 
                 <div className="flex justify-center">
                   <button className="btn-info" onClick={handleUpdate}>

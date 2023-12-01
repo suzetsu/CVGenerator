@@ -10,6 +10,10 @@ import mailIcon from "../../images/email2-icon.png";
 import linkIcon from "../../images/links-icon.png";
 import bookIcon from "../../images/book-icon.png";
 import profileIcon from "../../images/business-icon.png";
+import { formatInTimeZone } from 'date-fns-tz'
+import EnglishDate from 'nepali-date-converter'
+import NepaliDate from "nepali-date-converter";
+
 
 function ThirdCVTemp() {
   const location = useLocation();
@@ -47,16 +51,80 @@ function ThirdCVTemp() {
 
   const experienceJSON = JSON.parse(experiences);
   const educationJSON = JSON.parse(educations);
-  const date = new Date(joiningDate);
-  const options = { year: "numeric", month: "long", day: "numeric" };
-  const formattedJoiningDate = date.toLocaleDateString("en-US", options);
+  
+  // const { formatInTimeZone } = require('date-fns-tz');
+  // const { ne } = require('date-fns/locale');
+  
+ 
+  // const nepaliTimeZone = 'Asia/Kathmandu';
+  
+  // const DOB = new Date(clientDOB);
+  
+  // const formattedDate = formatInTimeZone(DOB, 'yyyy-MM-dd', { locale: ne, timeZone: nepaliTimeZone });
+  
+  // console.log(formattedDate);
+  // const NepaliDate = require('nepali-date-converter');
+  var dateObject = new Date(clientDOB);
 
-  const leavedate = new Date(clientLeavingDate);
-  const leavedateOptions = { year: "numeric", month: "long", day: "numeric" };
-  const formattedLeavingDate = leavedate.toLocaleDateString(
-    "en-US",
-    leavedateOptions
-  );
+  var year = dateObject.getFullYear();
+  var month = ("0" + (dateObject.getMonth() + 1)).slice(-2); // Months are zero-based
+  var day = ("0" + dateObject.getDate()).slice(-2);
+  
+  var formattedDate = year + "," + month + "," + day;
+  // console.log(formattedDate);
+  
+
+
+
+// console.log(nepDate);
+
+// NepaliDate (year,month,date)
+let DOB = new NepaliDate(new Date(clientDOB))
+const dateOfBirth = DOB.format(' DD MMMM YYYY');
+
+// console.log(clientDOB);
+// Javascript Date object
+// const jsdate = new NepaliDate(2051, 5, 24).toJsDate()
+// console.log(jsdate);
+// formatting
+
+
+ 
+
+
+  
+
+  // const date = new Date(joiningDate);
+  // const options = { year: "numeric", month: "long", day: "numeric" };
+  // const formattedJoiningDate = date.toLocaleDateString("en-US", options);
+
+  // const leavedate = new Date(clientLeavingDate);
+  // const leavedateOptions = { year: "numeric", month: "long", day: "numeric" };
+  // const formattedLeavingDate = leavedate.toLocaleDateString(
+  //   "en-US",
+  //   leavedateOptions
+  // );
+  const date = new Date(joiningDate);
+const options = { year: "numeric", month: "long", day: "numeric" };
+const formattedJoiningDate = formatDate(date, options);
+
+const leavedate = new Date(clientLeavingDate);
+const leavedateOptions = { year: "numeric", month: "long", day: "numeric" };
+const formattedLeavingDate = formatDate(leavedate, leavedateOptions);
+
+console.log(formattedJoiningDate);
+console.log(formattedLeavingDate);
+
+// Function to format date or return a default value if date is null
+function formatDate(date, options) {
+  if (!isNaN(date.getTime()) && date.toISOString() !== '1970-01-01T00:00:00.000Z') {
+    return date.toLocaleDateString("en-US", options);
+  } else {
+    // You can set a default value or handle it according to your needs
+    return "N/A";
+  }
+}
+
 
   const [loader, setLoader] = useState(false);
 
@@ -198,6 +266,14 @@ function ThirdCVTemp() {
                   </p>
                 </div>
                 <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-3 font-helvetica">
+                    <div className="text-[#0268d7] font-bold">
+                      Date Of Birth
+                    </div>
+                    <h3 className="m-0 p-0 font-helvetica text-sm">
+                      {dateOfBirth}
+                    </h3>
+                  </div>
                   <div className="flex flex-col gap-4 font-helvetica">
                     <div className="text-[#0268d7] font-bold">
                       Work Experience

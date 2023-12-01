@@ -20,6 +20,7 @@ import TemplateList from "./CustomerDetails/CVtemplate/templateList";
 import About from "./Extra/about";
 import ProtectedRoute from "./ProtectedRoutes";
 import EditEmployee from "./Employee/editEmployeeComponent";
+import Superadmin from "./Dashboard/Superadmin";
 
 const MainApp = () => {
   return (
@@ -91,6 +92,11 @@ const MainApp = () => {
             </ProtectedRoute>
           }
         />
+        <Route path="superadmin" element={
+        <ProtectedRoute>
+          <Superadmin />
+        </ProtectedRoute>
+      } />
 
         <Route
           path="employeeList"
@@ -166,6 +172,8 @@ const MainApp = () => {
           </ProtectedRoute>
         }
       />
+
+      
 
       {/*            
                 <Route

@@ -4,7 +4,7 @@ import handshake from '../../images/hadshake.png'
 import './template.css'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
-
+import NepaliDate from 'nepali-date-converter'
 
 
 const CVTemp = () => {
@@ -17,6 +17,7 @@ console.log(employeeInfo)
 const {
     clientName,
     email,
+    clientDOB,
     clientPANNO,
     designation,
     clientInformationID,
@@ -45,14 +46,37 @@ const {
   const skillSets = employeeInfo.skills.$values
   console.log(skillSets);
 
+// const date = new Date(joiningDate);
+// const options = { year: "numeric", month: "long", day: "numeric" };
+// const formattedJoiningDate = date.toLocaleDateString("en-US", options);
+
+// const leavedate = new Date(clientLeavingDate);
+// const leavedateOptions = { year: "numeric", month: "long", day: "numeric" };
+// const formattedLeavingDate = leavedate.toLocaleDateString("en-US", leavedateOptions);
 const date = new Date(joiningDate);
 const options = { year: "numeric", month: "long", day: "numeric" };
-const formattedJoiningDate = date.toLocaleDateString("en-US", options);
+const formattedJoiningDate = formatDate(date, options);
 
 const leavedate = new Date(clientLeavingDate);
 const leavedateOptions = { year: "numeric", month: "long", day: "numeric" };
-const formattedLeavingDate = leavedate.toLocaleDateString("en-US", leavedateOptions);
+const formattedLeavingDate = formatDate(leavedate, leavedateOptions);
 
+console.log(formattedJoiningDate);
+console.log(formattedLeavingDate);
+
+// Function to format date or return a default value if date is null
+function formatDate(date, options) {
+  if (!isNaN(date.getTime()) && date.toISOString() !== '1970-01-01T00:00:00.000Z') {
+    return date.toLocaleDateString("en-US", options);
+  } else {
+    // You can set a default value or handle it according to your needs
+    return "N/A";
+  }
+}
+
+
+let DOB = new NepaliDate(new Date(clientDOB))
+const dateOfBirth = DOB.format(' DD MMMM YYYY');
 
   
   const experienceJSON = JSON.parse(experiences)

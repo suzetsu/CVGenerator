@@ -130,19 +130,16 @@ export const updateClientInfo = (clientInformationID, updatedClient) => async (d
   try {
     const response = await axios.post(`${url}/api/Client/Edit/${clientInformationID}`,
     updatedClient,
-    {
-      headers: { 
-        "Content-Type": "application/json",
-      }
-    }
+    
     );
     if (response.status === 200) {
       dispatch({ type: actionTypes.CLIENT_INFO_UPDATE_SUCCESS });
     }
+    alert("Client information updated successfully");
     setTimeout(() => {
       window.location.reload();
     }, 1000)
-    alert("Client information updated successfully");
+   
   } catch (error) {
     console.log(error);
     dispatch({ type: actionTypes.CLIENT_INFO_UPDATE_FAILURE });

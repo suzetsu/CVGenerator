@@ -17,6 +17,8 @@ const Login = ({ isLoggedIn }) => {
   const history = useNavigate();
   const dispatch = useDispatch();
   console.log(isLoggedIn);
+
+  
   // const userCreationStatus = useSelector(state => state.auth.userCreationStatus);
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -26,15 +28,22 @@ const Login = ({ isLoggedIn }) => {
     setPassword(e.target.value);
     seterrorPW("");
   };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!isValidEmail(email)) {
       setErrormail("Invalid email");
     } else if (isValidEmail(email) && password) {
       const loginResult = await dispatch(login(email, password));
-
+      const role=  localStorage.getItem("tokendata") &&   JSON.parse(localStorage.getItem("tokendata")).role;
       if (loginResult.success === true) {
-        history("/main");
+        if (role === "SuperAdmin") {
+          history("/superadmin");
+        }
+        else{
+          history("/main");
+        }
+        
       } else {
         Swal.fire({
           icon: "error",

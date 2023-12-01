@@ -107,11 +107,7 @@ const ViewCompany = ({ isLoggedIn}) => {
 
     console.log(role);
     
-     const roleName = useSelector(state => state.auth.role);
-     useEffect (() => {
-       dispatch(login())
-     }, [])
-     console.log(isLoggedIn)
+     
 
      
     
@@ -143,7 +139,7 @@ console.log(companyDetails)
       dispatch(fetchClientInfo());
   }, [])
 
-  const CompanyId = selectedCompany?.companyId
+  const CompanyId = selectedCompany && selectedCompany?.companyId
   
  
   const handleDeleteCompany = (company) => {  
@@ -211,7 +207,7 @@ console.log(companyDetails)
                   
                         {/* <RoleTable Users={Users} /> */}
                     {
-                    Array.isArray(companyDetails.$values) &&
+                    companyDetails && Array.isArray(companyDetails.$values) &&
                     ( 
                       companyDetails.$values.map((company, index) => {
                         const name = company.name;
