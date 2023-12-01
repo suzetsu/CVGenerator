@@ -19,9 +19,6 @@ import addIcon from "../../images/addIcon.png";
 import closeIcon from "../../images/closeIcon.png";
 import * as actionTypes from "../../Redux/actionTypes";
 const InfoBody = () => {
-
-
-
   const [clientName, setName] = useState("");
   const [clientPANNO, setPAN] = useState("");
   const [companyName, setCompany] = useState("");
@@ -190,7 +187,6 @@ const InfoBody = () => {
     setCompany(option);
     setSelectedCompany(option);
     setShowCompanyOptions(false);
-    
   };
   const handleCompanyInputChange = (e) => {
     setAllErrors({ ...allErrors, companyNameFieldError: "" });
@@ -205,7 +201,7 @@ const InfoBody = () => {
   const handleCompanyFocus = (e) => {
     setShowCompanyOptions(!showCompanyOptions);
   };
-  
+
   const inputRef = useRef(null);
   const inputRef2 = useRef(null);
   const inputRef3 = useRef(null);
@@ -229,18 +225,14 @@ const InfoBody = () => {
     if (inputRef5.current && !inputRef5.current.contains(e.target)) {
       setShowDistricts(false);
     }
-    
-
   };
 
   React.useEffect(() => {
-    document.addEventListener('click', handleDocumentClick);
+    document.addEventListener("click", handleDocumentClick);
     return () => {
-      document.removeEventListener('click', handleDocumentClick);
+      document.removeEventListener("click", handleDocumentClick);
     };
   }, []);
-
-  
 
   let emailExistsErrorMessage = useSelector((state) => state.auth.emailError);
   const clientCreationStatus = useSelector(
@@ -362,10 +354,6 @@ const InfoBody = () => {
     // console.log(option);
   };
 
- 
-
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFieldErrorMessage("");
@@ -407,13 +395,10 @@ const InfoBody = () => {
       joiningDate: clientJoiningDate,
       clientLeavingDate,
       clientDOB,
-
     };
 
-   
     const formData = new FormData();
     for (const key in clientInfo) {
-      
       formData.set(key, clientInfo[key]);
     }
 
@@ -451,30 +436,28 @@ const InfoBody = () => {
     if (!isValidEmail(email)) {
       setErrorEmail("Email is invalid");
     } else {
-     
-      
       dispatch(await storeClientInfo(formData));
-      
-      setName('');
-    setPAN('');
-    setAddress('');
-    setMUNno('');
-    setDistrict('');
-    setProvince('');
-    setDesignation('');
-    setMobile('');
-    setEmail('');
-    setDescription('');
-    setCompany('');
-    setDepartment('');
-    setBloodGroup('');
-    setJoiningDate('');
-    setLeavingDate('');
-    setclientDOB('');
-    setExperiences([]);
-    setEducation([]);
-    setCurrentSkill([]);
-    setUploadedImage('');
+
+      setName("");
+      setPAN("");
+      setAddress("");
+      setMUNno("");
+      setDistrict("");
+      setProvince("");
+      setDesignation("");
+      setMobile("");
+      setEmail("");
+      setDescription("");
+      setCompany("");
+      setDepartment("");
+      setBloodGroup("");
+      setJoiningDate("");
+      setLeavingDate("");
+      setclientDOB("");
+      setExperiences([]);
+      setEducation([]);
+      setCurrentSkill([]);
+      setUploadedImage("");
     }
 
     // if (clientCreationStatus === 'success'){
@@ -483,14 +466,12 @@ const InfoBody = () => {
     // else if (clientCreationStatus === 'failure'){
     //   alert('Client Creation Failed')
     // }
-
-    
   };
 
   let imagePreviewURL = null;
   const handlePhotoUpload = (e) => {
     const imageFile = e.target.files[0]; // Get the selected image fil
-   
+
     if (imageFile) {
       // Optional: You can preview the image if needed
       const reader = new FileReader();
@@ -506,6 +487,24 @@ const InfoBody = () => {
       // console.log(uploadedImage);
     }
   };
+
+  // const [imagePreviewURL, setImagePreviewURL] = useState("");
+
+  // const handlePhotoUpload = (e) => {
+  //   const file = e.target.files[0];
+
+  //   // Assuming you want to preview the selected image
+  //   if (file) {
+  //     const reader = new FileReader();
+
+  //     reader.onloadend = () => {
+  //       setUploadedImage(file);
+  //       setImagePreviewURL(reader.result);
+  //     };
+
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
 
   const addExperience = () => {
     setExperiences([
@@ -572,8 +571,6 @@ const InfoBody = () => {
     updatedEducation[index].degree = value;
     setEducation(updatedEducation);
   };
-
-
 
   return (
     <>
@@ -914,12 +911,11 @@ const InfoBody = () => {
                             placeholder="Client Joining Date"
                             onChange={(e) => {
                               setJoiningDate(e.target.value);
-                              console.log(clientJoiningDate)
+                              console.log(clientJoiningDate);
                               setAllErrors({
                                 ...allErrors,
                                 clientJoiningDateFieldError: "",
-                                
-                              } );
+                              });
                             }}
                           />
                         </div>
@@ -961,42 +957,39 @@ const InfoBody = () => {
                       </div>
                     </div>
                     <div className="flex flex-col gap-1 pt-2">
-                        <p className="p-0 m-0 font-helvetica text-xs font-semibold">
-                          Client DOB
-                        </p>
-                        <div
-                          className={` ${
-                            allErrors.clientDOBFieldError
-                              ? "error-input"
-                              : "info-input-field"
-                          }`}
-                        >
-                          <input
-                            type="date" // Use 'date' type for date input
-                            value={clientDOB}
-                            onChange={(e) => {
-                              setclientDOB(e.target.value);
-                              // console.log(new Date(e.target.value).toString().split(" ")[1]);
-                              // console.log(new Date(e.target.value).toString().split(" ")[0]);
-                              // console.log(new Date(e.target.value).toString().split(" ")[2]);
-                              // console.log(new Date(e.target.value).toString().split(" ")[3]);
-                              setAllErrors({
-                                ...allErrors,
-                                clientDOBFieldError: "",
-                              });
-                            }}
-                          />
-                        </div>
-                        {allErrors.clientDOBFieldError && (
-                          <p className="field-error-message">
-                            {allErrors.clientDOBFieldError}
-                          </p>
-                        )}
+                      <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                        Client DOB
+                      </p>
+                      <div
+                        className={` ${
+                          allErrors.clientDOBFieldError
+                            ? "error-input"
+                            : "info-input-field"
+                        }`}
+                      >
+                        <input
+                          type="date" // Use 'date' type for date input
+                          value={clientDOB}
+                          onChange={(e) => {
+                            setclientDOB(e.target.value);
+                            // console.log(new Date(e.target.value).toString().split(" ")[1]);
+                            // console.log(new Date(e.target.value).toString().split(" ")[0]);
+                            // console.log(new Date(e.target.value).toString().split(" ")[2]);
+                            // console.log(new Date(e.target.value).toString().split(" ")[3]);
+                            setAllErrors({
+                              ...allErrors,
+                              clientDOBFieldError: "",
+                            });
+                          }}
+                        />
                       </div>
-                    <div>
-                      
+                      {allErrors.clientDOBFieldError && (
+                        <p className="field-error-message">
+                          {allErrors.clientDOBFieldError}
+                        </p>
+                      )}
                     </div>
-
+                    <div></div>
                   </div>
                 </div>
                 <div>
@@ -1199,7 +1192,10 @@ const InfoBody = () => {
                                 emailFieldError: "",
                               });
                               emailExistsErrorMessage = "";
-                              dispatch({type:actionTypes.CLIENT_INFO_FAILURE, payload:null})
+                              dispatch({
+                                type: actionTypes.CLIENT_INFO_FAILURE,
+                                payload: null,
+                              });
                             }}
                           />
                         </div>
@@ -1209,7 +1205,9 @@ const InfoBody = () => {
                           </p>
                         )}
                         {emailExistError && (
-                          <p className="field-error-message">{emailExistError}</p>
+                          <p className="field-error-message">
+                            {emailExistError}
+                          </p>
                         )}
                         {/* {emailExistsErrorMessage && <p className='field-error-message'>{emailExistsErrorMessage}</p>} */}
                       </div>

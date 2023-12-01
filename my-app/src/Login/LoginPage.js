@@ -35,14 +35,11 @@ const Login = ({ isLoggedIn }) => {
       setErrormail("Invalid email");
     } else if (isValidEmail(email) && password) {
       const loginResult = await dispatch(login(email, password));
-      const role=  localStorage.getItem("tokendata") &&   JSON.parse(localStorage.getItem("tokendata")).role;
+      // const role=  localStorage.getItem("tokendata") &&   JSON.parse(localStorage.getItem("tokendata")).role;
       if (loginResult.success === true) {
-        if (role === "SuperAdmin") {
-          history("/superadmin");
-        }
-        else{
+       
           history("/main");
-        }
+        
         
       } else {
         Swal.fire({

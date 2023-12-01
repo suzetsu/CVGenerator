@@ -49,14 +49,15 @@ const handleClick = () => {
         <div className='nav-links space-x-9 font-helvetica pl-1'>
             
             <div className='hoverNav' onClick={handleClick}>Home</div>
-            
-            <div className='hoverNav-company '>
+            { role === 'SuperAdmin' && (
+              <div className='hoverNav-company '>
               Company Details
               <div className='dropdown-menu hidden absolute shadow-md py-2 '>
                 <div className='pb-2'><a href='/addCompany' className='menu-item'>Add Company</a></div>
                 <div><a href='/viewCompany' className='menu-item' >View Company</a></div>
               </div>
-            </div>
+            </div>)}
+            
             
             <div className='hoverNav' onClick={() => history('/templateList')}>CV Template List</div>
             {/* {userRole === 'Admin' || userRole === 'SuperAdmin' ? (

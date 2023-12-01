@@ -903,14 +903,14 @@ const EditEmployee = () => {
                       <img
                         src={imagePreviewURL}
                         alt="Preview"
-                        style={{ maxWidth: "100%", maxHeight: "100%" }}
+                        style={{ maxWidth: "15%", maxHeight: "15%" }}
                       />
                     ) : // If no new image is selected, show the existing image
                     uploadedImage ? (
                       <img
                         style={{
                           backgroundImage: `url(data:image/jpg;base64,${uploadedImage})`,
-                          backgroundSize: "cover", // You can adjust this property as needed
+                          // backgroundSize: "cover",
                           width: "100px",
                           height: "100px",
                         }}
