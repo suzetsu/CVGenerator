@@ -139,3 +139,14 @@
     padding-right: 2rem;
   }
 }
+
+.image-class img:hover{
+  transform: scale(8);
+  position: absolute;
+}
+.image-class img{
+  transition: transform 0.3s ease-in;
+  cursor: pointer;
+  /* position: relative; */
+  width: 24px;
+}

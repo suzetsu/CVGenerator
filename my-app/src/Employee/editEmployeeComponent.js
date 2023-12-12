@@ -868,7 +868,6 @@ const EditEmployee = () => {
                     </p>
                   </div>
                 </div>
-
                 <div>
                   <p
                     className=" m-0 pb-4 font-roboto font-bold"
@@ -910,7 +909,7 @@ const EditEmployee = () => {
                       <img
                         style={{
                           backgroundImage: `url(data:image/jpg;base64,${uploadedImage})`,
-                          // backgroundSize: "cover",
+                          backgroundSize: "cover",
                           width: "100px",
                           height: "100px",
                         }}

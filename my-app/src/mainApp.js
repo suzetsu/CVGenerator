@@ -21,6 +21,7 @@ import About from "./Extra/about";
 import ProtectedRoute from "./ProtectedRoutes";
 import EditEmployee from "./Employee/editEmployeeComponent";
 import Superadmin from "./Dashboard/Superadmin";
+import FirstForm from "./CustomerDetails/InfoComponents/FirstForm";
 
 const MainApp = () => {
   return (
@@ -38,8 +39,14 @@ const MainApp = () => {
             </ProtectedRoute>
           }
         />
+        <Route path = 'firstForm' element = {
+          <ProtectedRoute>
+            <FirstForm />
+          </ProtectedRoute>
+        }/>
         <Route
-          path="main"
+          // path="main"
+          index
           element={
             <ProtectedRoute>
               <Main />

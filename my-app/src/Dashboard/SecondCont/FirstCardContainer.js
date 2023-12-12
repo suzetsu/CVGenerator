@@ -18,14 +18,16 @@ const FirstCardContainer = () => {
     
     
     
-    const getEmployeeCount = clientInfo.$values && Array.isArray(clientInfo.$values) ? clientInfo.$values.length:0
-        const getCompanyCount = companyInfo.$values && Array.isArray(companyInfo.$values) ? companyInfo.$values.length:0
+    const getEmployeeCount = clientInfo?.$values && Array.isArray(clientInfo.$values) ? clientInfo.$values.length:0
+        // const getCompanyCount = companyInfo.$values && Array.isArray(companyInfo.$values) ? companyInfo.$values.length:0
+        const getCompanyCount = companyInfo?.$values && Array.isArray(companyInfo.$values) ? companyInfo.$values.length : 0;
+
         function getTotalDepartmentCount(companyInfo) {
             let totalCount = 0;
           
-            if (companyInfo.$values && Array.isArray(companyInfo.$values)) {
+            if (companyInfo?.$values && Array.isArray(companyInfo.$values)) {
                 companyInfo.$values.forEach(company => {
-                  if (company.departments && company.departments.$values) {
+                  if (company?.departments && company.departments.$values) {
                     totalCount += company.departments.$values.length;
                   }
                 });

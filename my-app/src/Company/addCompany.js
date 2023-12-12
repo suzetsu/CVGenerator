@@ -17,6 +17,9 @@ const AddCompany = ({ token }) => {
   const [departments, setSelectedDepartment] = useState([]);
   const [currentDepartment, setCurrentDepartment] = useState(""); // Store current input department
   const [error, setError] = useState("");
+  const [formType, setFormType] = useState("");
+  const [previewImage, setPreviewImage] = useState("");
+  const [uploadedImage, setUploadedImage] = useState(null);
   
   const successStatus = useSelector(
     (state) => state.company.companyCreationStatus
@@ -126,6 +129,41 @@ const AddCompany = ({ token }) => {
       );
   };
 
+  let imagePreviewURL = null;
+  const handlePhotoUpload = (e) => {
+    const imageFile = e.target.files[0]; // Get the selected image fil
+
+    if (imageFile) {
+      // Optional: You can preview the image if needed
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        imagePreviewURL = event.target.result;
+        setPreviewImage(imagePreviewURL); // Store the image preview URL in state
+        console.log(`Previewing ${imagePreviewURL}`);
+      };
+      reader.readAsDataURL(imageFile);
+
+      // Store the selected image file in state (e.g., uploadedImage)
+      setUploadedImage(imageFile);
+      // console.log(uploadedImage);
+    }
+  };
+
+  const dataToPost = {
+    PAN,
+    name,
+    email,
+    address,
+    departments,
+    formType
+  };
+  
+
+  const formData = new FormData();
+  for (const key in dataToPost) { 
+    formData.append(key, dataToPost[key]);
+  }
+  formData.append("imageFile", uploadedImage);
   const handleClick = (e) => {
    
     e.preventDefault();
@@ -140,7 +178,7 @@ const AddCompany = ({ token }) => {
     //   setError('Company name already exists');
     // }
      else {
-      dispatch(createCompany({ PAN, name, email, address, departments }));
+      dispatch(createCompany(formData));
       console.log(errorMessage);
       if (errorMessage) {
         setError(errorMessage);
@@ -151,6 +189,8 @@ const AddCompany = ({ token }) => {
       setEmail('');
       // setDepartments([]);
       setSelectedDepartment([]);
+      setUploadedImage(null);
+      setFormType('');
       
       console.log(successStatus);
      
@@ -159,12 +199,12 @@ const AddCompany = ({ token }) => {
 console.log(successStatus);
   return (
     // <div className='flex justify-center h-[100vh] items-center bg-[#F0F4F3]'>
-    <div className="flex flex-col bg-[#F0F4F3] ">
+    <div className="flex flex-col bg-[#F0F4F3] h-[100%] ">
       {/* <div>
         <Navbar />
       </div> */}
-      <div className=" add-company-css flex justify-center pt-44 pb-10">
-        <div className="shadow-paper flex flex-col justify-center items-center bg-white pl-10 pr-10 pb-5 pt-5">
+      <div className=" add-company-css flex justify-center pt-40 pb-10">
+        <div className="shadow-paper flex flex-col justify-center items-center bg-white pl-10 pr-10 pb-5 pt-5 rounded-lg">
           <div>
             <img src={Logo} alt="" />
           </div>
@@ -175,7 +215,7 @@ console.log(successStatus);
                 <h2 className="p-0 m-0 text-lime-500">Add New Company</h2>
               </div>
               <div>
-                <div className=" flex flex-col gap-2 pt-4 pb-4 ">
+                <div className=" flex flex-col gap-4 pt-4 pb-4 ">
                   <div className="info-input-field-company">
                     <input
                       type="text"
@@ -247,15 +287,47 @@ console.log(successStatus);
                       onChange={handleEmailChange}
                     />
                   </div>
+                  <div className="info-input-field-company ">
+                  <input
+                    type="text"
+                    placeholder="Select Form Type"
+                    value={formType}
+                    // onChange={(e) => setFormType(e.target.value)}
+                    className="typeStyle"
+                  />
+                  <select
+                    value={formType}
+                    onChange={(e) => setFormType(e.target.value)}
+                  >
+                    <option value=""></option>
+                    <option value="Form 1">Form 1</option>
+                    <option value="Form 2">Form 2</option>
+                    <option value="Form 3">Form 3</option>
+                  </select>
                 </div>
-                <div className="flex justify-center pb-4">
-                  <button
+                <div>
+                  <label htmlFor="photo-upload" className="m-0 pb-2 font-helvetica text-sm font-semibold block">Select Company Logo:</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handlePhotoUpload}
+                    
+                  />
+                  <div
+                    className="image-container"
+                    style={{ backgroundImage: { imagePreviewURL } }}
+                  ></div>
+                
+                </div>
+                </div>
+                <div className="flex justify-center pb-4 mt-2">
+                  <div
                     type="submit"
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer"
+                    className="bg-blue-700 hover:bg-[#8FD448] text-white font-bold py-2 px-4 rounded-2xl cursor-pointer hover:scale-110 transition-transform duration-2000"
                     onClick={handleClick}
                   >
                     Add Company
-                  </button>
+                  </div>
                 </div>
                 {error && (
                   <p className="error-message flex justify-center">{error}</p>

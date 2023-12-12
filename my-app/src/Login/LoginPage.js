@@ -38,7 +38,7 @@ const Login = ({ isLoggedIn }) => {
       // const role=  localStorage.getItem("tokendata") &&   JSON.parse(localStorage.getItem("tokendata")).role;
       if (loginResult.success === true) {
        
-          history("/main");
+          history("/");
         
         
       } else {

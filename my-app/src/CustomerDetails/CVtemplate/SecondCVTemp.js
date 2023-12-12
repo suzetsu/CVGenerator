@@ -127,7 +127,7 @@ function formatDate(date, options) {
   return (
     <div className='  flex justify-center pt-12 bg-[#cde3e7] pb-10'>
         <div className='flex flex-col'>
-            <div className=' shadow-paper rounded-lg bg-[#FFF] w-[815px] download-pdf'>
+            <div className=' shadow-paper rounded-lg bg-[#FFF] download-pdf' style={{ width: '210mm', height: '297mm' }}>
                 <div className='p-4 '>
                     <div className='flex flex-col'>
                         <div className='flex flex-col gap-2'>

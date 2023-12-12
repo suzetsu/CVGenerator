@@ -3,18 +3,14 @@ import * as actionTypes from "./actionTypes";
 import { url } from "../Config";
 
 export const createCompany =
-  (PAN, name, email, address, departments) => async (dispatch) => {
+  (formData) => async (dispatch) => {
     try {
       console.log("HERE");
       dispatch({ type: actionTypes.COMPANY_CREATE_FAILURE, payload: null });
       const response = await axios.post(
         `${url}/api/Company`,
 
-        PAN,
-        name,
-        email,
-        address,
-        departments
+        formData,
       );
 
       dispatch({ type: actionTypes.COMPANY_CREATE_SUCCESS });

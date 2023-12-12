@@ -11,6 +11,7 @@ $primary-color: #dbdbdb;
   display: flex;
   position: fixed;
   z-index: 10;
+  width: 100%;
   // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
 }
 .side-logo{
@@ -25,13 +26,19 @@ $primary-color: #dbdbdb;
     padding-bottom: 3px;
 }
 .nav-links{
-    display: flex;
+    // display: flex;
     align-items: center;
     color: #FFF;
-    justify-content: space-between;
+    // justify-content: space-between;
     font-size: 14px;
     font-weight: 700;
 
+}
+.hoverNav-company:hover{
+    background-color: #4a5568;
+    border-radius: 4px;
+    padding: 4px;
+    transition: background-color 0.2s, color 0.3s;
 }
 .hoverNav {
     
@@ -50,6 +57,7 @@ $primary-color: #dbdbdb;
 .hoverNav-company {
   position: relative;
   cursor: pointer;
+  
 
   &:hover .dropdown-menu {
     display: block;
@@ -60,6 +68,7 @@ $primary-color: #dbdbdb;
     border-radius: 8px;
     
   }
+
 }
 
 .dropdown-menu {
@@ -72,6 +81,7 @@ $primary-color: #dbdbdb;
   z-index: 1;
   top: 100%;
   left: 0;
+  // transition: display 2s linear;
 }
 
 .menu-item {
@@ -107,3 +117,4 @@ $primary-color: #dbdbdb;
   }
 
 }
+

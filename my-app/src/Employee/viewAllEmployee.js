@@ -189,7 +189,7 @@ const ViewAllEmployee = () => {
 
   return (
     <div className="flex flex-col gap-9">
-      <div className="text-[#666] pt-[5rem] flex justify-center font-helvetica pl-4 text-lg font-bold">
+      <div className="text-[#666] pt-[5rem] flex justify-center font-helvetica pl-4 text-2xl font-bold">
         All Employee Details
       </div>
       <div className="flex justify-center">
@@ -266,11 +266,12 @@ const ViewAllEmployee = () => {
                         <td>{index + 1}</td>
                         <td className="flex gap-6">
                           {imageData && (
-                            <div className="m-0 p-0" onClick={() => handleImagePopupOpen(imageData)}>
+                            // <div className="m-0 p-0" onClick={() => handleImagePopupOpen(imageData)}>
+                            <div className="m-0 p-0 image-class">
                               <img
                                 src={`data:image/jpg;base64,${imageData}`}
                                 alt="location"
-                                className=" w-6 h- cursor-pointer  "
+                                className="  "
                               />
                             </div>
                           )}

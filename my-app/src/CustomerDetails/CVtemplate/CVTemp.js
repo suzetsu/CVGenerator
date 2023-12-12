@@ -102,10 +102,10 @@ const dateOfBirth = DOB.format(' DD MMMM YYYY');
     }
 
   return (
-    <div className='flex justify-center bg-[#AFEEEE] pb-4'>
-        <div className='pt-12'>
-            <div className=' shadow-paper rounded-lg bg-[#FFF] w-[815px] '>
-                <div className='flex flex-col p-2 download-pdf'>
+    <div className='flex justify-center bg-[#AFEEEE] pb-4' >
+        <div className='pt-12' >
+            <div className=' shadow-paper rounded-lg bg-[#FFF] download-pdf' style={{ width: '210mm', height: '297mm' }}>
+                <div className='flex flex-col p-2 '>
                     <div className='bg-[#121214] h-[10rem] flex gap-56 pl-8 items-center'>
                         <div className='w-[400px] '>
                         <h1 className='text-[#48a7ff] font-helvetica m-0 p-0'>{clientName} </h1> 
@@ -127,7 +127,7 @@ const dateOfBirth = DOB.format(' DD MMMM YYYY');
                         
                     </div>
                     <div className='flex pl-2 pt-1 font-helvetica'>
-                        <div className='w-[35%]  pl-2 bg-[#c7c7c7] pt-2 pb-2'>
+                        <div className='w-[35%] h-[58.8rem] pl-2 bg-[#c7c7c7] pt-2 pb-2'>
                             <div className='flex flex-col gap-4'>
                                 <div className='flex flex-col gap-1'>
                                 <h3 className='text-[#265683] m-0 p-0'>Contact Info</h3>

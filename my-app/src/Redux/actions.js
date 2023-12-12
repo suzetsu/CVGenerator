@@ -69,9 +69,7 @@ export const storeClientInfo = async(formData) => async (dispatch) => {
       `${url}/api/Client`,
       
         formData,
-      {
-        
-      }
+      
       
       
     );

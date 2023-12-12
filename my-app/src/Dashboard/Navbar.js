@@ -32,13 +32,13 @@ const NavBar = () => {
 
   // console.log(roleName);
 const handleClick = () => {
-  history('/main');
+  history('/');
 }
 
   return (
     <>
-    <div className='nav-container w-full shadow-paper flex gap-52 '>
-        <div className='side-logo'>
+    <div className='nav-container w-full shadow-paper gap-28  flex justify-center '>
+        <div className='side-logo cursor-pointer' onClick={handleClick}>
             <div>
             <img src={Logo} alt='logo'/>
             </div>
@@ -46,7 +46,7 @@ const handleClick = () => {
             <h1 className='logo-text font-helvetica'>EMS</h1>
             </div>
         </div>
-        <div className='nav-links space-x-9 font-helvetica pl-1'>
+        <div className='nav-links flex  gap-20 font-helvetica items-center'>
             
             <div className='hoverNav' onClick={handleClick}>Home</div>
             { role === 'SuperAdmin' && (
@@ -93,9 +93,7 @@ const handleClick = () => {
             
             {/* <div className='hoverNav'>Settings</div> */}
             
-           
-        </div>
-        <div className=' side-logo flex gap-1'>
+            <div className=' side-logo flex gap-1 ml-12'>
               <div className='relative'>
                 <img src={userCircle} alt='user'/>
                 <img src={userLogo} alt='user' className='center-image pb-4 pr-3'/>
@@ -106,6 +104,8 @@ const handleClick = () => {
               </div>
               
             </div>
+        </div>
+        
     </div>
     <Outlet />
     </>
