@@ -39,8 +39,7 @@ const EditEmployee = () => {
   const [bloodGroup, setBloodGroup] = useState(clickedEmployeeInfo.bloodGroup);
   const [clientDOB, setClientDOB] = useState(formattedDate);
   const [joiningDate, setJoiningDate] = useState(formattedJoiningDate);
-  const [clientLeavingDate, setClientLeavingDate] =
-    useState(formattedLeavingDate);
+  const [clientLeavingDate, setClientLeavingDate] = useState(formattedLeavingDate);
 
   
 
@@ -53,8 +52,16 @@ const EditEmployee = () => {
   const experienceJSON = JSON.parse(editedEmployee.experiences);
   const educationJSON = JSON.parse(editedEmployee.educations);
 
+  const otherInformationJSON = JSON.parse(editedEmployee.otherInformation);
+  const familyContactInformationJSON = JSON.parse(editedEmployee.familyContactInfo);
+  const skillsJSON = JSON.parse(editedEmployee.skills);
+  const skillsObject = skillsJSON[0]
+
   const [experiences, setExperiences] = useState(experienceJSON);
   const [education, setEducation] = useState(educationJSON);
+  const [skills, setSkills] = useState(skillsObject);
+  const [familyContact, setFamilyContact] = useState(familyContactInformationJSON);
+  const [otherInformation, setOtherInformation] = useState (otherInformationJSON);
 
   const handleOrganizationNameChange = (value, index) => {
     const updatedExperiences = [...experiences];
@@ -166,7 +173,7 @@ const EditEmployee = () => {
       degree,
       description,
 
-      skills,
+    
       imageFile,
       imagePath,
     } = editedEmployee;
@@ -180,6 +187,8 @@ const EditEmployee = () => {
       clientLeavingDate,
       clientDOB,
       skills: JSON.stringify(skills),
+      otherInformation: JSON.stringify(otherInformation),
+      familyContactInfo: JSON.stringify(familyContact)
     };
 
     const updatedClient = new FormData();

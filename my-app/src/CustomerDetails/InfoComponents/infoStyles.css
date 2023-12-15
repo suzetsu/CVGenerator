@@ -35,6 +35,15 @@
     position: relative;
    
   }
+  .info-input-field--smallfield input{
+    width: 55.548px;
+    height: 27.397px;
+    flex-shrink: 0;
+    border-radius: 5px;
+    border: 0.74px solid #000;
+    padding: 8px;
+    position: relative;
+  }
   .info-input-field input::placeholder{
     font-weight: 550;
     color: black;

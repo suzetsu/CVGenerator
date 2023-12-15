@@ -22,6 +22,8 @@ import ProtectedRoute from "./ProtectedRoutes";
 import EditEmployee from "./Employee/editEmployeeComponent";
 import Superadmin from "./Dashboard/Superadmin";
 import FirstForm from "./CustomerDetails/InfoComponents/FirstForm";
+import ChooseCompany from "./Company/ChooseCompany";
+import CVFormat from "./CustomerDetails/CVtemplate/CVFormat";
 
 const MainApp = () => {
   return (
@@ -39,6 +41,12 @@ const MainApp = () => {
             </ProtectedRoute>
           }
         />
+        <Route path = 'chooseCompany'
+        element = {
+          <ProtectedRoute>
+            <ChooseCompany />
+          </ProtectedRoute>
+        }/>
         <Route path = 'firstForm' element = {
           <ProtectedRoute>
             <FirstForm />
@@ -144,6 +152,13 @@ const MainApp = () => {
               <TemplateList />
             </ProtectedRoute>
           }
+        />
+        <Route path="CVFormat"
+        element={
+          <ProtectedRoute>
+            <CVFormat />
+          </ProtectedRoute>
+        }
         />
         <Route
           path="editEmployee"

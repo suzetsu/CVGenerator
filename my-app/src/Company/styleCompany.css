@@ -10,32 +10,7 @@
     /* box-shadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'; */
     z-index: 2; /* Ensure it appears above other content */
   }
-  .table-wrapper {
-    width: 100%;
-    overflow-x: auto;
-    /* position: absolute; */
-  }
-  .table-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .table-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid #ccc;
-  }
-  td {
-    padding: 8px;
-    white-space: nowrap;
-  }
-  .table-header td {
-    font-weight: bold;
-  }
-  .table-row td:last-child {
-    text-align: right;
-  }
+
 
   .selected-company {
     display: flex;

@@ -12,6 +12,7 @@ $primary-color: #dbdbdb;
   position: fixed;
   z-index: 10;
   width: 100%;
+  // max-width: 144rem;
   // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
 }
 .side-logo{
@@ -105,15 +106,12 @@ $primary-color: #dbdbdb;
 }
 
 @media screen and (max-width: 768px){
-  .nav-container{
-    // display: none;
-    // display: flex;
-    // align-items: center;
-
-
-  }
+  
   .main-style{
     flex-direction: row;
+  }
+  .nav-container {
+    max-width: 100%; /* Adjust the maximum width for smaller screens */
   }
 
 }

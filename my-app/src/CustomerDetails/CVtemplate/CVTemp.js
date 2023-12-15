@@ -10,9 +10,11 @@ import NepaliDate from 'nepali-date-converter'
 const CVTemp = () => {
 
 const location = useLocation();
-const employee = location.state;
+const employee =  location?.state;
 
-const employeeInfo = employee.employee
+const employeeInfo = employee && employee.employee
+
+
 console.log(employeeInfo)
 const {
     clientName,
@@ -100,7 +102,6 @@ const dateOfBirth = DOB.format(' DD MMMM YYYY');
         })
         
     }
-
   return (
     <div className='flex justify-center bg-[#AFEEEE] pb-4' >
         <div className='pt-12' >

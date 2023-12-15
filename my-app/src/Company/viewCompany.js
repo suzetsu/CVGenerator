@@ -104,15 +104,6 @@ const ViewCompany = ({ isLoggedIn}) => {
     const [selectedCompany, setSelectedCompany] = useState(null);
     const role=  localStorage.getItem("tokendata") &&   JSON.parse(localStorage.getItem("tokendata")).role;
 
-
-    console.log(role);
-    
-     
-
-     
-    
-
-
   useEffect(() => {
     dispatch(fetchCompanyInfo())
 }, [])

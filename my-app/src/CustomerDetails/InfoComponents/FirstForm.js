@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Form, useNavigate } from "react-router-dom";
+import { Form, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import "./infoStyles.css";
 import { storeClientInfo } from "../../Redux/actions";
@@ -21,8 +21,8 @@ import * as actionTypes from "../../Redux/actionTypes";
 const InfoBody = () => {
   const [clientName, setName] = useState("");
   const [clientPANNO, setPAN] = useState("");
- 
-  const [companyName, setCompany] = useState("");
+
+  
   const [departmentName, setDepartment] = useState("");
   const [municipality, setAddress] = useState("");
   const [municipalityNumber, setMUNno] = useState("");
@@ -31,9 +31,7 @@ const InfoBody = () => {
   const [clientJoiningDate, setJoiningDate] = useState("");
   const [clientLeavingDate, setLeavingDate] = useState("");
   const [clientDOB, setclientDOB] = useState("");
-  const [fatherName, setFatherName] = useState("");
-  const [spouseName, setSpouseName] = useState("");
-  const [religion, setReligion] = useState("");
+
   const [experiences, setExperiences] = useState([
     {
       organizationName: "",
@@ -55,23 +53,60 @@ const InfoBody = () => {
 
   const [designation, setDesignation] = useState("");
   const [phone, setMobile] = useState("");
-  const [homeNumber, setHomeNumber] = useState("");
+ 
   const [email, setEmail] = useState("");
 
-  const [skills, setSelectedSkills] = useState([]); // Store selected roles
-
-  const [currentSkill, setCurrentSkill] = useState(""); // Store current input role
   const [description, setDescription] = useState("");
   const [previewImage, setPreviewImage] = useState("");
   const [uploadedImage, setUploadedImage] = useState(null);
   const [bloodGroup, setBloodGroup] = useState("");
 
   const [fielderrorMessage, setFieldErrorMessage] = useState("");
-  const [gender, setGender] = useState('');
+  const [gender, setGender] = useState("");
   const [marriedStatus, setMarriedStatus] = useState('');
   const [tole, setTole] = useState('');
+  const [homeNumber, setHomeNumber] = useState("");
   const [weight, setWeight] = useState('');
   const [height, setHeight] = useState('');
+  const [swimming, setSwimming] = useState('')
+  const [license, setLicense] = useState('');
+  const [otherSkill, setOtherSkill] = useState('');
+  const [spouseNumber, setSpouseNumber] = useState('');
+  const [fatherName, setFatherName] = useState("");
+  const [spouseName, setSpouseName] = useState("");
+  const [religion, setReligion] = useState("");
+  const [sonNum, setSonNum] = useState('');
+  const [daughterNum, setDaughterNum] = useState('');
+  const [citizenNum, setCitizenNum] = useState('');
+  const [issueDistrict, setIssueDistrict] = useState('');
+  const [issueDate, setIssueDate] = useState('');
+  const [insuranceNum, setInsuranceNum] = useState('');
+  const [insuranceCompany, setInsuranceCompany] = useState('');
+  const [pfSsfNum, setPfSsfNum] = useState('');
+  const [citNum, setCitNum] = useState('');
+  const [branch, setBranch] = useState('');
+  const [affiliatedField, setAffiliationField] = useState('');
+  const [interestedField, setInterestedField] = useState('');
+  const [occupationName, setOccupationName] = useState('');
+  const [occupationType, setOccupationType] = useState('');
+  const [operationPeriod, setOperationPeriod] = useState('');
+  const [occupationLocation, setOccupationLocation] = useState('');
+  const [affiliatedOrganization, setAffiliationOrganization] = useState({
+    firstaffiliatedOrganization: '',
+    secondaffiliatedOrganization: '',
+    thirdaffiliatedOrganization: '',
+
+  });
+  const [appointmentStatus, setAppointmentStatus] = useState('');
+
+
+  const location = useLocation('');
+  const chosenCompanyInfo = location.state?.companyInfo
+  const formType = chosenCompanyInfo && chosenCompanyInfo.formType
+  const chosenCompanyName = chosenCompanyInfo && chosenCompanyInfo.name
+
+  const [companyName, setCompany] = useState(chosenCompanyName);
+ 
 
   const allError = {
     emailFieldError: "",
@@ -90,7 +125,7 @@ const InfoBody = () => {
     collegeFieldError: "",
     levelFieldError: "",
     degreeFieldError: "",
-    skillsFieldError: "",
+
     descriptionFieldError: "",
     bloodGroupFieldError: "",
     educationFieldError: "",
@@ -123,6 +158,7 @@ const InfoBody = () => {
     : [];
 
   const [showDistricts, setShowDistricts] = useState(false);
+  const [showIssueDistricts, setShowIssueDistricts] = useState(false)
   const [showDesignations, setShowDesignations] = useState(false);
 
   const [selectedOption, setSelectedOption] = useState("");
@@ -154,23 +190,30 @@ const InfoBody = () => {
   const companyDetails = useSelector((state) => state.company.companyData);
   // console.log(companyDetails)
   const companyInfo = companyDetails?.$values;
-  const companyNames = Array.isArray(companyInfo)
-    ? companyInfo.map((company) => company.name)
-    : [];
+  // const companyNames = Array.isArray(companyInfo)
+  //   ? companyInfo.map((company) => company.name)
+  //   : [];
 
   const [showDepartmentOptions, setShowDepartmentOptions] = useState(false);
   const [selectedDepartment, setSelectedDepartment] = useState("");
-  const departmentInfo = Array.isArray(companyInfo)
-    ? companyInfo.map((company) => company.departments)
+  const departmentInfo = Array.isArray(chosenCompanyInfo)
+    ? chosenCompanyInfo.map((company) => company.departments)
     : [];
   // console.log(departmentInfo)
   const departmentNames = Array.isArray(departmentInfo)
     ? departmentInfo.map((department) => department.$values)
     : [];
   const filteredDepartmentNames = departmentNames.filter(
-    (departments, index) => companyNames[index] === companyName
+    (departments, index) => chosenCompanyName[index] === companyName
   );
   const flattenedDepartmentNames = [].concat(...filteredDepartmentNames);
+
+  const handleAffiliationChange = (fieldName, value) => {
+    setAffiliationOrganization((prevAffiliation) => ({
+      ...prevAffiliation,
+      [fieldName]: value,
+    }));
+  };
 
   const handleDepartmentInputChange = (e) => {
     setAllErrors({ ...allErrors, departmentNameFieldError: "" });
@@ -206,9 +249,9 @@ const InfoBody = () => {
 
     setSelectedOption("");
   };
-  const filteredCompanyNames = companyNames.filter((company) => {
-    return company.toLowerCase().includes(companyName.toLowerCase());
-  });
+  // const filteredCompanyNames = companyNames.filter((company) => {
+  //   return company.toLowerCase().includes(companyName.toLowerCase());
+  // });
   const handleCompanyFocus = (e) => {
     setShowCompanyOptions(!showCompanyOptions);
   };
@@ -219,11 +262,12 @@ const InfoBody = () => {
   const inputRef4 = useRef(null);
   const inputRef5 = useRef(null);
   const inputRef6 = useRef(null);
+  const inputRef7 = useRef(null);
   const handleDocumentClick = (e) => {
-    if (inputRef.current && !inputRef.current.contains(e.target)) {
-      setShowCompanyOptions(false);
-      // setShowDepartmentOptions(false);
-    }
+    // if (inputRef.current && !inputRef.current.contains(e.target)) {
+    //   setShowCompanyOptions(false);
+    //   // setShowDepartmentOptions(false);
+    // }
     if (inputRef2.current && !inputRef2.current.contains(e.target)) {
       setShowDepartmentOptions(false);
     }
@@ -235,6 +279,9 @@ const InfoBody = () => {
     }
     if (inputRef5.current && !inputRef5.current.contains(e.target)) {
       setShowDistricts(false);
+    }
+    if (inputRef6.current && !inputRef6.current.contains(e.target)) {
+      setShowIssueDistricts(false);
     }
   };
 
@@ -249,12 +296,7 @@ const InfoBody = () => {
   const clientCreationStatus = useSelector(
     (state) => state.auth.clientCreationStatus
   );
-  console.log(clientCreationStatus);
-  const userRole = useSelector((state) => state.auth.role);
-  const isLoggedIn = useSelector((state) => state.auth.token);
-
-  // const [emailExistMsg, setEmailExistsMsg] = useState(emailExistsErrorMessage);
-  // console.log(emailExistMsg)
+ 
 
   const isValidEmail = (email) => {
     return String(email)
@@ -263,13 +305,32 @@ const InfoBody = () => {
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
       );
   };
+let [filteredDistrictNames, setFilteredDistrictNames] = useState([]);
+  //  filteredDistrictNames = districtNames.filter((option) =>
+  //   option.toLowerCase().includes(district.toLowerCase())
+  // );
 
   const handleDistrictChange = (e) => {
     setAllErrors({ ...allErrors, districtFieldError: "" });
     const districtValue = e.target.value;
     setDistrict(districtValue);
     setSelectedOption("");
+    // setFilteredDistrictNames(
+    //   districtNames.filter((option) =>
+    //     option.toLowerCase().includes(districtValue.toLowerCase())
+    //   )
+    // );
+    
   };
+
+  const handleIssueDistrictChange = (e) => {
+    const issuedistrictValue = e.target.value;
+    setIssueDistrict(issuedistrictValue);
+    setSelectedOption("");
+   
+  
+  }
+ 
 
   const handleDistrictClick = (option) => {
     // setFilteredOptions(option)
@@ -277,6 +338,24 @@ const InfoBody = () => {
     setShowDistricts(false);
     setSelectedOption(option);
     // console.log(option);
+  };
+  const handleIssueDistrictClick = (issuedoption) => { 
+    setIssueDistrict(issuedoption);
+    setShowIssueDistricts(false);
+    setSelectedOption(issuedoption);
+  }
+  
+  const handleDistrictFocus = () => {
+    setShowDistricts(!showDistricts);
+    setFilteredDistrictNames(
+      districtNames.filter((option) =>
+        option.toLowerCase().includes(district.toLowerCase())
+      )
+    );
+  };
+  const handleIssueDistrictFocus = () => {
+    setShowIssueDistricts(!showIssueDistricts);
+   
   };
   const handleDesignationChange = (e) => {
     setAllErrors({ ...allErrors, designationFieldError: "" });
@@ -290,9 +369,6 @@ const InfoBody = () => {
     setShowDesignations(false);
     setSelectedOption(option);
     // console.log(option);
-  };
-  const handleDistrictFocus = () => {
-    setShowDistricts(!showDistricts);
   };
   const handleDesignationFocus = () => {
     setShowDesignations(!showDesignations);
@@ -308,9 +384,7 @@ const InfoBody = () => {
     option.toLowerCase().includes(province.toLowerCase())
   );
 
-  const filteredDistrictNames = districtNames.filter((option) =>
-    option.toLowerCase().includes(district.toLowerCase())
-  );
+  
   const filteredDesignations = designationNames.filter((option) =>
     option.toLowerCase().includes(designation.toLowerCase())
   );
@@ -338,14 +412,19 @@ const InfoBody = () => {
 
     const experiencesJson = JSON.stringify(experiences);
     const educationJson = JSON.stringify(education);
+    const affiliatedOrganizationJSON = JSON.stringify(
+      affiliatedOrganization
+    );
 
     console.log(experiencesJson);
     console.log(educationJson);
-    console.log(skills);
+
 
     // })
     // setAllErrors(errors);
-    const clientInfo = {
+    let clientInfo;
+    if (formType === "Form 1" ){
+     clientInfo = {
       clientName,
       clientPANNO,
       companyName,
@@ -358,15 +437,180 @@ const InfoBody = () => {
       email,
       phone,
       description,
+      religion,
       experiences: experiencesJson,
       educations: educationJson,
-      skills,
       bloodGroup,
       joiningDate: clientJoiningDate,
-      clientLeavingDate,
-      clientDOB,
-      gender: gender,
-    };
+      clientDOB: clientDOB,
+      
+      gender,
+      marriedStatus,
+      swimming,
+      homeNumber,
+      
+
+      officialInformation: JSON.stringify({
+        // affiliatedField: affiliatedField,
+        appointment: appointmentStatus,
+        // interestedField : interestedField,
+      }),
+     
+      otherInformation: JSON.stringify({
+        citizenNum: citizenNum,
+        issueDistrict: issueDistrict,
+        issueDate: issueDate,
+        insuranceCompany:insuranceCompany,
+        insuranceNum: insuranceNum,
+        pfSsfNum: pfSsfNum,
+        citNum: citNum,
+
+      }),
+      familyContactInfo: JSON.stringify({
+        spouseName: spouseName,
+        spouseNumber: spouseNumber,
+        sonNum: sonNum,
+        daughterNum: daughterNum,
+      }),
+      skills: JSON.stringify( {
+        swimming: swimming,
+        license:license,
+        otherSkill: otherSkill,
+      })
+    }
+  }
+  else if (formType === 'Form 2'){
+    clientInfo = {
+      clientName,
+      clientPANNO,
+      companyName,
+      departmentName,
+      designation,
+      municipality,
+      municipalityNumber,
+      province,
+      district,
+      email,
+      phone,
+      description,
+      religion,
+      experiences: experiencesJson,
+      educations: educationJson,
+      bloodGroup,
+      joiningDate: clientJoiningDate,
+      clientDOB: clientDOB,
+      
+      gender,
+      marriedStatus,
+      swimming,
+      homeNumber,
+      
+      branch: branch? branch: null,
+      occupations: JSON.stringify({
+        occupationType: occupationType,
+        occupationLocation: occupationLocation,
+        occupationName: occupationName,
+        operationPeriod: operationPeriod,
+      }),
+
+      officialInformation: JSON.stringify({
+        affiliatedField: affiliatedField,
+        // appointment: appointmentStatus,
+        interestedField : interestedField,
+      }),
+      // affiliatedOrganization: affiliatedOrganizationJSON,
+      otherInformation: JSON.stringify({
+        citizenNum: citizenNum,
+        issueDistrict: issueDistrict,
+        issueDate: issueDate,
+        insuranceCompany:insuranceCompany,
+        insuranceNum: insuranceNum,
+        pfSsfNum: pfSsfNum,
+        citNum: citNum,
+
+      }),
+      familyContactInfo: JSON.stringify({
+        spouseName: spouseName,
+        spouseNumber: spouseNumber,
+        sonNum: sonNum,
+        daughterNum: daughterNum,
+      }),
+      skills: JSON.stringify( {
+        swimming: swimming,
+        license:license,
+        otherSkill: otherSkill,
+      })
+    }
+  }
+    else if (formType === 'Form 3'){
+       clientInfo = {
+        clientName,
+        clientPANNO,
+        companyName,
+        departmentName,
+        designation,
+        municipality,
+        municipalityNumber,
+        province,
+        district,
+        email,
+        phone,
+        description,
+        religion,
+        experiences: experiencesJson,
+        educations: educationJson,
+        bloodGroup,
+        joiningDate: clientJoiningDate,
+        clientDOB: clientDOB,
+        
+        gender,
+        marriedStatus,
+        swimming,
+        homeNumber,
+        
+        branch: branch? branch: null,
+        occupations: JSON.stringify({
+          occupationType: occupationType,
+          occupationLocation: occupationLocation,
+          occupationName: occupationName,
+          operationPeriod: operationPeriod,
+        }),
+  
+        officialInformation: JSON.stringify({
+          affiliatedField: affiliatedField,
+          // appointment: appointmentStatus,
+          interestedField : interestedField,
+        }),
+        affiliatedOrganization: affiliatedOrganizationJSON,
+        otherInformation: JSON.stringify({
+          citizenNum: citizenNum,
+          issueDistrict: issueDistrict,
+          issueDate: issueDate,
+          insuranceCompany:insuranceCompany,
+          insuranceNum: insuranceNum,
+          pfSsfNum: pfSsfNum,
+          citNum: citNum,
+  
+        }),
+        familyContactInfo: JSON.stringify({
+          spouseName: spouseName,
+          spouseNumber: spouseNumber,
+          sonNum: sonNum,
+          daughterNum: daughterNum,
+        }),
+        skills: JSON.stringify( {
+          swimming: swimming,
+          license:license,
+          otherSkill: otherSkill,
+        })
+      }
+    }
+  
+
+    //  if(formType === 'Form 1'){
+    //    clientInfo["branch"] = branch
+    //    clientInfo[""] = branch
+    //  }
 
     const formData = new FormData();
     for (const key in clientInfo) {
@@ -409,26 +653,26 @@ const InfoBody = () => {
     } else {
       dispatch(await storeClientInfo(formData));
 
-      setName("");
-      setPAN("");
-      setAddress("");
-      setMUNno("");
-      setDistrict("");
-      setProvince("");
-      setDesignation("");
-      setMobile("");
-      setEmail("");
-      setDescription("");
-      setCompany("");
-      setDepartment("");
-      setBloodGroup("");
-      setJoiningDate("");
-      setLeavingDate("");
-      setclientDOB("");
-      setExperiences([]);
-      setEducation([]);
-      setCurrentSkill([]);
-      setUploadedImage("");
+      // setName("");
+      // setPAN("");
+      // setAddress("");
+      // setMUNno("");
+      // setDistrict("");
+      // setProvince("");
+      // setDesignation("");
+      // setMobile("");
+      // setEmail("");
+      // setDescription("");
+      // setCompany("");
+      // setDepartment("");
+      // setBloodGroup("");
+      // setJoiningDate("");
+      // setLeavingDate("");
+      // setclientDOB("");
+      // setExperiences([]);
+      // setEducation([]);
+
+      // setUploadedImage("");
     }
   };
 
@@ -546,11 +790,10 @@ const InfoBody = () => {
                           Client Name
                         </p>
                         <div
-                          className={` ${
-                            allErrors.clientNameFieldError
-                              ? "error-input"
-                              : "info-input-field"
-                          }`}
+                          className={` ${allErrors.clientNameFieldError
+                            ? "error-input"
+                            : "info-input-field"
+                            }`}
                         >
                           <input
                             type="text"
@@ -576,11 +819,10 @@ const InfoBody = () => {
                           Client DOB
                         </p>
                         <div
-                          className={` ${
-                            allErrors.clientDOBFieldError
-                              ? "error-input"
-                              : "info-input-field"
-                          }`}
+                          className={` ${allErrors.clientDOBFieldError
+                            ? "error-input"
+                            : "info-input-field"
+                            }`}
                         >
                           <input
                             type="date" // Use 'date' type for date input
@@ -601,15 +843,15 @@ const InfoBody = () => {
                             {allErrors.clientDOBFieldError}
                           </p>
                         )}
-                        
+
                       </div>
                       <div className="flex flex-col gap-1 pt-2 ">
                         <p className="p-0 m-0 font-helvetica text-xs font-semibold">
                           Religion
                         </p>
                         <div
-                          className= "info-input-field"
-                          
+                          className="info-input-field"
+
                         >
                           <input
                             type="text"
@@ -621,7 +863,7 @@ const InfoBody = () => {
                           />
                         </div>
                       </div>
-                      
+
 
                       <div></div>
                     </div>
@@ -632,11 +874,10 @@ const InfoBody = () => {
                           Father's Name
                         </p>
                         <div
-                          className={` ${
-                            allErrors.clientPANNOfieldError
-                              ? "error-input"
-                              : "info-input-field"
-                          }`}
+                          className={` ${allErrors.clientPANNOfieldError
+                            ? "error-input"
+                            : "info-input-field"
+                            }`}
                         >
                           <input
                             type="text"
@@ -648,123 +889,119 @@ const InfoBody = () => {
                           />
                         </div>
                       </div>
-                      
+
                       <div className="flex flex-col gap-1 pt-2 ">
                         <p className="p-0 m-0 font-helvetica text-xs font-semibold pt-1">
                           Gender:
                         </p>
                         <div
-                          className= 'flex items-center gap-2 content-center font-helvetica text-sm pt-1'
+                          className='flex items-center gap-2 content-center font-helvetica text-sm pt-1'
                         >
                           <label className="flex content-center m-0 p-0">
                             <input
                               className="flex content-center items-center pl-1 ml-1 mb-0 mt-0 pb-0 pt-0 "
                               type="radio"
                               name="gender"
-                              value='male'
-                              checked={gender === "male"}
+                              value='Male'
+                              checked={gender === "Male"}
                               onChange={(e) => {
-                                setGender( e.target.checked );
-                                setAllErrors({
-                                  ...allErrors,
-                                  genderfieldError: "",
-                                });
+
+                                setGender("Male");
+
                               }}
                             />
                             Male
                           </label>
                           <label className="flex content-center ">
                             <input
-                            className="flex content-center items-center pl-1 ml-1 mb-0 mt-0 pb-0 pt-0"
+                              className="flex content-center items-center pl-1 ml-1 mb-0 mt-0 pb-0 pt-0"
                               type="radio"
                               name="gender"
-                              value="female"
-                              checked={gender === "female"} 
+                              value="Female"
+                              checked={gender === "Female"}
                               onChange={(e) => {
-                                setGender( e.target.value );
-                                setAllErrors({
-                                  ...allErrors,
-                                  genderfieldError: "",
-                                });
+                                setGender("Female");
+
+                                console.log(gender);
+
                               }}
                             />
                             Female
                           </label>
                           <label className="flex content-center">
                             <input
-                            className="flex content-center items-center pl-1 ml-1 mb-0 mt-0 pb-0 pt-0"
+                              className="flex content-center items-center pl-1 ml-1 mb-0 mt-0 pb-0 pt-0"
                               type="radio"
                               name="gender"
-                              value="others"
-                              checked={gender === "others"}
+                              value="Others"
+                              checked={gender === "Others"}
                               onChange={(e) => {
-                                console.log(gender);
-                                setGender( e.target.value );
-                                setAllErrors({
-                                  ...allErrors,
-                                  genderfieldError: "",
-                                });
+
+                                setGender("Others");
+                                
                               }}
                             />
                             Others
                           </label>
                         </div>
-                        {allErrors.genderfieldError && (
-                          <p className="field-error-message">
-                            {allErrors.genderfieldError}
-                          </p>
-                        )}
+                        
+                        
+                       
                       </div>
                       <div className="flex flex-col gap-1 pt-2 pl-3">
                         <p className="p-0 m-0 font-helvetica text-xs font-semibold pt-1">
                           Marital Status:
                         </p>
                         <div
-                          className= 'flex items-center gap-2 content-center font-helvetica text-sm pt-1'
+                          className='flex items-center gap-2 content-center font-helvetica text-sm pt-1'
                         >
                           <label className="flex content-center m-0 p-0">
                             <input
                               className="flex content-center items-center pl-1 ml-1 mb-0 mt-0 pb-0 pt-0 "
                               type="radio"
-                              value='married'
-                              checked={marriedStatus === "married"}
+                              value='Married'
+                              checked={marriedStatus === "Married"}
                               onChange={(e) => {
-                                setMarriedStatus(e.target.value);
-                                setAllErrors({
-                                  ...allErrors,
-                                  genderfieldError: "",
-                                });
+                                setMarriedStatus('Married');
+                               
                               }}
                             />
                             Married
                           </label>
                           <label className="flex content-center ">
                             <input
-                            className="flex content-center items-center pl-1 ml-1 mb-0 mt-0 pb-0 pt-0"
+                              className="flex content-center items-center pl-1 ml-1 mb-0 mt-0 pb-0 pt-0"
                               type="radio"
-                              value='unmarried'
-                              checked={marriedStatus === "unmarried"}
+                              value='Unmarried'
+                              checked={marriedStatus === "Unmarried"}
                               onChange={(e) => {
-                                setMarriedStatus(e.target.value);
-                                setAllErrors({
-                                  ...allErrors,
-                                  genderfieldError: "",
-                                });
+                                setMarriedStatus('Unmarried');
+                               
                               }}
                             />
                             Unmarried
                           </label>
                         </div>
-                        {allErrors.genderfieldError && (
-                          <p className="field-error-message">
-                            {allErrors.genderfieldError}
-                          </p>
-                        )}
+                        
                       </div>
                     </div>
-                    <div className="flex gap-14">
-                    
-                    </div>
+                    <div className="flex gap-14 pt-2">
+                    <div className="flex flex-col gap-2">
+                            <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                              Company Name
+                            </p>
+                            <div className="info-input-field">
+                              <input
+                                type="text"
+                                value={companyName}
+                                placeholder="Enter Company name"
+                                onChange={(e) =>
+                                  setCompany(e.target.value)
+                                }
+                              />
+                            </div>
+                          </div>
+                      </div>
 
                     <div></div>
                   </div>
@@ -785,13 +1022,11 @@ const InfoBody = () => {
                         </p>
                         <div
                           className={
-                            ` ${
-                              errorMail ? "error-input" : "info-input-field"
+                            ` ${errorMail ? "error-input" : "info-input-field"
                             }` ||
-                            ` ${
-                              allErrors.emailFieldError
-                                ? "error-input"
-                                : "info-input-field"
+                            ` ${allErrors.emailFieldError
+                              ? "error-input"
+                              : "info-input-field"
                             }`
                           }
                         >
@@ -831,11 +1066,10 @@ const InfoBody = () => {
                           Client Mobile No.
                         </p>
                         <div
-                          className={` ${
-                            allErrors.phoneFieldError
-                              ? "error-input"
-                              : "info-input-field"
-                          }`}
+                          className={` ${allErrors.phoneFieldError
+                            ? "error-input"
+                            : "info-input-field"
+                            }`}
                         >
                           <input
                             type="tel"
@@ -861,30 +1095,20 @@ const InfoBody = () => {
                           Home No.
                         </p>
                         <div
-                          className={` ${
-                            allErrors.phoneFieldError
-                              ? "error-input"
-                              : "info-input-field"
-                          }`}
+                          className="info-input-field"
+
                         >
                           <input
                             type="number"
-                            value={phone}
-                            placeholder="mobile number"
+                            value={homeNumber}
+                            placeholder="Home number"
                             onChange={(e) => {
-                              setMobile(e.target.value);
-                              setAllErrors({
-                                ...allErrors,
-                                phoneFieldError: "",
-                              });
+                              setHomeNumber(e.target.value);
+
                             }}
                           />
                         </div>
-                        {allErrors.phoneFieldError && (
-                          <p className="field-error-message">
-                            {allErrors.phoneFieldError}
-                          </p>
-                        )}
+
                       </div>
                       <div></div>
                     </div>
@@ -904,11 +1128,10 @@ const InfoBody = () => {
                           Province
                         </p>
                         <div
-                          className={` ${
-                            allErrors.provinceFieldError
-                              ? "error-input"
-                              : "info-input-field flex gap-1"
-                          }`}
+                          className={` ${allErrors.provinceFieldError
+                            ? "error-input"
+                            : "info-input-field flex gap-1"
+                            }`}
                         >
                           <input
                             type="text"
@@ -946,11 +1169,10 @@ const InfoBody = () => {
                           District
                         </p>
                         <div
-                          className={` ${
-                            allErrors.districtFieldError
-                              ? "error-input"
-                              : "info-input-field"
-                          }`}
+                          className={` ${allErrors.districtFieldError
+                            ? "error-input"
+                            : "info-input-field"
+                            }`}
                         >
                           <input
                             type="text"
@@ -965,16 +1187,16 @@ const InfoBody = () => {
                               <div className="autocomplete-options">
                                 {Array.isArray(filteredDistrictNames)
                                   ? filteredDistrictNames.map((option) => (
-                                      <div
-                                        key={option}
-                                        className="option"
-                                        onClick={() =>
-                                          handleDistrictClick(option)
-                                        }
-                                      >
-                                        {option}
-                                      </div>
-                                    ))
+                                    <div
+                                      key={option}
+                                      className="option"
+                                      onClick={() =>
+                                        handleDistrictClick(option)
+                                      }
+                                    >
+                                      {option}
+                                    </div>
+                                  ))
                                   : null}
                               </div>
                             </div>
@@ -991,11 +1213,10 @@ const InfoBody = () => {
                           Municipality
                         </p>
                         <div
-                          className={` ${
-                            allErrors.municipalityFieldError
-                              ? "error-input"
-                              : "info-input-field"
-                          }`}
+                          className={` ${allErrors.municipalityFieldError
+                            ? "error-input"
+                            : "info-input-field"
+                            }`}
                         >
                           <input
                             type="text"
@@ -1025,11 +1246,10 @@ const InfoBody = () => {
                           MUN No.
                         </p>
                         <div
-                          className={` ${
-                            allErrors.municipalityNumberFieldError
-                              ? "error-input"
-                              : "info-input-field"
-                          }`}
+                          className={` ${allErrors.municipalityNumberFieldError
+                            ? "error-input"
+                            : "info-input-field"
+                            }`}
                         >
                           <input
                             type="number"
@@ -1056,11 +1276,7 @@ const InfoBody = () => {
                           Tole
                         </p>
                         <div
-                          className={` ${
-                            allErrors.districtFieldError
-                              ? "error-input"
-                              : "info-input-field"
-                          }`}
+                          className="info-input-field"
                         >
                           <input
                             type="text"
@@ -1068,31 +1284,10 @@ const InfoBody = () => {
                             placeholder="Tole Name"
                             onChange={(e) => {
                               setTole(e.target.value);
-                              setAllErrors({
-                                ...allErrors,
-                                districtFieldError: "",
-                              });
+                              
                             }}
                           />
-                          {showDistricts && (
-                            <div>
-                              <div className="autocomplete-options">
-                                {Array.isArray(filteredDistrictNames)
-                                  ? filteredDistrictNames.map((option) => (
-                                      <div
-                                        key={option}
-                                        className="option"
-                                        onClick={() =>
-                                          handleDistrictClick(option)
-                                        }
-                                      >
-                                        {option}
-                                      </div>
-                                    ))
-                                  : null}
-                              </div>
-                            </div>
-                          )}
+                          
                         </div>
                         {allErrors.districtFieldError && (
                           <p className="field-error-message">
@@ -1103,7 +1298,7 @@ const InfoBody = () => {
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-col gap-2">
+                {(formType === 'Form 1')&& <div className="flex flex-col gap-2">
                   <p
                     className=" m-0 p-0 font-roboto font-bold"
                     style={{ color: "#1670B2", fontSize: "16px" }}
@@ -1118,11 +1313,10 @@ const InfoBody = () => {
                             Designation
                           </p>
                           <div
-                            className={` ${
-                              allErrors.designationFieldError
-                                ? "error-input"
-                                : "info-input-field flex gap-1"
-                            }`}
+                            className={` ${allErrors.designationFieldError
+                              ? "error-input"
+                              : "info-input-field flex gap-1"
+                              }`}
                           >
                             <input
                               type="text"
@@ -1142,16 +1336,16 @@ const InfoBody = () => {
                               <div className="autocomplete-options mt-7">
                                 {Array.isArray(filteredDesignations)
                                   ? filteredDesignations.map((option) => (
-                                      <div
-                                        key={option}
-                                        className="option"
-                                        onClick={() =>
-                                          handleDesignationClick(option)
-                                        }
-                                      >
-                                        {option}
-                                      </div>
-                                    ))
+                                    <div
+                                      key={option}
+                                      className="option"
+                                      onClick={() =>
+                                        handleDesignationClick(option)
+                                      }
+                                    >
+                                      {option}
+                                    </div>
+                                  ))
                                   : null}
                               </div>
                             )}
@@ -1167,11 +1361,10 @@ const InfoBody = () => {
                             Department Name
                           </p>
                           <div
-                            className={` ${
-                              allErrors.departmentNameFieldError
-                                ? "error-input"
-                                : "info-input-field"
-                            }`}
+                            className={` ${allErrors.departmentNameFieldError
+                              ? "error-input"
+                              : "info-input-field"
+                              }`}
                           >
                             <input
                               type="text"
@@ -1212,11 +1405,10 @@ const InfoBody = () => {
                             Client Joining Date
                           </p>
                           <div
-                            className={` ${
-                              allErrors.clientJoiningDateFieldError
-                                ? "error-input"
-                                : "info-input-field"
-                            }`}
+                            className={` ${allErrors.clientJoiningDateFieldError
+                              ? "error-input"
+                              : "info-input-field"
+                              }`}
                           >
                             <input
                               type="date" // Use 'date' type for date input
@@ -1240,14 +1432,59 @@ const InfoBody = () => {
                         </div>
                       </div>
                       <div className="flex gap-14"></div>
-                      <div className="flex flex-col gap-1 pt-2">
-                        <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                      <div className="flex flex-col gap-1 pt-2 ">
+                        <p className="p-0 m-0 font-helvetica text-xs font-semibold pt-1">
                           Type Of Appointment:
                         </p>
-                      </div>
+                        <div
+                          className='flex items-center gap-2 content-center font-helvetica text-sm pt-1'
+                        >
+                          <label className="flex content-center m-0 p-0">
+                            <input
+                              className="flex content-center items-center pl-1 ml-1 mb-0 mt-0 pb-0 pt-0 "
+                              type="radio"
+                              value='Permanent'
+                              checked={appointmentStatus === "Permanent"}
+                              onChange={(e) => {
+                                setAppointmentStatus('Permanent');
+                               
+                              }}
+                            />
+                            Permanent
+                          </label>
+                          <label className="flex content-center ">
+                            <input
+                              className="flex content-center items-center pl-1 ml-1 mb-0 mt-0 pb-0 pt-0"
+                              type="radio"
+                              value='Contract'
+                              checked={appointmentStatus === "Contract"}
+                              onChange={(e) => {
+                                setAppointmentStatus('Contract');
+                               
+                              }}
+                            />
+                            Contract
+                          </label>
+                          <label className="flex content-center ">
+                            <input
+                              className="flex content-center items-center pl-1 ml-1 mb-0 mt-0 pb-0 pt-0"
+                              type="radio"
+                              value='Other'
+                              checked={appointmentStatus === "Other"}
+                              onChange={(e) => {
+                                setAppointmentStatus('Other');
+                               
+                              }}
+                            />
+                            Other
+                          </label>
+                        </div>
+                        
+                        </div>
                     </div>
                   </div>
                 </div>
+                }
                 <div className="flex flex-col gap-2">
                   <p
                     className=" m-0 p-0 font-roboto font-bold"
@@ -1258,117 +1495,835 @@ const InfoBody = () => {
                   <div className=" pl-2">
                     <div className=" flex flex-col pl-2">
                       <div className="flex  gap-14">
-                      <div className="flex flex-col gap-1 pt-2">
-                        <p className="p-0 m-0 font-helvetica text-xs font-semibold">
-                          Height(ft)
-                        </p>
-                        <div
-                          className={` ${
-                            allErrors.clientNameFieldError
-                              ? "error-input"
-                              : "info-input-field"
-                          }`}
-                        >
-                          <input
-                            type="text"
-                            value={height}
-                            placeholder="Enter height"
-                            onChange={(e) => {
-                              setHeight(e.target.value);
-                              setAllErrors({
-                                ...allErrors,
-                                clientNameFieldError: "",
-                              });
-                            }}
-                          />
-                        </div>
-                        {allErrors.clientNameFieldError && (
-                          <p className=" field-error-message">
-                            {allErrors.clientNameFieldError}
-                          </p>
-                        )}
-                      </div>
-                      <div className="flex flex-col gap-1 pt-2">
-                        <p className="p-0 m-0 font-helvetica text-xs font-semibold">
-                          Weight(kg)
-                        </p>
-                        <div
-                          className={` ${
-                            allErrors.clientNameFieldError
-                              ? "error-input"
-                              : "info-input-field"
-                          }`}
-                        >
-                          <input
-                            type="text"
-                            value={weight}
-                            placeholder="Enter weight"
-                            onChange={(e) => {
-                              setWeight(e.target.value);
-                              setAllErrors({
-                                ...allErrors,
-                                clientNameFieldError: "",
-                              });
-                            }}
-                          />
-                        </div>
-                        {allErrors.clientNameFieldError && (
-                          <p className=" field-error-message">
-                            {allErrors.clientNameFieldError}
-                          </p>
-                        )}
-                      </div>
                         <div className="flex flex-col gap-1 pt-2">
-                        <p className="p-0 m-0 font-helvetica text-xs font-semibold">
-                          Blood Group
-                        </p>
-                        <div
-                          className={` ${
-                            allErrors.bloodGroupFieldError
+                          <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                            Height(ft)
+                          </p>
+                          <div
+                            className={` ${allErrors.clientNameFieldError
+                              ? "error-input"
+                              : "info-input-field"
+                              }`}
+                          >
+                            <input
+                              type="text"
+                              value={height}
+                              placeholder="Enter height"
+                              onChange={(e) => {
+                                setHeight(e.target.value);
+                                setAllErrors({
+                                  ...allErrors,
+                                  clientNameFieldError: "",
+                                });
+                              }}
+                            />
+                          </div>
+                          {allErrors.clientNameFieldError && (
+                            <p className=" field-error-message">
+                              {allErrors.clientNameFieldError}
+                            </p>
+                          )}
+                        </div>
+                        <div className="flex flex-col gap-1 pt-2">
+                          <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                            Weight(kg)
+                          </p>
+                          <div
+                            className={` ${allErrors.clientNameFieldError
+                              ? "error-input"
+                              : "info-input-field"
+                              }`}
+                          >
+                            <input
+                              type="text"
+                              value={weight}
+                              placeholder="Enter weight"
+                              onChange={(e) => {
+                                setWeight(e.target.value);
+                                setAllErrors({
+                                  ...allErrors,
+                                  clientNameFieldError: "",
+                                });
+                              }}
+                            />
+                          </div>
+                          {allErrors.clientNameFieldError && (
+                            <p className=" field-error-message">
+                              {allErrors.clientNameFieldError}
+                            </p>
+                          )}
+                        </div>
+                        <div className="flex flex-col gap-1 pt-2">
+                          <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                            Blood Group
+                          </p>
+                          <div
+                            className={` ${allErrors.bloodGroupFieldError
                               ? "error-input"
                               : "info-input-field flex gap-1"
-                          }`}
-                        >
-                          <input
-                            type="text"
-                            value={bloodGroup}
-                            placeholder="Client Blood Group"
-                            onChange={(e) => {
-                              setBloodGroup(e.target.value);
-                              setAllErrors({
-                                ...allErrors,
-                                bloodGroupFieldError: "",
-                              });
-                            }}
-                          />
-                          <select
-                            value={bloodGroup}
-                            onChange={(e) => setBloodGroup(e.target.value)}
+                              }`}
                           >
-                            <option value=""></option>
-                            <option value="A +ve">A +ve</option>
-                            <option value="A -ve">A -ve</option>
-                            <option value="O +ve">O +ve</option>
-                            <option value="O -ve">O -ve</option>
-                            <option value="AB +ve">AB +ve</option>
-                            <option value="AB -ve">AB -ve</option>
-                          </select>
+                            <input
+                              type="text"
+                              value={bloodGroup}
+                              placeholder="Client Blood Group"
+                              onChange={(e) => {
+                                setBloodGroup(e.target.value);
+                                setAllErrors({
+                                  ...allErrors,
+                                  bloodGroupFieldError: "",
+                                });
+                              }}
+                            />
+                            <select
+                              value={bloodGroup}
+                              onChange={(e) => setBloodGroup(e.target.value)}
+                            >
+                              <option value=""></option>
+                              <option value="A +ve">A +ve</option>
+                              <option value="A -ve">A -ve</option>
+                              <option value="O +ve">O +ve</option>
+                              <option value="O -ve">O -ve</option>
+                              <option value="AB +ve">AB +ve</option>
+                              <option value="AB -ve">AB -ve</option>
+                            </select>
+                          </div>
+                          {allErrors.bloodGroupFieldError && (
+                            <p className="field-error-message">
+                              {allErrors.bloodGroupFieldError}
+                            </p>
+                          )}
                         </div>
-                        {allErrors.bloodGroupFieldError && (
-                          <p className="field-error-message">
-                            {allErrors.bloodGroupFieldError}
-                          </p>
-                        )}
-                      </div>
-                     
+
                       </div>
                       <div className="flex gap-14"></div>
                       <div className="flex flex-col gap-1 pt-2">
-                        
+
                       </div>
                     </div>
                   </div>
                 </div>
+                <div className="flex flex-col gap-2">
+                  <p
+                    className=" m-0 p-0 font-roboto font-bold"
+                    style={{ color: "#1670B2", fontSize: "16px" }}
+                  >
+                    Skills
+                  </p>
+                  <div className=" pl-2">
+                    <div className=" flex flex-col pl-2">
+                      <div className="flex  gap-14">
+                        <div className="flex flex-col gap-1 pt-2">
+                          <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                            Driving License Category
+                          </p>
+                          <div
+                            className='info-input-field'
+                          >
+                            <input
+                              type="text"
+                              value={license}
+                              placeholder="E.g. A, B, K"
+                              onChange={(e) => {
+                                setLicense(e.target.value);
+
+                              }}
+                            />
+                          </div>
+
+                        </div>
+                        <div className="flex flex-col gap-1 pt-2">
+                          <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                            Swimming
+                          </p>
+                          <div >
+                            <div className="flex items-center gap-4">
+                              <label className="flex content-center m-0 p-0">
+                                <input
+
+                                  type="checkbox"
+                                  value= "Yes"
+                                  checked={swimming === 'Yes'}
+                                  onChange={() => {
+                                    setSwimming('Yes');
+                                    
+
+                                  }}
+                                />
+                                Yes
+                              </label>
+                              <label >
+                                <input
+
+                                  type="checkbox"
+                                  value='No'
+                                  checked={swimming === 'No'}
+                                  onChange={() => {
+                                    setSwimming('No')
+
+                                  }}
+                                />
+                                No
+                              </label>
+                            </div>
+                          </div>
+
+                        </div>
+
+                        <div className="flex flex-col gap-1 pt-2">
+                          <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                            Others
+                          </p>
+                          <div
+                            className='info-input-field'
+                          >
+                            <input
+                              type="text"
+                              value={otherSkill}
+                              placeholder="Other skills"
+                              onChange={(e) => {
+                                setOtherSkill(e.target.value);
+
+                              }}
+                            />
+
+                          </div>
+
+                        </div>
+
+                      </div>
+                      <div className="flex gap-14"></div>
+                      <div className="flex flex-col gap-1 pt-2">
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <p
+                    className=" m-0 p-0 font-roboto font-bold"
+                    style={{ color: "#1670B2", fontSize: "16px" }}
+                  >
+                    Family Contact Information
+                  </p>
+                  <div className=" pl-2">
+                    <div className=" flex flex-col pl-2">
+                      <div className="flex  gap-14">
+                        <div className="flex flex-col gap-1 pt-2">
+                          <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                            Spouse Name
+                          </p>
+                          <div
+                            className='info-input-field'
+                          >
+                            <input
+                              type="text"
+                              value={spouseName}
+                              placeholder=" Spouse Name"
+                              onChange={(e) => {
+                                setSpouseName(e.target.value);
+
+                              }}
+                            />
+                          </div>
+
+                        </div>
+                        <div className="flex flex-col gap-1 pt-2">
+                          <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                            Contact No.
+                          </p>
+                          <div >
+                            <div
+                              className='info-input-field'
+                            >
+                              <input
+                                type="tel"
+                                value={spouseNumber}
+                                placeholder="Spouse Contact Number"
+                                onChange={(e) => {
+                                  setSpouseNumber(e.target.value);
+
+                                }}
+                              />
+                            </div>
+                          </div>
+
+                        </div>
+
+                        <div className="flex flex-col gap-1 pt-2">
+                          <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                            No. Of Children
+                          </p>
+                          <div className="flex gap-2">
+                            <p className=" p-0 m-0 font-helvetica text-xs font-thin ">Son:</p>
+                            <div
+                              className='info-input-field--smallfield'
+                            >
+                              <input
+                                type="text"
+                                value={sonNum}
+                                placeholder=""
+                                onChange={(e) => {
+                                  setSonNum(e.target.value);
+
+                                }}
+                              />
+
+                            </div>
+                            <p className=" p-0 m-0 font-helvetica text-xs font-thin ">Daughter:</p>
+                            <div
+                              className='info-input-field--smallfield'
+                            >
+                              <input
+                                type="text"
+                                value={daughterNum}
+                                placeholder=""
+                                onChange={(e) => {
+                                  setDaughterNum(e.target.value);
+
+                                }}
+                              />
+
+                            </div>
+                          </div>
+
+                        </div>
+
+                      </div>
+                      <div className="flex gap-14"></div>
+                      <div className="flex flex-col gap-1 pt-2">
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <p
+                    className=" m-0 pb-4 font-roboto font-bold"
+                    style={{ color: "#1670B2", fontSize: "16px" }}
+                  >
+                    Other Information
+                  </p>
+                  <div className="flex flex-col pl-2">
+                    <div className="flex  gap-14">
+                      <div className="flex flex-col gap-1 pt-2">
+                        <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                          Citizenship Number
+                        </p>
+                        <div
+                          className='info-input-field'
+                        >
+                          <input
+                            type="text"
+                            value={citizenNum}
+                            placeholder="province"
+                            onChange={
+                              (e) => {
+                                setCitizenNum(e.target.value);
+
+                              }
+                            }
+
+                          />
+
+
+                        </div>
+
+                      </div>
+                      <div className="flex flex-col gap-1 pt-2">
+                        <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                          Issued District
+                        </p>
+                        <div
+                          className='info-input-field'
+                        >
+                          <input
+                            type="text"
+                            value={issueDistrict}
+                            placeholder="district"
+                            onChange={handleIssueDistrictChange}
+                            onFocus={handleIssueDistrictFocus}
+                            ref={inputRef6}
+                          />
+                          {showIssueDistricts && (
+                            <div>
+                              <div className="autocomplete-options">
+                                {Array.isArray(filteredDistrictNames)
+                                  ? filteredDistrictNames.map((issuedoption) => (
+                                    <div
+                                      key={issuedoption}
+                                      className="option"
+                                      onClick={() =>
+                                        handleIssueDistrictClick(issuedoption)
+                                      }
+                                    >
+                                      {issuedoption}
+                                    </div>
+                                  ))
+                                  : null}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                      </div>
+                      <div className="flex flex-col gap-1 pt-2">
+                        <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                          Issued Date
+                        </p>
+                        <div
+                          className=' info-input-field'
+                        >
+                          <input
+                            type="text"
+                            value={issueDate}
+                            placeholder="Enter Issue Date"
+                            onChange={(e) => {
+                              setIssueDate(e.target.value);
+
+                            }}
+                          />
+                        </div>
+                        {allErrors.municipalityFieldError && (
+                          <p className="field-error-message">
+                            {allErrors.municipalityFieldError}
+                          </p>
+                        )}
+                      </div>
+
+                      <div></div>
+                    </div>
+                    <div className="flex  gap-14">
+                      <div className="flex flex-col gap-1 pt-2">
+                        <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                          PF/SSF Number
+                        </p>
+                        <div
+                          className="info-input-field"
+                        >
+                          <input
+                            type="number"
+                            value={pfSsfNum}
+                            placeholder="Pf/SSF Number"
+                            onChange={(e) => {
+                              setPfSsfNum(e.target.value);
+
+                            }}
+                          />
+                        </div>
+
+                      </div>
+
+                      <div className="flex flex-col gap-1 pt-2 ">
+                        <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                          PAN No.
+                        </p>
+                        <div
+                          className={` ${allErrors.clientPANNOfieldError
+                            ? "error-input"
+                            : "info-input-field"
+                            }`}
+                        >
+                          <input
+                            type="text"
+                            value={clientPANNO}
+                            placeholder="PAN No."
+                            onChange={(e) => {
+                              setPAN(e.target.value);
+                              setAllErrors({
+                                ...allErrors,
+                                clientPANNOfieldError: "",
+                              });
+                            }}
+                          />
+                        </div>
+                        {allErrors.clientPANNOfieldError && (
+                          <p className="field-error-message">
+                            {allErrors.clientPANNOfieldError}
+                          </p>
+                        )}
+                      </div>
+                      <div className="flex flex-col gap-1 pt-2 ">
+                        <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                          CIT No.
+                        </p>
+                        <div
+                          className="info-input-field"
+                        >
+                          <input
+                            type="text"
+                            value={citNum}
+                            placeholder="PAN No."
+                            onChange={(e) => {
+                              setCitNum(e.target.value);
+
+                            }}
+                          />
+                        </div>
+
+                      </div>
+                    </div>
+                    <div className="flex  gap-14">
+                      <div className="flex flex-col gap-1 pt-2 ">
+                        <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                          Insurance Number
+                        </p>
+                        <div
+                          className="info-input-field"
+                        >
+                          <input
+                            type="text"
+                            value={insuranceNum}
+                            placeholder="Insurance Company"
+                            onChange={(e) => {
+                              setInsuranceNum(e.target.value);
+
+                            }}
+                          />
+                        </div>
+
+                      </div>
+                      <div className="flex flex-col gap-1 pt-2 ">
+                        <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                          Insurance Comapny
+                        </p>
+                        <div
+                          className="info-input-field"
+                        >
+                          <input
+                            type="text"
+                            value={insuranceCompany}
+                            placeholder="Insurance Company"
+                            onChange={(e) => {
+                              setInsuranceCompany(e.target.value);
+
+                            }}
+                          />
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {(formType === 'Form 2' || formType === 'Form 3') &&
+                <div>
+                  <p
+                    className=" m-0 pb-4 font-roboto font-bold"
+                    style={{ color: "#1670B2", fontSize: "16px" }}
+                  >
+                    Business/Occupation
+                  </p>
+                  <div className="flex flex-col pl-2">
+                    <div className="flex  gap-14">
+                      <div className="flex flex-col gap-1 pt-2">
+                        <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                          Name
+                        </p>
+                        <div
+                          className='info-input-field'
+                        >
+                          <input
+                            type="text"
+                            value={occupationName}
+                            placeholder="business name"
+                            onChange={
+                              (e) => {
+                                setOccupationName(e.target.value);
+
+                              }
+                            }
+
+                          />
+
+
+                        </div>
+
+                      </div>
+                      <div className="flex flex-col gap-1 pt-2">
+                        <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                          Type
+                        </p>
+                        <div
+                          className='info-input-field'
+                        >
+                          <input
+                            type="text"
+                            value={occupationType}
+                            placeholder="Business type"
+                            onChange={
+                              (e) => {
+                                setOccupationType(e.target.value);
+
+                              }
+                            }
+
+                          />
+
+                        </div>
+
+                      </div>
+                      <div className="flex flex-col gap-1 pt-2">
+                        <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                          Operation Period
+                        </p>
+                        <div
+                          className=' info-input-field'
+                        >
+                          <input
+                            type="text"
+                            value={operationPeriod}
+                            placeholder="Enter duration of operation"
+                            onChange={(e) => {
+                              setOperationPeriod(e.target.value);
+
+                            }}
+                          />
+                        </div>
+
+                      </div>
+
+                      <div></div>
+                    </div>
+                    <div className="flex  gap-14">
+                      <div className="flex flex-col gap-1 pt-2">
+                        <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                          Location
+                        </p>
+                        <div
+                          className="info-input-field"
+                        >
+                          <input
+                            type="text"
+                            value={occupationLocation}
+                            placeholder="Location of the business"
+                            onChange={(e) => {
+                              setOccupationLocation(e.target.value);
+
+                            }}
+                          />
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                }
+                {(formType === 'Form 2' || formType === 'Form 3') && 
+                <div>
+                  <p
+                    className="m-0 pb-4 font-roboto font-bold"
+                    style={{ color: "#1670B2", fontSize: "16px" }}
+                  >
+                    {formType === 'Form 2' ? 'Institutional Status' : 'Political Status'}
+                  </p>
+                  <div className="flex flex-col pl-2">
+                    <div className="flex  gap-14">
+                      <div className="flex flex-col gap-1 pt-2">
+                        <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                          Designation
+                        </p>
+                        <div
+                          className='info-input-field'
+                        >
+                          <input
+                            type="text"
+                            value={designation}
+                            placeholder="Eg: Developer, Analyst, Tester"
+                            onChange={handleDesignationChange}
+                            onFocus={handleDesignationFocus}
+                            ref={inputRef4}
+                          />
+                          {/* <select value={designation} onChange={(e) => setDesignation(e.target.value)}>
+                                    <option value=""></option>
+                                    <option value="Developer">Developer</option>
+                                    <option value="Analyst">Analyst</option>
+                                    <option value="Tester">Tester</option>
+                                </select> */}
+                          {showDesignations && (
+                            <div className="autocomplete-options mt-7">
+                              {Array.isArray(filteredDesignations)
+                                ? filteredDesignations.map((option) => (
+                                  <div
+                                    key={option}
+                                    className="option"
+                                    onClick={() =>
+                                      handleDesignationClick(option)
+                                    }
+                                  >
+                                    {option}
+                                  </div>
+                                ))
+                                : null}
+                            </div>
+                          )}
+                        </div>
+
+                      </div>
+                      <div className="flex flex-col gap-1 pt-2">
+                        <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                          Branch
+                        </p>
+                        <div
+                          className='info-input-field'
+                        >
+                          <input
+                            type="text"
+                            value={branch}
+                            placeholder="branch name"
+                            onChange={
+                              (e) => {
+                                setBranch(e.target.value);
+
+                              }
+                            }
+
+                          />
+
+
+                        </div>
+
+                      </div>
+                      <div className="flex flex-col gap-1 pt-2">
+                        <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                          Date of Join
+                        </p>
+                        <div
+                          className='info-input-field'
+                        >
+                          <input
+                            type="date"
+                            value={clientJoiningDate}
+                            placeholder=""
+                            onChange={
+                              (e) => {
+                                setJoiningDate(e.target.value);
+
+                              }
+                            }
+
+                          />
+
+                        </div>
+
+                      </div>
+
+                      <div></div>
+                    </div>
+                    <div className="flex  gap-14">
+                      <div className="flex flex-col gap-1 pt-2">
+                        <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                          Affiliated Field
+                        </p>
+                        <div
+                          className=' info-input-field'
+                        >
+                          <input
+                            type="text"
+                            value={affiliatedField}
+                            placeholder="Enter affiliated field"
+                            onChange={(e) => {
+                              setAffiliationField(e.target.value);
+
+                            }}
+                          />
+                        </div>
+
+                      </div>
+
+                      <div className="flex flex-col gap-1 pt-2">
+                        <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                          Interested Field
+                        </p>
+                        <div
+                          className="info-input-field"
+                        >
+                          <input
+                            type="text"
+                            value={interestedField}
+                            placeholder="Enter affiliated field"
+                            onChange={(e) => {
+                              setInterestedField(e.target.value);
+
+                            }}
+                          />
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                  }
+                {(formType === 'Form 3') && <div>
+                  <p
+                    className=" m-0 pb-4 font-roboto font-bold"
+                    style={{ color: "#1670B2", fontSize: "16px" }}
+                  >
+                    Affiliated Organization
+                  </p>
+                  <div className="flex flex-col pl-2">
+                    <div className="flex  gap-14">
+                      <div className="flex flex-col gap-1 pt-2">
+                        <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                          Organization 1:
+                        </p>
+                        <div
+                          className='info-input-field'
+                        >
+                          <input
+                            type="text"
+                            value={affiliatedOrganization.firstaffiliatedOrganization}
+                            placeholder="Organization Name"
+                            onChange={(e) =>
+                              handleAffiliationChange('firstaffiliatedOrganization', e.target.value)
+                            }
+
+                          />
+
+
+                        </div>
+
+                      </div>
+                      <div className="flex flex-col gap-1 pt-2">
+                        <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                          Organization 2:
+                        </p>
+                        <div
+                          className='info-input-field'
+                        >
+                          <input
+                            type="text"
+                            value={affiliatedField.secondOrganization}
+                            placeholder="Organization Name"
+                            onChange={(e) => handleAffiliationChange('secondaffiliatedOrganization', e.target.value)}
+
+                          />
+
+                        </div>
+
+                      </div>
+                      <div className="flex flex-col gap-1 pt-2">
+                        <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                          Organization 3:
+                        </p>
+                        <div
+                          className=' info-input-field'
+                        >
+                          <input
+                            type="text"
+                            value={affiliatedOrganization.thirdaffiliatedOrganization}
+                            placeholder="Organization Name"
+                            onChange={(e) => {
+                              handleAffiliationChange('thirdaffiliatedOrganization', e.target.value)
+
+                            }}
+                          />
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                }
 
                 <div>
                   <p
@@ -1391,11 +2346,10 @@ const InfoBody = () => {
                                 University
                               </p>
                               <div
-                                className={` ${
-                                  educationError
-                                    ? "error-input"
-                                    : "info-input-field"
-                                }`}
+                                className={` ${educationError
+                                  ? "error-input"
+                                  : "info-input-field"
+                                  }`}
                               >
                                 <input
                                   type="text"
@@ -1479,7 +2433,7 @@ const InfoBody = () => {
                       className="flex gap-1 justify-center items-center bg-[blue] w-[130px] h-[32px] rounded-[6px] cursor-pointer"
                       onClick={addEducation}
                     >
-                      {/* <button onClick={addExperience}>Add Experience</button> */}
+                     
                       <img
                         src={addIcon}
                         alt="addIcon"
@@ -1488,7 +2442,7 @@ const InfoBody = () => {
                       <p className="m-0 p-0 font-helvetica font-bold text-white text-xs">
                         Add Education
                       </p>
-                    </div>
+                    </div> 
                   </div>
                   {allErrors.educationFieldError && (
                     <p className="field-error-message">
@@ -1496,12 +2450,13 @@ const InfoBody = () => {
                     </p>
                   )}
                 </div>
+                {(formType === 'Form 1' || formType === 'Form 2') &&
                 <div>
                   <p
                     className="m-0 pb-4 font-roboto font-bold"
                     style={{ color: "#1670B2", fontSize: "16px" }}
                   >
-                    Professional Experiences
+                    Training/Experiences
                   </p>
                   <div className="pl-2 pb-4 flex flex-col gap-2">
                     {experiences.map((experience, index) => (
@@ -1548,7 +2503,7 @@ const InfoBody = () => {
                           </div>
                           <div className="flex flex-col gap-2">
                             <p className="p-0 m-0 font-helvetica text-xs font-semibold">
-                              Work Description
+                              Work Title
                             </p>
                             <div className="info-input-field-project-desc">
                               <textarea
@@ -1597,6 +2552,7 @@ const InfoBody = () => {
                     </div>
                   </div>
                 </div>
+                  }
 
                 <div>
                   <p
@@ -1607,11 +2563,10 @@ const InfoBody = () => {
                   </p>
                   <div className=" pl-2">
                     <div
-                      className={` ${
-                        allErrors.descriptionFieldError
-                          ? "error-input-desc"
-                          : "info-input-field-desc"
-                      }`}
+                      className={` ${allErrors.descriptionFieldError
+                        ? "error-input-desc"
+                        : "info-input-field-desc"
+                        }`}
                     >
                       <textarea
                         type="text"
@@ -1625,7 +2580,7 @@ const InfoBody = () => {
                           });
                         }}
                         rows={4}
-                        cols={60}
+                        cols={40}
                       ></textarea>
                     </div>
                     <div className="flex items-start">

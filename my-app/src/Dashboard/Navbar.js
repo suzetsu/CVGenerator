@@ -69,7 +69,7 @@ const handleClick = () => {
             <div className='hoverNav-company'>
               Employee Management
               <div className='dropdown-menu hidden absolute top-10 left-0 bg-white shadow-md py-2'>
-                <div className='pb-2'><a href='/Info' className='menu-item'>Add Employee</a></div>
+                <div className='pb-2'><a href='/chooseCompany' className='menu-item'>Add Employee</a></div>
                 {(role === 'SuperAdmin' || role === 'Admin') && <div className='pb-2'><a href='/viewAllEmployee' className='menu-item'>View All</a></div>}
                 {/* <div><a href='/viewRole' className='menu-item'>View Employee</a></div> */}
               </div>

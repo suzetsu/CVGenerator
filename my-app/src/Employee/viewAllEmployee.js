@@ -151,8 +151,9 @@ const ViewAllEmployee = () => {
      dispatch(deleteClientInfo(clientInformationID));
   };
   const handleEmployeeView = (client) => {
-    setSelectedEmployeeInfo(client);
-    setIsCVGeneratePopupOpen(true);
+    // setSelectedEmployeeInfo(client);
+    // setIsCVGeneratePopupOpen(true);
+    history('/CVFormat', {state: {client}});
   };
   // Calculate the total number of pages
   const totalPages = Math.ceil(filteredClientData.length / itemsPerPage);
@@ -235,15 +236,18 @@ const ViewAllEmployee = () => {
 
       <div className=" flex flex-col gap-4">
         <div className="flex flex-col justify-center items-center pb-8 gap-4">
-          <table className="m-0 p-0">
+          <table className="m-0 p-0 " id="employeetable">
             <thead>
               <tr>
                 <th colSpan={1}>S.N.</th>
                 <th>Name</th>
+                <th>DoB</th>
+                <th>Age</th>
                 <th>Email</th>
-                <th>Company Name</th>
+                {/* <th>Company Name</th> */}
                 <th>Mobile No.</th>
-                <th>District</th>
+                <th>Designation</th>
+                <th>Branch</th>
                 <th>Details</th>
               </tr>
             </thead>
@@ -258,8 +262,13 @@ const ViewAllEmployee = () => {
                     district,
                     companyName,
                     imageData,
+                    clientDOB,
+                    age,
+                    designation,
+                    branch
                   } = client;
-
+                  const parsedDate = new Date(clientDOB);
+                  const formattedDate = parsedDate.toISOString().split('T')[0];
                   return (
                     <tbody>
                       <tr key={index}>
@@ -277,10 +286,13 @@ const ViewAllEmployee = () => {
                           )}
                           <p className="m-0 p-0">{clientName}</p>
                         </td>
+                        <td>{formattedDate}</td>
+                        <td>{age}</td>
                         <td>{email}</td>
-                        <td>{companyName}</td>
+                        {/* <td>{companyName}</td> */}
                         <td>{phone}</td>
-                        <td>{district}</td>
+                        <td>{designation}</td>
+                        <td>{branch}</td>
                         {/* <td>{`${municipality}-${municipalityNumber}, ${district},`}</td> */}
                         <td>
                           <div className="flex gap-2">
