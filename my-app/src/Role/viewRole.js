@@ -8,6 +8,7 @@ import {updateRoleInfo} from '../Redux/roleActions'
 import { deleteRoleInfo } from '../Redux/roleActions'
 import deleteIcon from "../images/delete.png";
 import editIcon from "../images/editing.png";
+import DeleteUserPopup from './DeleteUserPopup'
 
 
 const ViewRole = () => {
@@ -20,12 +21,26 @@ const ViewRole = () => {
         dispatch(fetchUserInfo());
     }, [])
     const Users = useSelector(state => state.auth.userData);
-    console.log(Users)
-
-    console.log(Users)
+ 
 
     const [selectedUser, setSelectedUser] = useState(null); // Track selected user
     const [isPopupOpen, setIsPopupOpen] = useState(false); // Track popup open/close
+
+    const [passwordInput, setPasswordInput] = useState("");
+    const [isPasswordPopupOpen, setIsPasswordPopupOpen] = useState(false);
+
+    const handleOpenPasswordPopup = (user) => {
+      setIsPasswordPopupOpen(true);
+      setSelectedUser(user);
+    };
+  
+    // Function to close the password confirmation popup
+    const handleClosePasswordPopup = () => {
+      setIsPasswordPopupOpen(false);
+      // Clear the password input when closing the popup
+      setPasswordInput("");
+    };
+
   
     // Function to handle clicking the Edit button
     const handleEditClick = (user) => {
@@ -50,16 +65,21 @@ const ViewRole = () => {
         roleName,
         password
       }
-      console.log(updatedUser)
+      
      
       
       dispatch(updateRoleInfo(id, updatedUser));
       setSelectedUser(null);
       setIsPopupOpen(false);
     };
-    const handleDeleteUser = (user) => {
-      const id = user.id
-      dispatch(deleteRoleInfo(id))
+    const handleDeleteUser = (userId, userPassword) => {
+
+      const deletedUser= {
+        userId,
+        userPassword
+      }
+      
+      dispatch(deleteRoleInfo(id, deletedUser))
     }
 
   return (
@@ -103,7 +123,7 @@ const ViewRole = () => {
                             <p className='m-0 p-0 underline cursor-pointer' onClick={() => handleEditClick(user)}>
                             {(role === "SuperAdmin" || role === "Admin") &&<img src={editIcon} alt="edit" className='w-5 h-5'/>}
                             </p>
-                            <p className='m-0 p-0 underline cursor-pointer' onClick={() => handleDeleteUser(user)}>
+                            <p className='m-0 p-0 underline cursor-pointer' onClick={() => handleOpenPasswordPopup(user)}>
                             {role === "SuperAdmin" && <img src={deleteIcon} alt="delete" className='w-5 h-5'/>}
                             </p>
                             </div>
@@ -123,6 +143,15 @@ const ViewRole = () => {
           user={selectedUser}
           onClose={handleClosePopup}
           onSave={handleSaveUser}
+        />
+      )}
+
+      {isPasswordPopupOpen && (
+        <DeleteUserPopup
+          user={selectedUser}
+          onClose={handleClosePasswordPopup}
+          onSave={handleDeleteUser}
+          id={id}
         />
       )}
         </div>

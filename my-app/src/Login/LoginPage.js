@@ -45,7 +45,7 @@ const Login = ({ isLoggedIn }) => {
         Swal.fire({
           icon: "error",
           title: "Oops...",
-          text: "Invalid Credentials",
+          text: "Error Occured",
         });
       }
     }

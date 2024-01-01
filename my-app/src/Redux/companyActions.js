@@ -5,7 +5,7 @@ import { url } from "../Config";
 export const createCompany =
   (formData) => async (dispatch) => {
     try {
-      console.log("HERE");
+    
       dispatch({ type: actionTypes.COMPANY_CREATE_FAILURE, payload: null });
       const response = await axios.post(
         `${url}/api/Company`,
@@ -70,10 +70,11 @@ export const updateCompanyInfo =
     }
   };
 
-export const deleteCompanyInfo = (CompanyId) => async (dispatch) => {
+export const deleteCompanyInfo = (CompanyId, deletedCompany) => async (dispatch) => {
   try {
     const response = await axios.post(
-      `${url}/api/Company/Delete/${CompanyId}`
+      `${url}/api/Company/Delete/${CompanyId}`,
+      deletedCompany 
     );
     if (response.status === 200) {
       dispatch({ type: actionTypes.COMPANY_DELETE_SUCCESS });
@@ -84,6 +85,12 @@ export const deleteCompanyInfo = (CompanyId) => async (dispatch) => {
     alert("Company information deleted successfully");
   } catch (error) {
     dispatch({ type: actionTypes.COMPANY_DELETE_FAILURE });
-    console.error(error);
+    alert("Error occurred while deleting company information");
+   
   }
 };
+
+export const setCompany = (companyInf) => ({
+  type: actionTypes.SET_COMPANY,
+  payload: companyInf,
+});

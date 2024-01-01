@@ -18,6 +18,8 @@ import EducationForm from "./education";
 import addIcon from "../../images/addIcon.png";
 import closeIcon from "../../images/closeIcon.png";
 import * as actionTypes from "../../Redux/actionTypes";
+import CompanyDashboardNav from "../../Dashboard/CompanyDashboardNav";
+import NavBar from "../../Dashboard/Navbar";
 const InfoBody = () => {
   const [clientName, setName] = useState("");
   const [clientPANNO, setPAN] = useState("");
@@ -101,7 +103,9 @@ const InfoBody = () => {
 
 
   const location = useLocation('');
-  const chosenCompanyInfo = location.state?.companyInfo
+  const chosenCompanyInfo = location.state
+  console.log(chosenCompanyInfo);
+  
   const formType = chosenCompanyInfo && chosenCompanyInfo.formType
   const chosenCompanyName = chosenCompanyInfo && chosenCompanyInfo.name
 
@@ -195,18 +199,14 @@ const InfoBody = () => {
   //   : [];
 
   const [showDepartmentOptions, setShowDepartmentOptions] = useState(false);
+  
   const [selectedDepartment, setSelectedDepartment] = useState("");
-  const departmentInfo = Array.isArray(chosenCompanyInfo)
+  const departmentInfo = chosenCompanyInfo && Array.isArray(chosenCompanyInfo)
     ? chosenCompanyInfo.map((company) => company.departments)
     : [];
-  // console.log(departmentInfo)
-  const departmentNames = Array.isArray(departmentInfo)
-    ? departmentInfo.map((department) => department.$values)
-    : [];
-  const filteredDepartmentNames = departmentNames.filter(
-    (departments, index) => chosenCompanyName[index] === companyName
-  );
-  const flattenedDepartmentNames = [].concat(...filteredDepartmentNames);
+ 
+  const departmentNames = chosenCompanyInfo && chosenCompanyInfo.departments.$values
+  
 
   const handleAffiliationChange = (fieldName, value) => {
     setAffiliationOrganization((prevAffiliation) => ({
@@ -225,7 +225,7 @@ const InfoBody = () => {
   const handleDepartmentFocus = (e) => {
     setShowDepartmentOptions(!showDepartmentOptions);
   };
-  const filterDepartmentNamesByDepartments = flattenedDepartmentNames.filter(
+  const filterDepartmentNamesByDepartments = departmentNames.filter(
     (department) => {
       return department.toLowerCase().includes(departmentName.toLowerCase());
     }
@@ -416,8 +416,7 @@ let [filteredDistrictNames, setFilteredDistrictNames] = useState([]);
       affiliatedOrganization
     );
 
-    console.log(experiencesJson);
-    console.log(educationJson);
+
 
 
     // })
@@ -621,7 +620,7 @@ let [filteredDistrictNames, setFilteredDistrictNames] = useState([]);
     // const imageAsString = btoa(String.fromCharCode(...new Uint8Array(uploadedImage)));
     // formData.append('imagePath', uploadedImage);
 
-    console.log(formData.get("education"));
+   
 
     const requiredField = [
       // { name: "clientName", label: "Name" },
@@ -650,29 +649,56 @@ let [filteredDistrictNames, setFilteredDistrictNames] = useState([]);
     });
     if (!isValidEmail(email)) {
       setErrorEmail("Email is invalid");
-    } else {
+    } 
+    else {
       dispatch(await storeClientInfo(formData));
 
-      // setName("");
-      // setPAN("");
-      // setAddress("");
-      // setMUNno("");
-      // setDistrict("");
-      // setProvince("");
-      // setDesignation("");
-      // setMobile("");
-      // setEmail("");
-      // setDescription("");
-      // setCompany("");
-      // setDepartment("");
-      // setBloodGroup("");
-      // setJoiningDate("");
-      // setLeavingDate("");
-      // setclientDOB("");
-      // setExperiences([]);
-      // setEducation([]);
+      setName("");
+      setPAN("");
+      setAddress("");
+      setMUNno("");
+      setDistrict("");
+      setProvince("");
+      setDesignation("");
+      setMobile("");
+      setEmail("");
+      setDescription("");
+      setCompany("");
+      setDepartment("");
+      setBloodGroup("");
+      setJoiningDate("");
+      setLeavingDate("");
+      setclientDOB("");
+      setExperiences([]);
+      setEducation([]);
 
-      // setUploadedImage("");
+      setUploadedImage("");
+      setOccupationType("");
+      setOccupationLocation("");
+      setOccupationName("");
+      setOperationPeriod("");
+      setAffiliationField ("");
+      setAppointmentStatus("");
+      setInterestedField("");
+  
+     
+      setCitizenNum("");
+      setIssueDistrict("");
+      setIssueDate("");
+      setInsuranceCompany("");
+      setInsuranceNum("");
+      setPfSsfNum("");
+      setCitNum("");
+      setSpouseName("");
+      setSpouseNumber("");
+      setSonNum("");
+      setDaughterNum("");
+      setSwimming("");
+      setLicense("");
+      setOtherSkill("");
+      setBranch("");
+      
+
     }
   };
 
@@ -686,7 +712,7 @@ let [filteredDistrictNames, setFilteredDistrictNames] = useState([]);
       reader.onload = (event) => {
         imagePreviewURL = event.target.result;
         setPreviewImage(imagePreviewURL); // Store the image preview URL in state
-        console.log(`Previewing ${imagePreviewURL}`);
+    
       };
       reader.readAsDataURL(imageFile);
 
@@ -764,6 +790,9 @@ let [filteredDistrictNames, setFilteredDistrictNames] = useState([]);
 
   return (
     <>
+    <div>
+      <NavBar/>
+    </div>
       <div className="  flex justify-center pt-24 bg-[#F8F8F8] pb-10">
         <div className="flex flex-col">
           <div className="w-[815px]  info-div ">
@@ -922,7 +951,7 @@ let [filteredDistrictNames, setFilteredDistrictNames] = useState([]);
                               onChange={(e) => {
                                 setGender("Female");
 
-                                console.log(gender);
+                              
 
                               }}
                             />
@@ -1041,7 +1070,7 @@ let [filteredDistrictNames, setFilteredDistrictNames] = useState([]);
                                 ...allErrors,
                                 emailFieldError: "",
                               });
-                              emailExistsErrorMessage = "";
+                              emailExistError = "";
                               dispatch({
                                 type: actionTypes.CLIENT_INFO_FAILURE,
                                 payload: null,
@@ -1054,7 +1083,7 @@ let [filteredDistrictNames, setFilteredDistrictNames] = useState([]);
                             {allErrors.emailFieldError}
                           </p>
                         )}
-                        {emailExistError && (
+                        {emailExistError == 'Email Already Exist' && (
                           <p className="field-error-message">
                             {emailExistError}
                           </p>
@@ -1416,7 +1445,7 @@ let [filteredDistrictNames, setFilteredDistrictNames] = useState([]);
                               placeholder="Client Joining Date"
                               onChange={(e) => {
                                 setJoiningDate(e.target.value);
-                                console.log(clientJoiningDate);
+                               
                                 setAllErrors({
                                   ...allErrors,
                                   clientJoiningDateFieldError: "",
@@ -1582,6 +1611,8 @@ let [filteredDistrictNames, setFilteredDistrictNames] = useState([]);
                               <option value=""></option>
                               <option value="A +ve">A +ve</option>
                               <option value="A -ve">A -ve</option>
+                              <option value="B +ve">B +ve</option>
+                              <option value="B -ve">B -ve</option>
                               <option value="O +ve">O +ve</option>
                               <option value="O -ve">O -ve</option>
                               <option value="AB +ve">AB +ve</option>
@@ -2614,6 +2645,9 @@ let [filteredDistrictNames, setFilteredDistrictNames] = useState([]);
                   <div className="success-message flex justify-center">
                     Client Added Successfully
                   </div>
+                )}
+                {emailExistError == 'Error Occurred' && (
+                  <p className="field-error-message">{emailExistError}</p>
                 )}
                 {fielderrorMessage && (
                   <p className="field-error-message">{fielderrorMessage}</p>

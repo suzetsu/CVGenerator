@@ -5,34 +5,65 @@ import EmployeeList from '../Employee/employeeList';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchClientInfo } from '../Redux/actions';
 import viewIcon from "../images/green-eye.png";
+import deleteIcon from '../images/delete.png'
 
 const ViewDepartment = () => {
   const dispatch = useDispatch();
 
   const location = useLocation();
   const company = location.state;
-  console.log(company);
+ 
+  
   const department = company.departments.$values;
   const companyName = company.name;
+  const employeeDetails = useSelector((state) => state.auth.clientData)
 
-  console.log(companyName);
+  const role=  localStorage.getItem("tokendata") &&   JSON.parse(localStorage.getItem("tokendata")).role;
+    const [isPasswordPopupOpen, setIsPasswordPopupOpen] = useState(false);
+    
+  // Filter employees based on the selected company name
+const matchedDepartments = employeeDetails && employeeDetails.$values
+.filter((employee) => employee.companyName === companyName)
+.map((depart) => depart.departmentName);
 
-  console.log(department);
+// Filter out duplicate departments already present in company.departments.$values
+const uniqueMatchedDepartments = matchedDepartments && matchedDepartments.filter(
+(depart) => !department.includes(depart)
+);
+
+// Concatenate departments
+const totalDepartments = department.concat(uniqueMatchedDepartments);
+
+
   const [selectedDepartment, setSelectedDepartmentSet] = useState('');
   const history = useNavigate();
 
   const viewEmployee = (department) => {
     setSelectedDepartmentSet(department);
     history('/employeeList', { state: { department, companyName } });
+    
   };
+const departmentId = selectedDepartment && selectedDepartment.departmentId 
+  const handleOpenPasswordPopUp = (department) => {
+    setSelectedDepartmentSet(department);
+    setIsPasswordPopupOpen(false);
+  }
+
+  const handleClosePasswordPopup = (department) => {
+    setSelectedDepartmentSet('');
+    setIsPasswordPopupOpen(false);
+  }
+  
 
   useEffect(() => {
     dispatch(fetchClientInfo());
   }, []);
 
-  const employeeDetails = useSelector((state) => state.auth.clientData);
-  console.log(employeeDetails);
+  
+ 
+  const companyData = useSelector((state) => state.auth.companyData);
 
+  
   const getEmployeeCountByDepartment = (department) => {
     if (employeeDetails && employeeDetails.$values){
     const filteredEmployees = employeeDetails.$values.filter(
@@ -43,6 +74,7 @@ const ViewDepartment = () => {
       return 0;
     }
   };
+  // console.log(employeeCount);
 
   return (
     <div className='flex flex-col gap-9'>
@@ -63,9 +95,10 @@ const ViewDepartment = () => {
             </tr>
           </thead>
           <tbody>
-            {Array.isArray(department) &&
-              department.map((department, index) => {
+            {Array.isArray(totalDepartments) &&
+              totalDepartments.map((department, index) => {
                 const employeeCount = getEmployeeCountByDepartment(department);
+                const departmentId = department.departmentId;
                 return (
                   <tr key={index}>
                     <td>{index + 1}</td>
@@ -78,6 +111,12 @@ const ViewDepartment = () => {
                           onClick={() => viewEmployee(department)}
                         >
                           <img src={viewIcon} alt='view' className='w-5 h-5' />
+                        </p>
+                        <p
+                          className='m-0 p-0 underline cursor-pointer'
+                          onClick={() => handleOpenPasswordPopUp(department, departmentId)}
+                        >
+                          <img src={deleteIcon} alt='view' className='w-5 h-5' />
                         </p>
                       </div>
                     </td>

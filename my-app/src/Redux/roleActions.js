@@ -45,9 +45,11 @@ export const createRole = (email, password, fullName, roleName) => async (dispat
     }
   }
 
-  export const deleteRoleInfo = (id) => async (dispatch) => {
+  export const deleteRoleInfo = (id, deletedUser) => async (dispatch) => {
     try {
-      const response = await axios.post(`${url}/api/Users/Delete/${id}`);
+      const response = await axios.post(`${url}/api/Users/Delete/${id}`, 
+      deletedUser,
+       );
       if (response.status === 200) {
         dispatch({ type: actionTypes.ROLE_DELETE_SUCCESS });
       } 
@@ -57,6 +59,7 @@ export const createRole = (email, password, fullName, roleName) => async (dispat
       alert("Role deleted successfully");
     } catch (error) {
       dispatch({ type: actionTypes.ROLE_DELETE_FAILURE });
+      alert("Error occurred while deleting role")
     }
   }
 

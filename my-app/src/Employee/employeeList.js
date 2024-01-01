@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import NavBar from "../Dashboard/Navbar";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { fetchClientInfo } from "../Redux/actions";
 import { fetchCompanyInfo } from "../Redux/companyActions";
 import EditEmployeePopup from "./employeeEdit";
@@ -20,6 +20,7 @@ const EmployeeList = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false); // Track popup open/close
   const [isCVGeneratePopupOpen, setIsCVGeneratePopupOpen] = useState(false);
   const dispatch = useDispatch();
+  const history = useNavigate();
 
   useEffect(() => {
     dispatch(fetchCompanyInfo());
@@ -28,6 +29,8 @@ const EmployeeList = () => {
 
   const employeeDetails = useSelector((state) => state.auth.clientData);
   // const clientInformationID = selectedEmployee?.id
+
+
 
   let filteredEmployees = [];
 
@@ -43,9 +46,10 @@ const EmployeeList = () => {
     return 0;
   }
 
-  const handleEmployeeEdit = (employee) => {
-    setSelectedEmployee(employee);
-    setIsPopupOpen(true);
+  const handleEmployeeEdit = (client) => {
+    setSelectedEmployee(client);
+    // setIsPopupOpen(true);
+    history("/editEmployee", { state: {client } });
   };
 
   // Function to handle closing the popup
@@ -63,9 +67,10 @@ const EmployeeList = () => {
   const handleDelete = (clientInformationID) => {
     dispatch(deleteClientInfo(clientInformationID));
   };
-  const handleView = (employee) => {
-    setSelectedEmployee(employee);
-    setIsCVGeneratePopupOpen(true);
+  const handleView = (client) => {
+    setSelectedEmployee(client);
+    // setIsCVGeneratePopupOpen(true);
+    history("/CVFormat", { state: {client } });
   };
 
   return (
@@ -87,28 +92,28 @@ const EmployeeList = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredEmployees.map((employee, index) => (
+            {filteredEmployees.map((client, index) => (
               <tr key={index}>
                 <td>{index + 1}</td>
-                <td>{employee.clientName}</td>
-                <td>{employee.email}</td>
+                <td>{client.clientName}</td>
+                <td>{client.email}</td>
                 <td>
                   <div className="flex gap-2">
                     <p
                       className="m-0 p-0 underline cursor-pointer"
-                      onClick={() => handleView(employee)}
+                      onClick={() => handleView(client)}
                     >
                       <img src={viewIcon} alt="view" className="w-5 h-5"/>
                     </p>
                     <p
                       className="m-0 p-0 underline cursor-pointer"
-                      onClick={() => handleEmployeeEdit(employee)}
+                      onClick={() => handleEmployeeEdit(client)}
                     >
                       <img src={editIcon} alt="edit" className="w-5 h-5"/>
                     </p>
                     <p
                       className="m-0 p-0 underline cursor-pointer"
-                      onClick={() => handleDelete(employee)}
+                      onClick={() => handleDelete(client)}
                     >
                       <img src={deleteIcon} alt="delete" className="w-5 h-5"/>
                     </p>

@@ -10,11 +10,18 @@ import { fetchCompanyInfo } from '../../Redux/companyActions'
 import { useDispatch, useSelector} from 'react-redux'
 
 
-const FirstCardContainer = () => {
+const FirstCardContainer = ({company}) => {
     const dispatch = useDispatch()
 
     const clientInfo = useSelector(state => state.auth.clientData)
     const companyInfo = useSelector(state => state.company.companyData)
+
+    const department = company && company.company.departments.$values;
+    const totalDepartmentNum = department && department.length
+    const companyName = company && company.company.name
+    
+   
+    
     
     
     
@@ -76,8 +83,8 @@ const FirstCardContainer = () => {
                         </div>
                     </div>
                     <div className='inside-text pl-4 pt-16 text-white '>
-                        <div className='mb-2 font-helvetica'>Total Company</div>
-                        <div className='text-xl font-bold mb-2 font-helvetica'>{getCompanyCount}</div>
+                        <div className='mb-2 font-helvetica'>Company Name</div>
+                        <div className='text-xl font-bold mb-2 font-helvetica'>{companyName}</div>
                         {/* <div className='mb-2 font-helvetica'>40% Increase in 28 Days</div> */}
                     </div>
                 </div>
@@ -95,7 +102,7 @@ const FirstCardContainer = () => {
                     </div>
                     <div className='inside-text pl-4 pt-16 text-white '>
                         <div className='mb-2 font-helvetica'>Total Departments</div>
-                        <div className='text-xl font-bold mb-2 font-helvetica'>{totalDepartmentCount}</div>
+                        <div className='text-xl font-bold mb-2 font-helvetica'>{totalDepartmentNum}</div>
                         {/* <div className='mb-2 font-helvetica'>80% Increase in 28 Days</div> */}
                     </div>
                 </div>

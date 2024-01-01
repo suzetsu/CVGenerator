@@ -13,6 +13,8 @@ import { login } from '../Redux/actions';
 import deleteIcon from "../images/delete.png";
 import editIcon from "../images/blue-edit.png";
 import viewIcon from "../images/green-eye.png";
+import CompanyDashboardNav from '../Dashboard/CompanyDashboardNav';
+import DeleteUserPopup from '../Role/DeleteUserPopup';
 
 
 const CompanyDetailsPopup = ({ companyInfo, onClose, onUpdate }) => {
@@ -103,20 +105,30 @@ const ViewCompany = ({ isLoggedIn}) => {
     const [showDetailsPopup, setShowDetailsPopup] = useState(false);
     const [selectedCompany, setSelectedCompany] = useState(null);
     const role=  localStorage.getItem("tokendata") &&   JSON.parse(localStorage.getItem("tokendata")).role;
-
+    const [isPasswordPopupOpen, setIsPasswordPopupOpen] = useState(false);
   useEffect(() => {
     dispatch(fetchCompanyInfo())
 }, [])
 
 const companyDetails = useSelector((state) => state.company.companyData);
-console.log(companyDetails)
+const handleOpenPasswordPopup = (company) => {
+  setIsPasswordPopupOpen(true);
+  setSelectedCompany(company)
+}
 
+const handleClosePasswordPopup = (company) => {
+  setIsPasswordPopupOpen(false);
+  setSelectedCompany(null);
+
+
+};
 
 
 
   const handleEditClick = (company) => {
-    setShowDetailsPopup(true);
-    setSelectedCompany(company);
+    // setShowDetailsPopup(true);
+    // setSelectedCompany(company);
+    history('/editCompany', {state: { company}})
     
   };
 
@@ -131,14 +143,21 @@ console.log(companyDetails)
   }, [])
 
   const CompanyId = selectedCompany && selectedCompany?.companyId
+  console.log(CompanyId);
   
  
-  const handleDeleteCompany = (company) => {  
-    const CompanyId = company.companyId
+  const handleDeleteCompany = (userId, userPassword) => {  
+    // const CompanyId = company.companyId
     // console.log(CompanyId)
+    // setSelectedCompany(company);
+    const deletedCompany = {
+      userId,
+      userPassword,
+      
+    }
     
 
-    dispatch(deleteCompanyInfo(CompanyId))
+    dispatch(deleteCompanyInfo(CompanyId, deletedCompany))
     // window.location.reload()
   }
     
@@ -154,7 +173,7 @@ console.log(companyDetails)
       departments
 
     }
-    console.log(name)
+ 
   
     dispatch(updateCompanyInfo(CompanyId, updatedcompany))
 
@@ -171,13 +190,15 @@ console.log(companyDetails)
     history('/viewDepartment', {state: company})
   }
  
-
+  
   
 
   return (
     <div className='bg-[#F0F4F3] h-[100vh]'>
     <div className='flex flex-col '>
-     
+    <div>
+        <CompanyDashboardNav />
+      </div>
       
       <div className='flex flex-col justify-center pt-32 items-center'>
       <div className='text-[#666] font-helvetica pl-4 text-lg font-bold'>
@@ -218,7 +239,7 @@ console.log(companyDetails)
                                     {(role === 'SuperAdmin' || role === 'Admin') && <p className='m-0 p-0 underline border-b-2 cursor-pointer' onClick={() => handleEditClick(company)}>
                                       <img src={editIcon} alt="edit" className='w-5 h-5' />
                                     </p>}
-                                    {role === 'SuperAdmin' && <p className='m-0 p-0 underline border-b-2 cursor-pointer' onClick={() => handleDeleteCompany(company)}>
+                                    {role === 'SuperAdmin' && <p className='m-0 p-0 underline border-b-2 cursor-pointer' onClick={() => handleOpenPasswordPopup(company)}>
                                     <img src={deleteIcon} alt="delete" className='w-5 h-5' /></p>}
                                     </div>
                                 </td>
@@ -247,6 +268,15 @@ console.log(companyDetails)
           />
         </div>
       )}
+      {
+        isPasswordPopupOpen && (
+          <DeleteUserPopup
+          onClose={handleClosePasswordPopup}
+          onCompanySave={handleDeleteCompany}
+          CompanyId = {CompanyId}
+          />
+        ) 
+      }
       
       
 </div>

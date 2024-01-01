@@ -4,13 +4,13 @@ import FirstCardContainer from './FirstCardContainer'
 import SecondCardContainer from './SecondCardContainer'
 import ThirdCardContainer from './ThirdCardContainer'
 
-const SecondContainer = () => {
+const SecondContainer = ({company}) => {
   return (
     <div className='second-cont w-full'>
       <div className='inside-container'>
         <p className='dashboard-text'>Dashboard</p>
         <div >
-            <FirstCardContainer/>
+            <FirstCardContainer company={company}/>
         </div>
         <div>
           <SecondCardContainer/>

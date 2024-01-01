@@ -1171,7 +1171,7 @@ const InfoBody = () => {
                         <div
                           className={
                             ` ${
-                              errorMail ? "error-input" : "info-input-field"
+                              emailExistError ? "error-input" : "info-input-field"
                             }` ||
                             ` ${
                               allErrors.emailFieldError
@@ -1535,6 +1535,9 @@ const InfoBody = () => {
                   <div className="success-message flex justify-center">
                     Client Added Successfully
                   </div>
+                )}
+                {errorMail && (
+                  <p className="field-error-message">{errorMail}</p>
                 )}
                 {fielderrorMessage && (
                   <p className="field-error-message">{fielderrorMessage}</p>

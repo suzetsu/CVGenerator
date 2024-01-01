@@ -18,7 +18,7 @@ const ChooseCompany = () => {
 
     }, []);
     const companyDetails = useSelector((state) => state.company.companyData);
-    console.log(companyDetails)
+ 
     const companyInfo = companyDetails?.$values;
     const companyNames = Array.isArray(companyInfo)
         ? companyInfo.map((company) => company.name)
@@ -56,9 +56,11 @@ const ChooseCompany = () => {
         };
     }, []);
     const handleButtonClick = () => { 
+
+        // history('/firstForm', { state: { companyInfo: companyName } });
         if (companyName) {
             // Find the selected company's information
-            const selectedCompanyInfo = companyInfo.find(
+            const selectedCompanyInfo = companyInfo && companyInfo.find(
               (company) => company.name === companyName
             );
         

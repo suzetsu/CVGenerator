@@ -7,7 +7,7 @@ import userCircle from '../images/userCircle.png'
 import userLogo from '../images/userLogo.png'
 import { login } from '../Redux/actions';
 import { useDispatch } from 'react-redux';
-import { useNavigate, Outlet } from 'react-router-dom';
+import { useNavigate, Outlet, Link } from 'react-router-dom';
 
 const NavBar = () => {
   const history = useNavigate();
@@ -15,7 +15,10 @@ const NavBar = () => {
   const dispatch = useDispatch();
   const role=  localStorage.getItem("tokendata") &&   JSON.parse(localStorage.getItem("tokendata")).role;
   const token=  localStorage.getItem("tokendata") &&   JSON.parse(localStorage.getItem("tokendata")).token;
-  console.log(token);
+
+  const company = useSelector((state) => state.company.company)
+  const companyForm = company && company.formType
+  
 
   useEffect(() => {
     if(!localStorage.getItem("tokendata")){
@@ -35,10 +38,12 @@ const handleClick = () => {
   history('/');
 }
 
+
+
   return (
     <>
-    <div className='nav-container w-full shadow-paper gap-28  flex justify-center '>
-        <div className='side-logo cursor-pointer' onClick={handleClick}>
+    <div className='nav-container w-full shadow-paper gap-28  flex justify-between '>
+        <div className='side-logo cursor-pointer ' onClick={handleClick}>
             <div>
             <img src={Logo} alt='logo'/>
             </div>
@@ -49,14 +54,14 @@ const handleClick = () => {
         <div className='nav-links flex  gap-20 font-helvetica items-center'>
             
             <div className='hoverNav' onClick={handleClick}>Home</div>
-            { role === 'SuperAdmin' && (
+            {/* { role === 'SuperAdmin' && (
               <div className='hoverNav-company '>
               Company Details
               <div className='dropdown-menu hidden absolute shadow-md py-2 '>
-                <div className='pb-2'><a href='/addCompany' className='menu-item'>Add Company</a></div>
+                <div className='pb-2'><a href='/addCompany' className='menu-item' >Add Company</a></div>
                 <div><a href='/viewCompany' className='menu-item' >View Company</a></div>
               </div>
-            </div>)}
+            </div>)} */}
             
             
             <div className='hoverNav' onClick={() => history('/templateList')}>CV Template List</div>
@@ -69,8 +74,8 @@ const handleClick = () => {
             <div className='hoverNav-company'>
               Employee Management
               <div className='dropdown-menu hidden absolute top-10 left-0 bg-white shadow-md py-2'>
-                <div className='pb-2'><a href='/chooseCompany' className='menu-item'>Add Employee</a></div>
-                {(role === 'SuperAdmin' || role === 'Admin') && <div className='pb-2'><a href='/viewAllEmployee' className='menu-item'>View All</a></div>}
+                <div className='pb-2'><Link to='/firstForm' state={company} className='menu-item'   >Add Employee</Link></div>
+                <div className='pb-2'><a href='/viewAllEmployee' className='menu-item'>View All</a></div>
                 {/* <div><a href='/viewRole' className='menu-item'>View Employee</a></div> */}
               </div>
               </div>
@@ -93,7 +98,9 @@ const handleClick = () => {
             
             {/* <div className='hoverNav'>Settings</div> */}
             
-            <div className=' side-logo flex gap-1 ml-12'>
+           
+        </div>
+        <div className=' side-logo flex gap-1 '>
               <div className='relative'>
                 <img src={userCircle} alt='user'/>
                 <img src={userLogo} alt='user' className='center-image pb-4 pr-3'/>
@@ -104,7 +111,6 @@ const handleClick = () => {
               </div>
               
             </div>
-        </div>
         
     </div>
     <Outlet />

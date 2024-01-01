@@ -15,7 +15,7 @@ const initialState = {
   errorMail:null,
   role : null,
   
-  roleError: null,
+  roleEmailError: null,
 
   // matchingClient: null,
   editEmployee: null,
@@ -44,7 +44,7 @@ const authReducer = (state = initialState, action) => {
     case actionTypes.USER_CREATE_SUCCESS:
       return { ...state, userCreationStatus: 'success' };
     case actionTypes.USER_CREATE_FAILURE:
-      return { ...state, userCreationStatus: 'failure', roleError: action.payload };
+      return { ...state, userCreationStatus: 'failure', roleEmailError: action.payload };
     case actionTypes.FETCH_USER_INFO_SUCCESS:
       return { ...state, userData: action.payload };
     case actionTypes.FETCH_USER_INFO_FAILURE:

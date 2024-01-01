@@ -28,12 +28,13 @@ export const login = (email, password) => async (dispatch) => {
     const token = response.data.token;
     // console.log(token);
     const role = response.data.roleName
+    const id = response.data.id
     // console.log(role);
    
     if (token) {
       dispatch({ type: actionTypes.LOGIN_SUCCESS, payload: token });
       dispatch({type:actionTypes.SET_USER_ROLE, payload:role})
-      localStorage.setItem('tokendata', JSON.stringify({token, role})); 
+      localStorage.setItem('tokendata', JSON.stringify({token, role, id})); 
       // dispatch(setUserRole(userRole));
       return { success: true };
     } else {
@@ -61,24 +62,13 @@ export const logout = () => (dispatch) => {
 export const storeClientInfo = async(formData) => async (dispatch) => {
   try {
     dispatch({ type: actionTypes.CLIENT_INFO_FAILURE, payload : null });
-    
-    
-    
-    
     const response = await axios.post(
       `${url}/api/Client`,
-      
         formData,
-      
-      
-      
     );
-    console.log(response);
-    
+
     dispatch({ type: actionTypes.CLIENT_INFO_FAILURE, payload : null });
     dispatch({ type: actionTypes.CLIENT_INFO_SUCCESS });
-    
-    
   } catch (error) {
   
     const errorMessage = error.response? error.response.data? error.response.data.message?error.response.data.message: 'Error Occurred': 'Error Occurred': 'Error Occurred';
@@ -109,9 +99,10 @@ export const fetchClientInfo = () => async (dispatch) => {
   
 };
 
-export const deleteClientInfo = (clientInformationID) => async (dispatch) => {
+export const deleteClientInfo = (clientInformationID, deletedClient) => async (dispatch) => {
   try {
-    const response = await axios.post(`${url}/api/Client/Delete/${clientInformationID}`);
+    const response = await axios.post(`${url}/api/Client/Delete/${clientInformationID}`,
+    deletedClient);
     if (response.status === 200) {
       dispatch({ type: actionTypes.CLIENT_INFO_DELETE_SUCCESS });
     }
@@ -121,6 +112,7 @@ export const deleteClientInfo = (clientInformationID) => async (dispatch) => {
     alert("Client information Deleted successfully");
   } catch (error) {
     dispatch({ type: actionTypes.CLIENT_INFO_DELETE_FAILURE });
+    alert ("Error Occurred While Deleting Client Information")
   }
 }
 
@@ -139,7 +131,7 @@ export const updateClientInfo = (clientInformationID, updatedClient) => async (d
     }, 1000)
    
   } catch (error) {
-    console.log(error);
+   
     dispatch({ type: actionTypes.CLIENT_INFO_UPDATE_FAILURE });
   }
 }

@@ -24,13 +24,23 @@ import Superadmin from "./Dashboard/Superadmin";
 import FirstForm from "./CustomerDetails/InfoComponents/FirstForm";
 import ChooseCompany from "./Company/ChooseCompany";
 import CVFormat from "./CustomerDetails/CVtemplate/CVFormat";
+import CompanyDashboard from "./Dashboard/CompanyDashboard";
+import EditCompany from "./Company/EditCompany";
 
 const MainApp = () => {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <CompanyDashboard />
+            </ProtectedRoute>
+          }
+        />
 
-      <Route path="/" element={<NavBar />}>
+     
         {/* <Route path="main" element={<Main  />}/> */}
 
         <Route
@@ -53,14 +63,21 @@ const MainApp = () => {
           </ProtectedRoute>
         }/>
         <Route
-          // path="main"
-          index
+          path="main"
+          
           element={
             <ProtectedRoute>
               <Main />
             </ProtectedRoute>
           }
         />
+        < Route
+        path ='editCompany'
+        element = {
+          <ProtectedRoute>
+            <EditCompany />
+          </ProtectedRoute>
+        }/>
 
         <Route path="CVGenerate" element={<CVGenerate />} />
         <Route
@@ -168,7 +185,7 @@ const MainApp = () => {
             </ProtectedRoute>
           }
         />
-      </Route>
+     
 
       <Route
         path="CVTemp"

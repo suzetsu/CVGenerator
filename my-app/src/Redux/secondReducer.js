@@ -9,6 +9,7 @@ const initialState = {
     districtData: '',
     designationData: '',
     companyError: null,
+    company: null
     
 }
 
@@ -42,6 +43,10 @@ const companyReducer = (state = initialState, action) => {
             return { ...state, designationData: action.payload };
         case actionTypes.GET_ALL_DESIGNATION_FAILURE:
             return { ...state, designationData: null };
+
+        case actionTypes.SET_COMPANY:
+            return {...state, company: action.payload };
+
         default:
             return state;
     }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import handshake from '../../images/hadshake.png'
 import './template.css'
@@ -7,6 +7,8 @@ import jsPDF from 'jspdf'
 import NepaliDate from 'nepali-date-converter'
 import logo from './umLogo.png'
 import image from './image.png'
+import { useSelector, useDispatch } from 'react-redux'
+import { fetchCompanyInfo } from '../../Redux/companyActions'
 
 
 
@@ -16,10 +18,30 @@ const CVFormat = () => {
     const location = useLocation();
     const employee = location?.state;
 
-    // const employeeInfo = employee && employee.employee
+    // const employeeInfo = employee && employee.employee\
+    
+    const dispatch = useDispatch()
 
-
-    console.log(employee)
+    useEffect(() => {
+        dispatch(fetchCompanyInfo())
+    }, [])
+    const companyDetails = useSelector((state) => state.company.companyData);
+  
+    const companyLogo = () => {
+        if (employee && employee.client.companyName) {
+          const matchingCompany = companyDetails && companyDetails.$values.find(
+            (company) => company.companyName === employee.client.name
+          );
+      
+          if (matchingCompany) {
+            return matchingCompany.imageData;
+          }
+        }
+      
+        
+        // return "logo.png";
+      };
+     const compLogo = companyLogo();
     const {
         client: { clientName,
             email,
@@ -119,12 +141,12 @@ const CVFormat = () => {
                         <div className='flex flex-col gap-1 '>
                             <div className='h-[10rem] flex justify-between text-black '>
                                 <div className='float-left w-[100px] h-[100px] bg-cover '>
-                                    <div style={{ backgroundImage: `url(data:image/jpg;base64,${imageData})` }} className='w-[100%] h-[100%] bg-cover rounded-[50%]'></div>
+                                    <div style={{ backgroundImage: `url(data:image/jpg;base64,${compLogo})` }} className='w-[100%] h-[100%] bg-cover rounded-[50%]'></div>
                                 </div>
                                 <div className=' flex flex-col gap-2 items-center'>
                                     <p className='p-0 m-0 text-2xl font-bold pt-4'> CABLECAR EMPLOYEE TRADE UNION</p>
 
-                                    <p className='p-0 m-0 flex justify-center'> Address</p>
+                                    <p className='p-0 m-0 flex justify-center'> ICHHAKAMANA-4, CHERES, CHITWAN</p>
                                     <div className='text-white mt-2'>
                                         <p className='bg-black rounded-3xl text-xl font-bold py-2 px-10 flex justify-center'>MEMBERSHIP FORM</p>
                                     </div>
@@ -164,9 +186,9 @@ const CVFormat = () => {
                                     </div>
                                     <div className='flex flex-col gap-3'>
                                         <h4 className='p-0 m-0 flex'>POSTAL INFORMATION</h4>
-                                        <p>{province} Pradesh, {district} District</p>
-                                        <p>{municipality}, Ward No.: {municipalityNumber}</p>
-                                        <p>{tole}</p>
+                                        <p>{province && <span className='m-0 p-0'>{province} Pradesh,</span>} {district&& <span className='m-0 p-0'> {district} District </span>}</p> 
+                                        <p><span className='m-0 p-0'>{municipality}</span> {municipalityNumber && <span className='m-0 p-0'>,Ward No.: {municipalityNumber}</span>}</p>
+                                        <p><span className='m-0 p-0'>{tole}</span></p>
 
                                     </div>
 
@@ -199,9 +221,9 @@ const CVFormat = () => {
                                     </div>
                                     <div className='flex flex-col gap-3'>
                                         <h4 className='p-0 m-0'>SKILLS</h4>
-                                        <p>Driving License Category: {skillObject.license}</p>
-                                        <p>Swimming: {skillObject.swimming}</p>
-                                        <p>Others: {skillObject.otherSkill}</p>
+                                        <p>Driving License Category: {skillObject && skillObject.license}</p>
+                                        <p>Swimming: {skillObject && skillObject.swimming}</p>
+                                        <p>Others: { skillObject && skillObject.otherSkill}</p>
 
 
                                     </div>
@@ -219,22 +241,23 @@ const CVFormat = () => {
 
 
                                     </div>
+                                    
                                     <div className='flex flex-col gap-3'>
                                         <h4 className='p-0 m-0'>FAMILY CONTACT INFORMATION</h4>
-                                        <p>Spouse Name: {familyContactInfoObject.spouseName}</p>
-                                        <p>Mobile No.: {familyContactInfoObject.spouseNumber}</p>
-                                        <p>No. Of Children: Son - {familyContactInfoObject.sonNum} Daughter - {familyContactInfoObject.daughterNum}</p>
+                                        <p>Spouse Name: {familyContactInfoObject && familyContactInfoObject.spouseName}</p>
+                                        <p>Mobile No.: {familyContactInfoObject && familyContactInfoObject.spouseNumber}</p>
+                                        <p>No. Of Children: Son - {familyContactInfoObject && familyContactInfoObject.sonNum} Daughter - {familyContactInfoObject && familyContactInfoObject.daughterNum}</p>
 
 
                                     </div>
                                     <div className='flex flex-col gap-3'>
                                         <h4 className='p-0 m-0'>OTHER INFORMATION</h4>
-                                        <p>Citiznship No.: {otherInformationObject.citizenNum}, {otherInformationObject.issueDistrict}, {otherInformationObject.issueDate}</p>
-                                        <p>PF/SSF No.: {otherInformationObject.pfSsfNum}</p>
-                                        <p>CIT No.: {otherInformationObject.citNum}</p>
+                                        <p>Citiznship No.: {otherInformationObject && otherInformationObject.citizenNum}, {otherInformationObject && otherInformationObject.issueDistrict}, {otherInformationObject && otherInformationObject.issueDate}</p>
+                                        <p>PF/SSF No.: {otherInformationObject && otherInformationObject.pfSsfNum}</p>
+                                        <p>CIT No.: {otherInformationObject && otherInformationObject.citNum}</p>
                                         <p>PAN No.: {clientPANNO}</p>
-                                        <p>Insurance No.: {otherInformationObject.insuranceNum}</p>
-                                        <p>Insurance Company: {otherInformationObject.insuranceCompany}</p>
+                                        <p>Insurance No.: {otherInformationObject && otherInformationObject.insuranceNum}</p>
+                                        <p>Insurance Company: {otherInformationObject && otherInformationObject.insuranceCompany}</p>
 
 
                                     </div>

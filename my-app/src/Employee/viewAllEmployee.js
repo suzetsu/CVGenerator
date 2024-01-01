@@ -13,6 +13,7 @@ import  EditImagePopup  from "./EditImagePopup";
 import deleteIcon from "../images/delete.png";
 import editIcon from "../images/blue-edit.png";
 import viewIcon from "../images/green-eye.png";
+import DeleteUserPopup from "../Role/DeleteUserPopup";
 // import { RiDeleteBin6Line } from "react-icons/fcRiDeleteBin6Line";
 
 
@@ -32,15 +33,15 @@ const ViewAllEmployee = () => {
     dispatch(fetchClientInfo());
     dispatch(GetAllDepartments());
   }, []);
-  console.log(clientData.$values);
+  
 
   const experiences = Array.isArray(clientData.$values)
     ? clientData.$values.map((client) => JSON.parse(client.experiences))
     : [];
-  console.log(experiences);
+ 
   const duration = experiences.map((exp) => exp.duration);
 
-  console.log(duration);
+
   const departmentData = Array.isArray(clientData.$values)
     ? clientData.$values.map((department) => department.departmentName)
     : [];
@@ -62,6 +63,7 @@ const ViewAllEmployee = () => {
   const [selectedCategory, setSelectedCategory] = useState(""); // Default search category
   const [isCVGeneratePopupOpen, setIsCVGeneratePopupOpen] = useState(false);
   const [departmentNameQuery, setDepartmentNameQuery] = useState(""); // Input for departmentName search
+  const [isPasswordPopupOpen, setIsPasswordPopupOpen] = useState(false);
 
   // Function to filter client data based on the search query
   const filterData = () => {
@@ -124,6 +126,7 @@ const ViewAllEmployee = () => {
       return filteredClientData.slice(startIndex, endIndex);
     };
 
+    const clientInformationID = selectedEmployeeInfo?.clientInformationID
   const handleEmployeeEdit = (client) => {
     setSelectedEmployeeInfo(client);
     // setIsPopupOpen(true);
@@ -136,19 +139,35 @@ const ViewAllEmployee = () => {
     setIsPopupOpen(false);
   };
   const handleSaveEmployee = (clientInformationID, updatedClient) => {
-    console.log(clientInformationID);
-    console.log(updatedClient);
+   
     dispatch(updateClientInfo(clientInformationID, updatedClient));
     setSelectedEmployeeInfo(null);
     setIsPopupOpen(false);
   };
-  const handleDelete = (client) => {
-    setSelectedEmployeeInfo(client);
-    // console.log(selectedEmployeeInfo);
-    const clientInformationID = client.clientInformationID;
-    console.log(clientInformationID);
+  
 
-     dispatch(deleteClientInfo(clientInformationID));
+    const handleOpenPasswordPopup = (client) => {
+      setIsPasswordPopupOpen(true);
+      setSelectedEmployeeInfo(client);
+      console.log(clientInformationID);
+    };
+  
+    // Function to close the password confirmation popup
+    const handleClosePasswordPopup = () => {
+      setIsPasswordPopupOpen(false);
+    
+    };
+  const handleDelete = (userId, userPassword) => {
+    
+    // console.log(selectedEmployeeInfo);
+    const deletedClient = {
+      userId,
+      userPassword,
+    }
+    
+ 
+
+     dispatch(deleteClientInfo(clientInformationID, deletedClient));
   };
   const handleEmployeeView = (client) => {
     // setSelectedEmployeeInfo(client);
@@ -190,6 +209,7 @@ const ViewAllEmployee = () => {
 
   return (
     <div className="flex flex-col gap-9">
+      <NavBar />
       <div className="text-[#666] pt-[5rem] flex justify-center font-helvetica pl-4 text-2xl font-bold">
         All Employee Details
       </div>
@@ -198,6 +218,7 @@ const ViewAllEmployee = () => {
           <div className="search-field">
             <input
               type="text"
+              disabled={!selectedCategory}
               placeholder={placeholderText}
               className=" rounded-[4.096px] w-[380px] h-[25px] bg-[#F3F3F3] border-black relative"
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -307,7 +328,7 @@ const ViewAllEmployee = () => {
                             {role === "SuperAdmin" && (
                               <p
                                 className="m-0 p-0 underline cursor-pointer"
-                                onClick={() => handleDelete(client)}
+                                onClick={() => handleOpenPasswordPopup(client)}
                               >
                                 <img src={deleteIcon} alt="Delete" className="w-5 h-5"/>
                               </p>
@@ -395,6 +416,15 @@ const ViewAllEmployee = () => {
           
         />
       )}
+      {
+        isPasswordPopupOpen && (
+          <DeleteUserPopup
+            clientInformationID={clientInformationID}
+            onClose={handleClosePasswordPopup}
+            onClientSave = {handleDelete}
+          />
+        )
+      }
     </div>
   );
 };

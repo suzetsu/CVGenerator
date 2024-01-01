@@ -12,7 +12,7 @@ const EditEmployee = () => {
   const dispatch = useDispatch();
   const employeeInfo = location.state;
   const clickedEmployeeInfo = employeeInfo.client;
-  const [editedEmployee, setEditedEmployee] = useState(clickedEmployeeInfo); 
+  const [editedEmployee, setEditedEmployee] = useState(clickedEmployeeInfo);
   // console.log(clickedEmployeeInfo);
   // console.log(editedEmployee);
   const formattedDate = editedEmployee.clientDOB
@@ -23,10 +23,10 @@ const EditEmployee = () => {
     : null;
   const formattedLeavingDate = editedEmployee.clientLeavingDate
     ? new Date(editedEmployee.clientLeavingDate)
-        .toISOString()
-        .split("T")[0]
+      .toISOString()
+      .split("T")[0]
     : null;
-  
+
 
   const clientUpdateStatus = useSelector(
     (state) => state.auth.clientUpdateStatus
@@ -36,32 +36,78 @@ const EditEmployee = () => {
   const [uploadedImage, setUploadedImage] = useState(
     clickedEmployeeInfo.imageData
   );
-  const [bloodGroup, setBloodGroup] = useState(clickedEmployeeInfo.bloodGroup);
+  const [editedbloodGroup, setBloodGroup] = useState(clickedEmployeeInfo.bloodGroup);
   const [clientDOB, setClientDOB] = useState(formattedDate);
   const [joiningDate, setJoiningDate] = useState(formattedJoiningDate);
   const [clientLeavingDate, setClientLeavingDate] = useState(formattedLeavingDate);
 
-  
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setEditedEmployee({ ...editedEmployee, [name]: value });
-    
+
   };
+
+ 
 
   const experienceJSON = JSON.parse(editedEmployee.experiences);
   const educationJSON = JSON.parse(editedEmployee.educations);
+  const affiliatedOrganizationJSON = JSON.parse(editedEmployee.affiliatedOrganization)
+
 
   const otherInformationJSON = JSON.parse(editedEmployee.otherInformation);
   const familyContactInformationJSON = JSON.parse(editedEmployee.familyContactInfo);
   const skillsJSON = JSON.parse(editedEmployee.skills);
-  const skillsObject = skillsJSON[0]
+  const officialInformationJSON = JSON.parse(editedEmployee.officialInformation);
+
+
 
   const [experiences, setExperiences] = useState(experienceJSON);
   const [education, setEducation] = useState(educationJSON);
-  const [skills, setSkills] = useState(skillsObject);
+  const [skills, setSkills] = useState(skillsJSON);
   const [familyContact, setFamilyContact] = useState(familyContactInformationJSON);
-  const [otherInformation, setOtherInformation] = useState (otherInformationJSON);
+  const [otherInfo, setOtherInformation] = useState(otherInformationJSON);
+  const [officialInfo, setOfficialInfo] = useState(officialInformationJSON);
+
+ const isFamilyContactExist = familyContact[0]
+const isOtherInfoExist = otherInfo[0]
+
+
+  const handleofficialInfo = (value, index, field) => {
+    const updatedOfficialInfo = [...officialInfo]
+    updatedOfficialInfo[index][field] = value;
+    setOfficialInfo(updatedOfficialInfo);
+  };
+  const handleOtherInfoChange = (value, index, field) => {
+    const updatedOtherInfo = [...otherInfo]
+    updatedOtherInfo[index][field] = value;
+    setOtherInformation(updatedOtherInfo);
+
+  };
+
+
+  const handleFamilyChange = (value, index, field) => {
+    const updatedFamilyContact = [...familyContact];
+    updatedFamilyContact[index][field] = value
+    setFamilyContact(updatedFamilyContact);
+
+
+  };
+  // const handleSpouseNumberChange = (value, index) => {
+  //   const updatedFamilyContact = [...familyContact];
+  //   updatedFamilyContact[index].spouseNumber = value 
+  //   setFamilyContact(updatedFamilyContact);
+  // };
+  // const handleSonChange = (value, index) => {
+  //   const updatedFamilyContact = [...familyContact];
+  //   updatedFamilyContact[index].sonNum = value 
+  //   setFamilyContact(updatedFamilyContact);
+  // };
+  // const handleDaughterChange = (value, index) => {
+  //   const updatedFamilyContact = [...familyContact];
+  //   updatedFamilyContact[index].daughterNum = value 
+  //   setFamilyContact(updatedFamilyContact);
+  // };
+
 
   const handleOrganizationNameChange = (value, index) => {
     const updatedExperiences = [...experiences];
@@ -102,6 +148,7 @@ const EditEmployee = () => {
     const updatedEducation = [...education];
     updatedEducation[index].degree = value;
     setEducation(updatedEducation);
+
   };
   const [imagePreviewURL, setImagePreviewURL] = useState("");
 
@@ -140,7 +187,7 @@ const EditEmployee = () => {
       { college: "", level: "", degree: "", university: "" },
     ]);
   };
-  
+
   // Function to remove an education
   const removeEducation = (index) => {
     const updatedEducation = [...education];
@@ -149,8 +196,9 @@ const EditEmployee = () => {
   };
 
   const handleUpdate = () => {
-    // console.log(JSON.stringify(education));
-    console.log(JSON.stringify(experiences));
+
+    // console.log(JSON.stringify(experiences));
+    // console.log(JSON.stringify(familyContact));
     // Call an update function or dispatch an action to save the edited user data
     const {
       clientName,
@@ -172,12 +220,13 @@ const EditEmployee = () => {
       level,
       degree,
       description,
+      affiliatedOrganization,
 
-    
+
       imageFile,
       imagePath,
     } = editedEmployee;
-    console.log(editedEmployee);
+
 
     const updatedClients = {
       ...editedEmployee,
@@ -186,9 +235,11 @@ const EditEmployee = () => {
       joiningDate,
       clientLeavingDate,
       clientDOB,
+      bloodGroup: editedbloodGroup,
       skills: JSON.stringify(skills),
-      otherInformation: JSON.stringify(otherInformation),
-      familyContactInfo: JSON.stringify(familyContact)
+      otherInformation: JSON.stringify(otherInfo),
+      familyContactInfo: JSON.stringify(familyContact),
+
     };
 
     const updatedClient = new FormData();
@@ -273,7 +324,7 @@ const EditEmployee = () => {
                             value={editedEmployee.designation}
                             placeholder="Eg: Developer, Analyst, Tester"
                             onChange={handleInputChange}
-                            // onFocus={handleDesignationFocus}
+                          // onFocus={handleDesignationFocus}
                           />
                           {/* <select value={designation} onChange={(e) => setDesignation(e.target.value)}>
                                     <option value=""></option>
@@ -314,23 +365,9 @@ const EditEmployee = () => {
                             value={editedEmployee.companyName}
                             placeholder="Company Name"
                             onChange={handleInputChange}
-                            // onFocus={handleCompanyFocus}
+                          // onFocus={handleCompanyFocus}
                           />
-                          {/* {showCompanyOptions && (
-                            <div className="absolute">
-                              <div className="autocomplete-options">
-                                {filteredCompanyNames.map((option) => (
-                                  <div
-                                    key={option}
-                                    className="option"
-                                    onClick={() => handleCompanyClick(option)}
-                                  >
-                                    {option}
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          )} */}
+
                         </div>
                       </div>
 
@@ -345,7 +382,7 @@ const EditEmployee = () => {
                             value={editedEmployee.departmentName}
                             placeholder="Department Name"
                             onChange={handleInputChange}
-                            // onFocus={handleDepartmentFocus}
+                          // onFocus={handleDepartmentFocus}
                           />
                           {/* {showDepartmentOptions && (
                             <div className="absolute">
@@ -370,88 +407,21 @@ const EditEmployee = () => {
                       </div>
                       <div className="flex flex-col gap-1 pt-2">
                         <p className="p-0 m-0 font-helvetica text-xs font-semibold">
-                          Blood Group
+                          Client DOB
                         </p>
-                        <div className="info-input-field flex gap-1">
+                        <div className="info-input-field">
                           <input
-                            type="text"
-                            name="bloodGroup"
-                            value={bloodGroup}
-                            placeholder="Client Blood Group"
-                            onChange={(e) => setBloodGroup(e.target.value)}
+                            type="date" // Use 'date' type for date input
+                            name="clientDOB"
+                            value={clientDOB}
+                            onChange={(e) => setClientDOB(e.target.value)}
                           />
-                          <select
-                            value={bloodGroup}
-                            onChange={(e) => setBloodGroup(e.target.value)}
-                          >
-                            <option value=""></option>
-                            <option value="A +ve">A +ve</option>
-                            <option value="A -ve">A -ve</option>
-                            <option value="O +ve">O +ve</option>
-                            <option value="O -ve">A -ve</option>
-                            <option value="AB +ve">AB +ve</option>
-                            <option value="AB -ve">AB -ve</option>
-                          </select>
                         </div>
                       </div>
+
                     </div>
                     <div className="flex gap-14">
-                      {/* <div className="flex flex-col gap-1 pt-2">
-                        <p className="p-0 m-0 font-helvetica text-xs font-semibold">
-                          Skills
-                        </p>
-                        <div
-                          className={` ${
-                            allErrors.skillsFieldError
-                              ? "error-input"
-                              : "info-input-field flex gap-1"
-                          }`}
-                        >
-                          <input
-                            type="text"
-                            value={currentSkill}
-                            onKeyPress={handleKeyPress}
-                            placeholder="Add skills"
-                            onChange={(e) => {
-                              setCurrentSkill(e.target.value);
-                              setAllErrors({
-                                ...allErrors,
-                                skillsFieldError: "",
-                              });
-                            }}
-                          />
-                          <select
-                            value={currentSkill}
-                            onChange={handleRoleSelect}
-                          >
-                            <option value=""></option>
-                            <option value="HTML">HTML</option>
-                            <option value="CSS">CSS</option>
-                            <option value="JavaScript">JavaScript</option>
-                            <option value="Python">Python</option>
-                            <option value="C#">C#</option>
-                            <option value="C++">C++</option>
-                          </select>
-                        </div>
-                        {allErrors.skillsFieldError && (
-                          <p className="field-error-message">
-                            {allErrors.skillsFieldError}
-                          </p>
-                        )}
-                        <div className="flex gap-2">
-                          {skills.map((skill, index) => (
-                            <div key={index} className="selected-role">
-                              {skill}
-                              <button
-                                onClick={() => removeRole(index)}
-                                className="remove-role-button"
-                              >
-                                x
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      </div> */}
+
                       <div className="flex flex-col gap-1 pt-2">
                         <p className="p-0 m-0 font-helvetica text-xs font-semibold">
                           Client Joining Date
@@ -468,34 +438,68 @@ const EditEmployee = () => {
                       </div>
                       <div className="flex flex-col gap-1 pt-2">
                         <p className="p-0 m-0 font-helvetica text-xs font-semibold">
-                          Client Leaving Date
+                          Type of Appointment
+                        </p>
+                        {officialInfo && Array.isArray(officialInfo) && officialInfo.length > 0 && officialInfo.map((info, index) => (
+                          <div className="info-input-field">
+                            <input
+                              type="text" // Use 'date' type for date input
+
+                              value={info.appointment}
+                              placeholder="Type of Appointment"
+                              onChange={(e) => handleofficialInfo(e.target.value, index, 'appointment')}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                      <div className="flex flex-col gap-1 pt-2">
+                        <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                          Gender
                         </p>
                         <div className="info-input-field">
                           <input
-                            type="date" // Use 'date' type for date input
-                            name="clientLeavingDate"
-                            value={clientLeavingDate}
-                            placeholder="Client Leaving Date"
-                            onChange={(e) =>
-                              setClientLeavingDate(e.target.value)
-                            }
+                            type="text"
+                            name="gender"
+                            value={editedEmployee.gender}
+                            placeholder="Gender"
+                            onChange={handleInputChange}
                           />
                         </div>
                       </div>
                     </div>
-                    <div className="flex flex-col gap-1 pt-2">
-                      <p className="p-0 m-0 font-helvetica text-xs font-semibold">
-                        Client DOB
-                      </p>
-                      <div className="info-input-field">
-                        <input
-                          type="date" // Use 'date' type for date input
-                          name="clientDOB"
-                          value={clientDOB}
-                          onChange={(e) => setClientDOB(e.target.value)}
-                        />
+                    <div className="flex gap-14 ">
+                      <div className="flex flex-col gap-1 pt-2">
+                        <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                          Father's Name
+                        </p>
+                        <div className="info-input-field">
+                          <input
+                            type="text"
+                            name="fatherName"
+                            value={editedEmployee.fatherName}
+                            placeholder="Father Name"
+                            onChange={handleInputChange}
+                          />
+                        </div>
                       </div>
+                      <div className="flex flex-col gap-1 pt-2">
+                        <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                          Religion
+                        </p>
+                        <div className="info-input-field">
+                          <input
+                            type="text"
+                            name="religion"
+                            value={editedEmployee.religion}
+                            placeholder="Religion Name"
+                            onChange={handleInputChange}
+                          />
+                        </div>
+                      </div>
+
+
                     </div>
+
                     <div></div>
                   </div>
                 </div>
@@ -547,7 +551,7 @@ const EditEmployee = () => {
                             value={editedEmployee.province}
                             placeholder="province"
                             onChange={handleInputChange}
-                            // onFocus={handleInputFocus}
+                          // onFocus={handleInputFocus}
                           />
 
                           {/* {showOptions && (
@@ -581,8 +585,8 @@ const EditEmployee = () => {
                             value={editedEmployee.district}
                             placeholder="district"
                             onChange={handleInputChange}
-                            // onChange={handleDistrictChange}
-                            // onFocus={handleDistrictFocus}
+                          // onChange={handleDistrictChange}
+                          // onFocus={handleDistrictFocus}
                           />
                           {/* {showDistricts && (
                             <div>
@@ -613,7 +617,271 @@ const EditEmployee = () => {
                     </div>
                   </div>
                 </div>
+                {isFamilyContactExist &&
+                  <div className="flex flex-col gap-2">
+                    <p
+                      className=" m-0 p-0 font-roboto font-bold"
+                      style={{ color: "#1670B2", fontSize: "16px" }}
+                    >
+                      Family Contact Information
+                    </p>
+                    {familyContact && Array.isArray(familyContact) && familyContact.length > 0 && familyContact.map((family, index) => (
+                      <div className=" pl-2">
+                        <div className=" flex flex-col pl-2">
+                          <div className="flex  gap-14">
+                            <div className="flex flex-col gap-1 pt-2">
+                              <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                                Spouse Name
+                              </p>
+                              <div
+                                className='info-input-field'
+                              >
+                                <input
+                                  type="text"
+                                  value={family.spouseName}
+                                  placeholder=" Spouse Name"
+                                  onChange={(e) => handleFamilyChange(e.target.value, index, 'spouseName')}
+                                />
+                              </div>
 
+                            </div>
+                            <div className="flex flex-col gap-1 pt-2">
+                              <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                                Contact No.
+                              </p>
+                              <div >
+                                <div
+                                  className='info-input-field'
+                                >
+                                  <input
+                                    type="tel"
+                                    value={family.spouseNumber}
+                                    placeholder="Spouse Contact Number"
+                                    onChange={(e) => handleFamilyChange(e.target.value, index, 'spouseNumber')}
+                                  />
+                                </div>
+                              </div>
+
+                            </div>
+
+                            <div className="flex flex-col gap-1 pt-2">
+                              <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                                No. Of Children
+                              </p>
+                              <div className="flex gap-2">
+                                <p className=" p-0 m-0 font-helvetica text-xs font-thin ">Son:</p>
+                                <div
+                                  className='info-input-field--smallfield'
+                                >
+                                  <input
+                                    type="text"
+                                    value={family.sonNum}
+                                    placeholder=""
+                                    onChange={(e) => handleFamilyChange(e.target.value, index, 'sonNum')}
+                                  />
+
+                                </div>
+                                <p className=" p-0 m-0 font-helvetica text-xs font-thin ">Daughter:</p>
+                                <div
+                                  className='info-input-field--smallfield'
+                                >
+                                  <input
+                                    type="text"
+                                    value={family.daughterNum}
+                                    placeholder=""
+                                    onChange={(e) => handleFamilyChange(e.target.value, index, 'daughterNum')}
+                                  />
+
+                                </div>
+                              </div>
+
+                            </div>
+
+                          </div>
+                          <div className="flex gap-14"></div>
+                          <div className="flex flex-col gap-1 pt-2">
+
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                }
+                <div className="flex flex-col gap-2">
+                  <p
+                    className=" m-0 p-0 font-roboto font-bold"
+                    style={{ color: "#1670B2", fontSize: "16px" }}
+                  >
+                    Physical Information
+                  </p>
+
+                  <div className=" pl-2">
+                    <div className=" flex flex-col pl-2">
+                      <div className="flex  gap-14">
+                        <div className="flex flex-col gap-1 pt-2">
+                          <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                            Height
+                          </p>
+                          <div
+                            className='info-input-field'
+                          >
+                            <input
+                              type="text"
+                              name="clientheight"
+                              value={editedEmployee.clientheight}
+                              placeholder="Height"
+                              onChange={handleInputChange}
+                            />
+                          </div>
+
+                        </div>
+                        <div className="flex flex-col gap-1 pt-2">
+                          <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                            Weight
+                          </p>
+                          <div >
+                            <div
+                              className='info-input-field'
+                            >
+                              <input
+                                type="text"
+                                name="weight"
+                                value={editedEmployee.weight}
+                                placeholder="Weight"
+                                onChange={handleInputChange}
+                              />
+                            </div>
+                          </div>
+
+                        </div>
+
+                        <div className="flex flex-col gap-1 pt-2">
+                          <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                            Blood Group
+                          </p>
+                          <div className="info-input-field flex gap-1">
+                            <input
+                              type="text"
+                              name="bloodGroup"
+                              value={editedbloodGroup}
+                              placeholder="Client Blood Group"
+                              onChange={(e) => setBloodGroup(e.target.value)}
+                            />
+                            <select
+                              value={editedbloodGroup}
+                              onChange={(e) => setBloodGroup(e.target.value)}
+                            >
+                              <option value=""></option>
+                              <option value="A +ve">A +ve</option>
+                              <option value="A -ve">A -ve</option>
+                              <option value="O +ve">O +ve</option>
+                              <option value="O -ve">A -ve</option>
+                              <option value="AB +ve">AB +ve</option>
+                              <option value="AB -ve">AB -ve</option>
+                            </select>
+                          </div>
+                        </div>
+
+                      </div>
+                      <div className="flex gap-14"></div>
+                      <div className="flex flex-col gap-1 pt-2">
+
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+                  {isOtherInfoExist &&
+                <div>
+                  <p
+                    className=" m-0 pb-4 font-roboto font-bold"
+                    style={{ color: "#1670B2", fontSize: "16px" }}
+                  >
+                    Other Information
+                  </p>
+                  {otherInfo && Array.isArray(otherInfo) && otherInfo.length > 0 && otherInfo.map((otherInf, index) => (
+                    <div className=" pl-2">
+                      <div className="flex  gap-14">
+                        <div className="flex flex-col gap-1 pt-2">
+                          <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                            PF/SSF No.:
+                          </p>
+                          <div className="info-input-field">
+                            <input
+                              type="number"
+                              name="pfSsfNum"
+                              value={otherInf.pfSsfNum}
+                              placeholder="PF/SS Number"
+                              onChange={(e) => { handleOtherInfoChange(e.target.value, index, "pfSsfNum") }}
+                            />
+                          </div>
+
+                          {/* {emailExistsErrorMessage && <p className='field-error-message'>{emailExistsErrorMessage}</p>} */}
+                        </div>
+                        <div className="flex flex-col gap-1 pt-2">
+                          <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                            Citizenship No.
+                          </p>
+                          <div className="info-input-field">
+                            <input
+                              type="text"
+
+                              value={otherInf.citizenNum}
+                              placeholder="Citizen number"
+                              onChange={(e) => { handleOtherInfoChange(e.target.value, index, "citizenNum") }}
+                            />
+                          </div>
+                        </div>
+                        <div className="flex flex-col gap-1 pt-2">
+                          <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                            Insurance No.
+                          </p>
+                          <div className="info-input-field">
+                            <input
+                              type="number"
+
+                              value={otherInf.insuranceNum}
+                              placeholder="Insurance number"
+                              onChange={(e) => { handleOtherInfoChange(e.target.value, index, "insuranceNum") }}
+                            />
+                          </div>
+                        </div>
+                        <div></div>
+                      </div>
+                      <div className="flex gap-14">
+                        <div className="flex flex-col gap-1 pt-2">
+                          <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                            CIT No.
+                          </p>
+                          <div className="info-input-field">
+                            <input
+                              type="number"
+
+                              value={otherInf.citNum}
+                              placeholder="CIT number"
+                              onChange={(e) => { handleOtherInfoChange(e.target.value, index, "citNum") }}
+                            />
+                          </div>
+                        </div>
+                        <div className="flex flex-col gap-1 pt-2">
+                          <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                            Insurance Company
+                          </p>
+                          <div className="info-input-field">
+                            <input
+                              type="text"
+
+                              value={otherInf.insuranceCompany}
+                              placeholder="Insurance Company"
+                              onChange={(e) => { handleOtherInfoChange(e.target.value, index, "insuranceCompany") }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+}
                 <div>
                   <p
                     className=" m-0 pb-4 font-roboto font-bold"
@@ -648,6 +916,20 @@ const EditEmployee = () => {
                             type="tel"
                             name="phone"
                             value={editedEmployee.phone}
+                            placeholder="mobile number"
+                            onChange={handleInputChange}
+                          />
+                        </div>
+                      </div>
+                      <div className="flex flex-col gap-1 pt-2">
+                        <p className="p-0 m-0 font-helvetica text-xs font-semibold">
+                          Home No.
+                        </p>
+                        <div className="info-input-field">
+                          <input
+                            type="number"
+                            name="homeNumber"
+                            value={editedEmployee.homeNumber}
                             placeholder="mobile number"
                             onChange={handleInputChange}
                           />
@@ -914,20 +1196,20 @@ const EditEmployee = () => {
                         style={{ maxWidth: "15%", maxHeight: "15%" }}
                       />
                     ) : // If no new image is selected, show the existing image
-                    uploadedImage ? (
-                      <img
-                        style={{
-                          backgroundImage: `url(data:image/jpg;base64,${uploadedImage})`,
-                          backgroundSize: "cover",
-                          width: "100px",
-                          height: "100px",
-                        }}
-                        alt=""
-                      />
-                    ) : (
-                      // If no existing image, you can display a placeholder or some default content
-                      <p>No image chosen</p>
-                    )}
+                      uploadedImage ? (
+                        <img
+                          style={{
+                            backgroundImage: `url(data:image/jpg;base64,${uploadedImage})`,
+                            backgroundSize: "cover",
+                            width: "100px",
+                            height: "100px",
+                          }}
+                          alt=""
+                        />
+                      ) : (
+                        // If no existing image, you can display a placeholder or some default content
+                        <p>No image chosen</p>
+                      )}
                   </div>
                 </div>
 

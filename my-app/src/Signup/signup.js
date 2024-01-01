@@ -8,7 +8,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserInfo } from "../Redux/roleActions";
 import NavBar from "../Dashboard/Navbar";
-
+import * as actionTypes from '../Redux/actionTypes'
 import { createRole } from "../Redux/roleActions";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
@@ -35,7 +35,8 @@ const Signup = () => {
   const userCreationStatus = useSelector(
     (state) => state.auth.userCreationStatus
   );
-  const roleError = useSelector((state) => state.auth.roleError);
+  let roleError = useSelector((state) => state.auth.roleEmailError);
+ 
   const emailExistsError = useSelector((state) => state.auth.errorUsermail);
 
   const [errorMail, setErrormailMessage] = useState(emailExistsError);
@@ -71,10 +72,14 @@ const Signup = () => {
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
-    setErrormail("");
+    setErrorRole("");
     setfieldErrorMessage("");
     setErrormailMessage("");
-    // emailErrorMessage = e.target.value;
+    roleError = ""
+    dispatch({
+      type: actionTypes.USER_CREATE_FAILURE,
+      payload: null,
+    });
 
     //
   };
@@ -86,15 +91,18 @@ const Signup = () => {
     }));
     seterrorPW("");
     setfieldErrorMessage("");
+    setErrorRole("");
   };
   const handleNameChange = (e) => {
     setName(e.target.value);
     setfieldErrorMessage("");
+    setErrorRole("");
   };
   const handleRoleChange = (e) => {
     setRole(e.target.value);
     setfieldErrorMessage("");
     setErrorRole("");
+    
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -131,15 +139,16 @@ const Signup = () => {
             roleName,
           })
         );
+        console.log(roleError);
         if (roleError) {
           setErrorRole(roleError);
         }
         if (userCreationStatus === "success") {
-          setEmail("");
-          setName("");
-          setRole("");
-          setPasswords("");
-          setPasswords({ password: "", confirmPassword: "" });
+          // setEmail("");
+          // setName("");
+          // setRole("");
+          // setPasswords("");
+          // setPasswords({ password: "", confirmPassword: "" });
         }
       }
     }
@@ -197,7 +206,11 @@ const Signup = () => {
                   onChange={handleEmailChange}
                   className="typeStyle"
                 />
-                {errorRole && <p className="error-message2">{errorRole}</p>}
+               {roleError == 'Email already exists' && (
+                          <p className="field-error-message">
+                            {roleError}
+                          </p>
+                        )}
                 {/* {errorMail && <p className='error-message1'>{errorMail}</p>} */}
                 <div className="info-input-field-dropdown ">
                   <input
@@ -217,7 +230,7 @@ const Signup = () => {
                     <option value="SuperAdmin">SuperAdmin</option>
                   </select>
                 </div>
-                {errorRole && <p className="error-message2">{errorRole}</p>}
+               
                 <div className="password-container1">
                   <div>
                     <input
@@ -259,8 +272,7 @@ const Signup = () => {
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="button1">
+              <div className="button1">
               <button className="button-edit1" onClick={handleSubmit}>
                 Add
               </button>
@@ -273,6 +285,8 @@ const Signup = () => {
                 Role Added Successfully
               </div>
             )}
+            </div>
+           
             {/* <div className='signin-text'>
           <p>Already have an Account? <a href='/'>Sign in</a></p>
         </div> */}

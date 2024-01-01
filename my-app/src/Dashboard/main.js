@@ -17,14 +17,21 @@ import SecondCVTemp from '../CustomerDetails/CVtemplate/SecondCVTemp';
 import ThirdCVTemp from '../CustomerDetails/CVtemplate/ThirdCVTemp';
 import CVGenerate from '../CustomerDetails/CVtemplate/CVGenerate';
 import './Navbar.scss'
+import { useLocation } from 'react-router-dom';
 
 const Main = () => {
+
+  const location = useLocation();
+  const company = location?.state;
   return (
     <div>
-    <div className='w-full'>
+      <div>
+        <NavBar/>
+      </div>
+    <div className='w-full pt-2'>
        <div className = "main-style flex flex-col" >
          <div>
-         <SecondContainer/>
+         <SecondContainer company={company}/>
          </div>
          <div>
           <Footer/>

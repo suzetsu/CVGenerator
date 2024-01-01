@@ -8,6 +8,7 @@ import "./styleCompany.css";
 import Logo from "../images/Logo.png";
 import "../CustomerDetails/InfoComponents/infoStyles.css";
 import Swal from "sweetalert2";
+import CompanyDashboardNav from "../Dashboard/CompanyDashboardNav";
 
 const AddCompany = ({ token }) => {
   const [PAN, setPAN] = useState("");
@@ -49,7 +50,7 @@ const AddCompany = ({ token }) => {
   const dispatch = useDispatch();
 
   // const token = useSelector((state)=> state.auth.token)
-  console.log(token);
+ 
 
   useEffect(() => {
     dispatch(GetAllDepartments());
@@ -139,7 +140,7 @@ const AddCompany = ({ token }) => {
       reader.onload = (event) => {
         imagePreviewURL = event.target.result;
         setPreviewImage(imagePreviewURL); // Store the image preview URL in state
-        console.log(`Previewing ${imagePreviewURL}`);
+        
       };
       reader.readAsDataURL(imageFile);
 
@@ -160,16 +161,27 @@ const AddCompany = ({ token }) => {
   
 
   const formData = new FormData();
-  for (const key in dataToPost) { 
-    formData.append(key, dataToPost[key]);
+  // for (const key in dataToPost) { 
+  //   formData.append(key, dataToPost[key]);
+  // }
+  for (const key in dataToPost) {
+    if (Array.isArray(dataToPost[key])) {
+      // If the value is an array, append each element separately
+      dataToPost[key].forEach((element, index) => {
+        formData.append(`${key}[${index}]`, element);
+      });
+    } else {
+      formData.append(key, dataToPost[key]);
+    }
   }
   formData.append("imageFile", uploadedImage);
   const handleClick = (e) => {
    
     e.preventDefault();
+    
 
     setError("");
-    if (!PAN || !name || !email || !address || !departments) {
+    if (!PAN || !name || !email || !address || !departments || !formType) {
       setError("Please fill all the fields");
     } else if (!isValidEmail(email)) {
       setError("Invalid Email");
@@ -179,7 +191,7 @@ const AddCompany = ({ token }) => {
     // }
      else {
       dispatch(createCompany(formData));
-      console.log(errorMessage);
+   
       if (errorMessage) {
         setError(errorMessage);
       }
@@ -192,17 +204,17 @@ const AddCompany = ({ token }) => {
       setUploadedImage(null);
       setFormType('');
       
-      console.log(successStatus);
+      
      
     }
   };
-console.log(successStatus);
+
   return (
     // <div className='flex justify-center h-[100vh] items-center bg-[#F0F4F3]'>
     <div className="flex flex-col bg-[#F0F4F3] h-[100%] ">
-      {/* <div>
-        <Navbar />
-      </div> */}
+      <div>
+        <CompanyDashboardNav />
+      </div>
       <div className=" add-company-css flex justify-center pt-40 pb-10">
         <div className="shadow-paper flex flex-col justify-center items-center bg-white pl-10 pr-10 pb-5 pt-5 rounded-lg">
           <div>
@@ -259,7 +271,7 @@ console.log(successStatus);
                     <input
                       type="text"
                       value={PAN}
-                      placeholder="Company PAN NO."
+                      placeholder="Company PAN/VAT NO."
                       onChange={handlePanChange}
                     />
                   </div>
