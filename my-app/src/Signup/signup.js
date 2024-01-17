@@ -13,6 +13,7 @@ import { createRole } from "../Redux/roleActions";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import "../CustomerDetails/InfoComponents/infoStyles.css";
+import CompanyDashboardNav from "../Dashboard/CompanyDashboardNav";
 
 const Signup = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -36,7 +37,7 @@ const Signup = () => {
     (state) => state.auth.userCreationStatus
   );
   let roleError = useSelector((state) => state.auth.roleEmailError);
- 
+
   const emailExistsError = useSelector((state) => state.auth.errorUsermail);
 
   const [errorMail, setErrormailMessage] = useState(emailExistsError);
@@ -102,7 +103,7 @@ const Signup = () => {
     setRole(e.target.value);
     setfieldErrorMessage("");
     setErrorRole("");
-    
+
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -139,16 +140,16 @@ const Signup = () => {
             roleName,
           })
         );
-        console.log(roleError);
+
         if (roleError) {
           setErrorRole(roleError);
         }
         if (userCreationStatus === "success") {
-          // setEmail("");
-          // setName("");
-          // setRole("");
-          // setPasswords("");
-          // setPasswords({ password: "", confirmPassword: "" });
+          setEmail("");
+          setName("");
+          setRole("");
+          setPasswords("");
+          setPasswords({ password: "", confirmPassword: "" });
         }
       }
     }
@@ -178,7 +179,7 @@ const Signup = () => {
   return (
     <div>
       <div>
-        <NavBar />
+        <CompanyDashboardNav />
       </div>
       <div className="main-Container1">
         <div className="second-container1">
@@ -206,11 +207,11 @@ const Signup = () => {
                   onChange={handleEmailChange}
                   className="typeStyle"
                 />
-               {roleError == 'Email already exists' && (
-                          <p className="field-error-message">
-                            {roleError}
-                          </p>
-                        )}
+                {roleError == 'Email already exists' && (
+                  <p className="field-error-message">
+                    {roleError}
+                  </p>
+                )}
                 {/* {errorMail && <p className='error-message1'>{errorMail}</p>} */}
                 <div className="info-input-field-dropdown ">
                   <input
@@ -230,7 +231,7 @@ const Signup = () => {
                     <option value="SuperAdmin">SuperAdmin</option>
                   </select>
                 </div>
-               
+
                 <div className="password-container1">
                   <div>
                     <input
@@ -242,9 +243,8 @@ const Signup = () => {
                     />
 
                     <i
-                      className={`password-toggle ${
-                        passwordVisible ? "fa fa-eye-slash" : "fa fa-eye"
-                      } `}
+                      className={`password-toggle ${passwordVisible ? "fa fa-eye-slash" : "fa fa-eye"
+                        } `}
                       onClick={togglePasswordVisibility}
                     ></i>
                   </div>
@@ -261,9 +261,8 @@ const Signup = () => {
                     />
 
                     <i
-                      className={`password-toggle ${
-                        passwordVisible1 ? "fa fa-eye-slash" : "fa fa-eye"
-                      } `}
+                      className={`password-toggle ${passwordVisible1 ? "fa fa-eye-slash" : "fa fa-eye"
+                        } `}
                       onClick={togglePasswordVisibility2}
                     ></i>
                     {pwnotMatch && (
@@ -273,20 +272,20 @@ const Signup = () => {
                 </div>
               </div>
               <div className="button1">
-              <button className="button-edit1" onClick={handleSubmit}>
-                Add
-              </button>
-            </div>
-            {fielderrorMessage && (
-              <p className="error-message3">{fielderrorMessage}</p>
-            )}
-            {userCreationStatus === "success" && (
-              <div className="success-message flex justify-center">
-                Role Added Successfully
+                <button className="button-edit1" onClick={handleSubmit}>
+                  Add
+                </button>
               </div>
-            )}
+              {fielderrorMessage && (
+                <p className="error-message3">{fielderrorMessage}</p>
+              )}
+              {userCreationStatus === "success" && (
+                <div className="success-message flex justify-center">
+                  Role Added Successfully
+                </div>
+              )}
             </div>
-           
+
             {/* <div className='signin-text'>
           <p>Already have an Account? <a href='/'>Sign in</a></p>
         </div> */}

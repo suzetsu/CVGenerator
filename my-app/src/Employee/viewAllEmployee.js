@@ -6,22 +6,19 @@ import EditAllEmployeePopup from "./editAllEmployee";
 import { updateClientInfo } from "../Redux/actions";
 import { deleteClientInfo } from "../Redux/actions";
 import { GetAllDepartments } from "../Redux/departmentActions";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./styles.css";
 import CVGenerate from "../CustomerDetails/CVtemplate/CVGenerate";
-import  EditImagePopup  from "./EditImagePopup";
+import EditImagePopup from "./EditImagePopup";
 import deleteIcon from "../images/delete.png";
 import editIcon from "../images/blue-edit.png";
 import viewIcon from "../images/green-eye.png";
 import DeleteUserPopup from "../Role/DeleteUserPopup";
-// import { RiDeleteBin6Line } from "react-icons/fcRiDeleteBin6Line";
-
-
-
 
 const ViewAllEmployee = () => {
   const dispatch = useDispatch();
   const history = useNavigate();
+  const location = useLocation();
   const clientData = useSelector((state) => state.auth.clientData);
   const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
@@ -33,24 +30,31 @@ const ViewAllEmployee = () => {
     dispatch(fetchClientInfo());
     dispatch(GetAllDepartments());
   }, []);
-  
 
-  const experiences = Array.isArray(clientData.$values)
-    ? clientData.$values.map((client) => JSON.parse(client.experiences))
+  const company =
+    localStorage.getItem("selectedCompany") &&
+    JSON.parse(localStorage.getItem("selectedCompany"));
+  const compName = company && company.name;
+
+  const clientInfo = useSelector((state) => state.auth.clientData);
+  const empDetails = clientInfo && clientInfo.$values;
+  const matchedEmployees =
+    empDetails && empDetails.filter((ex) => ex.companyName == compName);
+
+  const experiences = Array.isArray(matchedEmployees)
+    ? matchedEmployees.map((client) => JSON.parse(client.experiences))
     : [];
- 
+
   const duration = experiences.map((exp) => exp.duration);
 
-
-  const departmentData = Array.isArray(clientData.$values)
-    ? clientData.$values.map((department) => department.departmentName)
+  const departmentData = Array.isArray(matchedEmployees)
+    ? matchedEmployees.map((department) => department.departmentName)
     : [];
   // console.log(clientData.$values.map((image) => image.imageData));
   // const imageData = Array.isArray(clientData.$values) ? clientData.$values.map((image) => image.imageData): [];
   // console.log(imageData);
 
   // Function to get the data for the current page
-  
 
   // Function to handle page navigation
   const handlePageChange = (newPage) => {
@@ -69,12 +73,12 @@ const ViewAllEmployee = () => {
   const filterData = () => {
     // Function to filter client data based on the selected category and search query
     if (!selectedCategory || !searchQuery) {
-      return clientData?.$values ?? [];
+      return matchedEmployees ?? [];
     }
 
     const normalizedSearchQuery = searchQuery.toLowerCase().trim();
     return (
-      clientData?.$values?.filter((client) => {
+      matchedEmployees?.filter((client) => {
         const {
           clientName,
           district,
@@ -111,26 +115,25 @@ const ViewAllEmployee = () => {
     );
   };
 
- 
   const filteredClientData = filterData();
   const placeholderText = selectedCategory
     ? `Search by ${selectedCategory}`
     : "Search By...";
 
-    // useEffect(() => {
-    //   filterData();
-    // }, [searchQuery, selectedCategory, departmentNameQuery, clientData]);
-    const getCurrentPageData = () => {
-      const startIndex = (currentPage - 1) * itemsPerPage;
-      const endIndex = startIndex + itemsPerPage;
-      return filteredClientData.slice(startIndex, endIndex);
-    };
+  // useEffect(() => {
+  //   filterData();
+  // }, [searchQuery, selectedCategory, departmentNameQuery, clientData]);
+  const getCurrentPageData = () => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return filteredClientData.slice(startIndex, endIndex);
+  };
 
-    const clientInformationID = selectedEmployeeInfo?.clientInformationID
+  const clientInformationID = selectedEmployeeInfo?.clientInformationID;
   const handleEmployeeEdit = (client) => {
     setSelectedEmployeeInfo(client);
     // setIsPopupOpen(true);
-    history("/editEmployee", { state: {client } });
+    history("/editEmployee", { state: { client } });
   };
 
   // Function to handle closing the popup
@@ -139,40 +142,33 @@ const ViewAllEmployee = () => {
     setIsPopupOpen(false);
   };
   const handleSaveEmployee = (clientInformationID, updatedClient) => {
-   
     dispatch(updateClientInfo(clientInformationID, updatedClient));
     setSelectedEmployeeInfo(null);
     setIsPopupOpen(false);
   };
-  
 
-    const handleOpenPasswordPopup = (client) => {
-      setIsPasswordPopupOpen(true);
-      setSelectedEmployeeInfo(client);
-      console.log(clientInformationID);
-    };
-  
-    // Function to close the password confirmation popup
-    const handleClosePasswordPopup = () => {
-      setIsPasswordPopupOpen(false);
-    
-    };
+  const handleOpenPasswordPopup = (client) => {
+    setIsPasswordPopupOpen(true);
+    setSelectedEmployeeInfo(client);
+  };
+
+  // Function to close the password confirmation popup
+  const handleClosePasswordPopup = () => {
+    setIsPasswordPopupOpen(false);
+  };
   const handleDelete = (userId, userPassword) => {
-    
     // console.log(selectedEmployeeInfo);
     const deletedClient = {
       userId,
       userPassword,
-    }
-    
- 
+    };
 
-     dispatch(deleteClientInfo(clientInformationID, deletedClient));
+    dispatch(deleteClientInfo(clientInformationID, deletedClient));
   };
   const handleEmployeeView = (client) => {
     // setSelectedEmployeeInfo(client);
     // setIsCVGeneratePopupOpen(true);
-    history('/CVFormat', {state: {client}});
+    history("/CVFormat", { state: { client } });
   };
   // Calculate the total number of pages
   const totalPages = Math.ceil(filteredClientData.length / itemsPerPage);
@@ -192,7 +188,6 @@ const ViewAllEmployee = () => {
   const handlePageSelect = (page) => {
     setCurrentPage(page);
   };
-
 
   const [isImagePopupOpen, setImagePopupOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -228,7 +223,7 @@ const ViewAllEmployee = () => {
               onChange={(e) => setSelectedCategory(e.target.value)}
               className="drop-down"
             >
-              <option value=''></option>
+              <option value=""></option>
 
               <option value="clientName">Client Name</option>
               <option value="companyName">Company Name</option>
@@ -286,10 +281,13 @@ const ViewAllEmployee = () => {
                     clientDOB,
                     age,
                     designation,
-                    branch
+                    branch,
                   } = client;
-                  const parsedDate = new Date(clientDOB);
-                  const formattedDate = parsedDate.toISOString().split('T')[0];
+                  const parsedDate = clientDOB ? new Date(clientDOB) : null;
+                  const formattedDate = parsedDate
+                    ? parsedDate.toISOString().split("T")[0]
+                    : null;
+                  console.log(clientDOB);
                   return (
                     <tbody>
                       <tr key={index}>
@@ -322,7 +320,11 @@ const ViewAllEmployee = () => {
                                 className="m-0 p-0 underline cursor-pointer"
                                 onClick={() => handleEmployeeEdit(client)}
                               >
-                                <img src={editIcon} alt="Edit" className="w-5 h-5"/>
+                                <img
+                                  src={editIcon}
+                                  alt="Edit"
+                                  className="w-5 h-5"
+                                />
                               </p>
                             )}
                             {role === "SuperAdmin" && (
@@ -330,14 +332,22 @@ const ViewAllEmployee = () => {
                                 className="m-0 p-0 underline cursor-pointer"
                                 onClick={() => handleOpenPasswordPopup(client)}
                               >
-                                <img src={deleteIcon} alt="Delete" className="w-5 h-5"/>
+                                <img
+                                  src={deleteIcon}
+                                  alt="Delete"
+                                  className="w-5 h-5"
+                                />
                               </p>
                             )}
                             <p
                               className="m-0 p-0 underline cursor-pointer"
                               onClick={() => handleEmployeeView(client)}
                             >
-                              <img src={viewIcon} alt="View" className="w-5 h-5"/>
+                              <img
+                                src={viewIcon}
+                                alt="View"
+                                className="w-5 h-5"
+                              />
                             </p>
                           </div>
                         </td>
@@ -346,7 +356,6 @@ const ViewAllEmployee = () => {
                   );
                 })
               : null}
-              
           </table>
           {/* Pagination navigation */}
 
@@ -413,18 +422,15 @@ const ViewAllEmployee = () => {
           image={selectedImage}
           onClose={handleImagePopupClose}
           // onClose={() => setImagePopupOpen(false)}
-          
         />
       )}
-      {
-        isPasswordPopupOpen && (
-          <DeleteUserPopup
-            clientInformationID={clientInformationID}
-            onClose={handleClosePasswordPopup}
-            onClientSave = {handleDelete}
-          />
-        )
-      }
+      {isPasswordPopupOpen && (
+        <DeleteUserPopup
+          clientInformationID={clientInformationID}
+          onClose={handleClosePasswordPopup}
+          onClientSave={handleDelete}
+        />
+      )}
     </div>
   );
 };

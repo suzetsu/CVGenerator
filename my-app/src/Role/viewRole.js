@@ -9,6 +9,7 @@ import { deleteRoleInfo } from '../Redux/roleActions'
 import deleteIcon from "../images/delete.png";
 import editIcon from "../images/editing.png";
 import DeleteUserPopup from './DeleteUserPopup'
+import CompanyDashboardNav from '../Dashboard/CompanyDashboardNav'
 
 
 const ViewRole = () => {
@@ -57,7 +58,7 @@ const ViewRole = () => {
   
     // Function to handle saving edited user data
     const id = selectedUser?.id
-    console.log(id)
+    
     const handleSaveUser = (fullName, email, roleName, password) => {
       const updatedUser = {
         fullName, 
@@ -85,8 +86,8 @@ const ViewRole = () => {
   return (
     <div  className='flex flex-col gap-9'>
         <div>
-            <NavBar />
-        </div>
+                <CompanyDashboardNav />
+            </div>
         <div className='text-[#666] pt-[5rem] flex justify-center font-helvetica pl-4 text-lg font-bold'>
         UserRole Details
       </div>

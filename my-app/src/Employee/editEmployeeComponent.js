@@ -252,7 +252,7 @@ const isOtherInfoExist = otherInfo[0]
     }
 
     // Dispatch the update action with the updated client data
-    dispatch(updateClientInfo(clientInformationID, updatedClient));
+    dispatch(updateClientInfo(clientInformationID, updatedClient, history));
 
     // Redirect to the "/main" page after the update if successful
     if (clientUpdateStatus === "success") {

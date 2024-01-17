@@ -5,7 +5,7 @@ import EmployeeList from '../Employee/employeeList';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchClientInfo } from '../Redux/actions';
 import viewIcon from "../images/green-eye.png";
-import deleteIcon from '../images/delete.png'
+
 
 const ViewDepartment = () => {
   const dispatch = useDispatch();
@@ -18,8 +18,7 @@ const ViewDepartment = () => {
   const companyName = company.name;
   const employeeDetails = useSelector((state) => state.auth.clientData)
 
-  const role=  localStorage.getItem("tokendata") &&   JSON.parse(localStorage.getItem("tokendata")).role;
-    const [isPasswordPopupOpen, setIsPasswordPopupOpen] = useState(false);
+  
     
   // Filter employees based on the selected company name
 const matchedDepartments = employeeDetails && employeeDetails.$values
@@ -43,17 +42,7 @@ const totalDepartments = department.concat(uniqueMatchedDepartments);
     history('/employeeList', { state: { department, companyName } });
     
   };
-const departmentId = selectedDepartment && selectedDepartment.departmentId 
-  const handleOpenPasswordPopUp = (department) => {
-    setSelectedDepartmentSet(department);
-    setIsPasswordPopupOpen(false);
-  }
 
-  const handleClosePasswordPopup = (department) => {
-    setSelectedDepartmentSet('');
-    setIsPasswordPopupOpen(false);
-  }
-  
 
   useEffect(() => {
     dispatch(fetchClientInfo());
@@ -112,12 +101,7 @@ const departmentId = selectedDepartment && selectedDepartment.departmentId
                         >
                           <img src={viewIcon} alt='view' className='w-5 h-5' />
                         </p>
-                        <p
-                          className='m-0 p-0 underline cursor-pointer'
-                          onClick={() => handleOpenPasswordPopUp(department, departmentId)}
-                        >
-                          <img src={deleteIcon} alt='view' className='w-5 h-5' />
-                        </p>
+                        
                       </div>
                     </td>
                   </tr>

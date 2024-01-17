@@ -143,7 +143,7 @@ const handleClosePasswordPopup = (company) => {
   }, [])
 
   const CompanyId = selectedCompany && selectedCompany?.companyId
-  console.log(CompanyId);
+  
   
  
   const handleDeleteCompany = (userId, userPassword) => {  

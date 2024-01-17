@@ -9,6 +9,8 @@ import Logo from "../images/Logo.png";
 import "../CustomerDetails/InfoComponents/infoStyles.css";
 import Swal from "sweetalert2";
 import CompanyDashboardNav from "../Dashboard/CompanyDashboardNav";
+import * as actionTypes from "../Redux/actionTypes";
+import Select from "react-dropdown-select";
 
 const AddCompany = ({ token }) => {
   const [PAN, setPAN] = useState("");
@@ -21,13 +23,13 @@ const AddCompany = ({ token }) => {
   const [formType, setFormType] = useState("");
   const [previewImage, setPreviewImage] = useState("");
   const [uploadedImage, setUploadedImage] = useState(null);
-  
+
   const successStatus = useSelector(
     (state) => state.company.companyCreationStatus
   );
   // const [CompanySuccessStatus, setSuccessStatus] = useState( successStatus );
   const companyData = useSelector((state) => state.company.companyData);
-  const errorMessage = useSelector((state) => state.company.companyError);
+  let errorMessage = useSelector((state) => state.company.companyError);
   const departmentData = useSelector((state) => state.company.departmentData);
   let departmentNames =
     departmentData &&
@@ -37,6 +39,15 @@ const AddCompany = ({ token }) => {
       : [];
   const [showDepartmentOptions, setShowDepartmentOptions] = useState(false);
 
+  const dummyDepartments = [
+    "Sales",
+    "Employees",
+    "HR",
+    "Marketing",
+    "IT",
+    "Business",
+    "Administration",
+  ];
   const IsSameName = (name) => {
     if (companyData && companyData.$values) {
       const matchingName = companyData.$values.find(
@@ -50,7 +61,6 @@ const AddCompany = ({ token }) => {
   const dispatch = useDispatch();
 
   // const token = useSelector((state)=> state.auth.token)
- 
 
   useEffect(() => {
     dispatch(GetAllDepartments());
@@ -96,21 +106,44 @@ const AddCompany = ({ token }) => {
       setShowDepartmentOptions(false);
       // setShowDepartmentOptions(false);
     }
-  }
-  React.useEffect(() => {
-    document.addEventListener('click', handleDocumentClick);
+  };
+  useEffect(() => {
+    document.addEventListener("click", handleDocumentClick);
     return () => {
-      document.removeEventListener('click', handleDocumentClick);
+      document.removeEventListener("click", handleDocumentClick);
     };
   }, []);
   const handlePanChange = (e) => {
     setPAN(e.target.value);
     setError("");
   };
+  const [nameWarning, setNameWarning] = useState({
+    compNameWarning: "",
+    addressWarning: "",
+  });
   const handleNameChange = (e) => {
-    setName(e.target.value);
+    const enteredName = e.target.value;
+    setName(enteredName);
     setError("");
+    errorMessage = "";
+    dispatch({
+      type: actionTypes.COMPANY_CREATE_FAILURE,
+      payload: null,
+    });
     // setSuccessStatus("");
+    // Check if the first letter is not capitalized
+
+    if (enteredName && enteredName[0] !== enteredName[0].toUpperCase()) {
+      setNameWarning((prevWarnings) => ({
+        ...prevWarnings,
+        compNameWarning: "First letter must be capitalized",
+      }));
+    } else {
+      setNameWarning((prevWarnings) => ({
+        ...prevWarnings,
+        compNameWarning: "",
+      }));
+    }
   };
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -118,9 +151,25 @@ const AddCompany = ({ token }) => {
     // setSuccessStatus("");
   };
   const handleAddressChange = (e) => {
-    setAddress(e.target.value);
+    const enteredAddress = e.target.value;
+    setAddress(enteredAddress);
     setError("");
     // setSuccessStatus("");
+    // Check if the first letter is not capitalized
+    if (
+      enteredAddress &&
+      enteredAddress[0] !== enteredAddress[0].toUpperCase()
+    ) {
+      setNameWarning((prevWarnings) => ({
+        ...prevWarnings,
+        addressWarning: "First letter must be capitalized",
+      }));
+    } else {
+      setNameWarning((prevWarnings) => ({
+        ...prevWarnings,
+        addressWarning: "",
+      }));
+    }
   };
   const isValidEmail = (email) => {
     return String(email)
@@ -140,7 +189,6 @@ const AddCompany = ({ token }) => {
       reader.onload = (event) => {
         imagePreviewURL = event.target.result;
         setPreviewImage(imagePreviewURL); // Store the image preview URL in state
-        
       };
       reader.readAsDataURL(imageFile);
 
@@ -156,12 +204,11 @@ const AddCompany = ({ token }) => {
     email,
     address,
     departments,
-    formType
+    formType,
   };
-  
 
   const formData = new FormData();
-  // for (const key in dataToPost) { 
+  // for (const key in dataToPost) {
   //   formData.append(key, dataToPost[key]);
   // }
   for (const key in dataToPost) {
@@ -176,9 +223,8 @@ const AddCompany = ({ token }) => {
   }
   formData.append("imageFile", uploadedImage);
   const handleClick = (e) => {
-   
+    console.log(departments);
     e.preventDefault();
-    
 
     setError("");
     if (!PAN || !name || !email || !address || !departments || !formType) {
@@ -189,23 +235,22 @@ const AddCompany = ({ token }) => {
     // else if (IsSameName(name) !== null) {
     //   setError('Company name already exists');
     // }
-     else {
+    else {
       dispatch(createCompany(formData));
-   
+
       if (errorMessage) {
         setError(errorMessage);
       }
-      setAddress('');
-      setPAN('');
-      setName('');
-      setEmail('');
-      // setDepartments([]);
-      setSelectedDepartment([]);
-      setUploadedImage(null);
-      setFormType('');
-      
-      
-     
+      if (successStatus === "success") {
+        setAddress("");
+        setPAN("");
+        setName("");
+        setEmail("");
+        // setDepartments([]);
+        setSelectedDepartment([]);
+        setUploadedImage(null);
+        setFormType("");
+      }
     }
   };
 
@@ -228,8 +273,7 @@ const AddCompany = ({ token }) => {
               </div>
               <div>
                 <div className=" flex flex-col gap-4 pt-4 pb-4 ">
-                  <div className="info-input-field-company">
-                    <input
+                  {/* <input
                       type="text"
                       value={currentDepartment}
                       placeholder="Department Name"
@@ -252,9 +296,30 @@ const AddCompany = ({ token }) => {
                           ))}
                         </div>
                       </div>
-                    )}
-                  </div>
-                  <div className="flex gap-2">
+                    )} */}
+
+                  <Select
+                    name="select"
+                    style={{
+                      width: "300.546px",
+                      height: "27.379",
+                      fontSize: "16px",
+                      borderRadius: "0.8rem",
+                      border: "1px solid black",
+                    }}
+                    options={departmentNames.map((department) => ({
+                      value: department,
+                      label: department,
+                    }))}
+                    multi
+                    onChange={(selectedOptions) =>
+                      setSelectedDepartment(
+                        selectedOptions.map((option) => option.value)
+                      )
+                    }
+                  ></Select>
+
+                  {/* <div className="flex gap-2">
                     {departments.map((department, index) => (
                       <div key={index} className="selected-company">
                         {department}
@@ -266,7 +331,7 @@ const AddCompany = ({ token }) => {
                         </button>
                       </div>
                     ))}
-                  </div>
+                  </div> */}
                   <div className="info-input-field-company w-10">
                     <input
                       type="text"
@@ -283,6 +348,14 @@ const AddCompany = ({ token }) => {
                       onChange={handleNameChange}
                     />
                   </div>
+                  {errorMessage == "Company Name already exists" && (
+                    <p className="field-error-message">{errorMessage}</p>
+                  )}
+                  {nameWarning.compNameWarning && (
+                    <p className="field-error-message">
+                      {nameWarning.compNameWarning}
+                    </p>
+                  )}
                   <div className="info-input-field-company">
                     <input
                       type="text"
@@ -291,6 +364,11 @@ const AddCompany = ({ token }) => {
                       onChange={handleAddressChange}
                     />
                   </div>
+                  {nameWarning.addressWarning && (
+                    <p className="field-error-message">
+                      {nameWarning.addressWarning}
+                    </p>
+                  )}
                   <div className="info-input-field-company">
                     <input
                       type="email"
@@ -300,37 +378,40 @@ const AddCompany = ({ token }) => {
                     />
                   </div>
                   <div className="info-input-field-company ">
-                  <input
-                    type="text"
-                    placeholder="Select Form Type"
-                    value={formType}
-                    // onChange={(e) => setFormType(e.target.value)}
-                    className="typeStyle"
-                  />
-                  <select
-                    value={formType}
-                    onChange={(e) => setFormType(e.target.value)}
-                  >
-                    <option value=""></option>
-                    <option value="Form 1">Form 1</option>
-                    <option value="Form 2">Form 2</option>
-                    <option value="Form 3">Form 3</option>
-                  </select>
-                </div>
-                <div>
-                  <label htmlFor="photo-upload" className="m-0 pb-2 font-helvetica text-sm font-semibold block">Select Company Logo:</label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handlePhotoUpload}
-                    
-                  />
-                  <div
-                    className="image-container"
-                    style={{ backgroundImage: { imagePreviewURL } }}
-                  ></div>
-                
-                </div>
+                    <input
+                      type="text"
+                      placeholder="Select Form Type"
+                      value={formType}
+                      // onChange={(e) => setFormType(e.target.value)}
+                      className="typeStyle"
+                    />
+                    <select
+                      value={formType}
+                      onChange={(e) => setFormType(e.target.value)}
+                    >
+                      <option value=""></option>
+                      <option value="Form 1">Form 1</option>
+                      <option value="Form 2">Form 2</option>
+                      <option value="Form 3">Form 3</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="photo-upload"
+                      className="m-0 pb-2 font-helvetica text-sm font-semibold block"
+                    >
+                      Select Company Logo:
+                    </label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handlePhotoUpload}
+                    />
+                    <div
+                      className="image-container"
+                      style={{ backgroundImage: { imagePreviewURL } }}
+                    ></div>
+                  </div>
                 </div>
                 <div className="flex justify-center pb-4 mt-2">
                   <div

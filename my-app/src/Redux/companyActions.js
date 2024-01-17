@@ -1,6 +1,8 @@
 import axios from "axios";
 import * as actionTypes from "./actionTypes";
 import { url } from "../Config";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 export const createCompany =
   (formData) => async (dispatch) => {
@@ -14,6 +16,15 @@ export const createCompany =
       );
 
       dispatch({ type: actionTypes.COMPANY_CREATE_SUCCESS });
+      Swal.fire({
+        title: "Company Created successfully",
+        icon: "success",
+        timer: 2000,
+        showConfirmButton: false, // Hide the "OK" button
+      }).then(() => {
+        // Reload the window after the timer expires
+        window.location.reload();
+      });
     } catch (error) {
       const errorMessage = error.response
         ? error.response.data
@@ -26,6 +37,8 @@ export const createCompany =
         type: actionTypes.COMPANY_CREATE_FAILURE,
         payload: errorMessage,
       });
+     
+      
     }
   };
 
@@ -50,21 +63,27 @@ export const fetchCompanyInfo = () => async (dispatch) => {
 };
 
 export const updateCompanyInfo =
-  (CompanyId, updatedcompany) => async (dispatch) => {
+  (CompanyId, updatedcompany, history) => async (dispatch) => {
     try {
+      dispatch({ type: actionTypes.COMPANY_UPDATE_FAILURE, payload: null});
       const response = await axios.post(
         `${url}/api/Company/Edit/${CompanyId}`,
         updatedcompany
       );
       if (response.status === 200) {
         dispatch({ type: actionTypes.COMPANY_UPDATE_SUCCESS });
+        Swal.fire({
+          title: "Company Updated successfully",
+          icon: "success",
+          timer: 2000,
+          showConfirmButton: false, // Hide the "OK" button
+        })
+        
+        history('/viewCompany')
       } else {
         dispatch({ type: actionTypes.COMPANY_UPDATE_FAILURE });
       }
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
-      alert("Company information updated successfully");
+     
     } catch (error) {
       dispatch({ type: actionTypes.COMPANY_UPDATE_FAILURE });
     }
@@ -79,18 +98,32 @@ export const deleteCompanyInfo = (CompanyId, deletedCompany) => async (dispatch)
     if (response.status === 200) {
       dispatch({ type: actionTypes.COMPANY_DELETE_SUCCESS });
     } 
-    setTimeout(() => {
+    Swal.fire({
+      title: "Company Deleted successfully",
+      icon: "success",
+      timer: 2000,
+      showConfirmButton: false, // Hide the "OK" button
+    }). then(() => {
+      // Reload the window after the timer expires
       window.location.reload();
-    }, 1000);
-    alert("Company information deleted successfully");
+    }); 
   } catch (error) {
     dispatch({ type: actionTypes.COMPANY_DELETE_FAILURE });
-    alert("Error occurred while deleting company information");
+    // alert("Error occurred while deleting company information");
+    Swal.fire({
+      title: "Error occurred while deleting company information",
+      icon: "error",
+      // timer: 2000,
+      showConfirmButton: true, // Hide the "OK" button
+    })
    
   }
 };
 
-export const setCompany = (companyInf) => ({
-  type: actionTypes.SET_COMPANY,
-  payload: companyInf,
-});
+export const setCompany = (companyInf) =>  (dispatch) => {
+   dispatch( {
+    type: actionTypes.SET_COMPANY,
+    payload: companyInf,
+  });
+};
+

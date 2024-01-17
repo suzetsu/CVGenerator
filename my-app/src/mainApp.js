@@ -32,160 +32,160 @@ const MainApp = () => {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <CompanyDashboard />
-            </ProtectedRoute>
-          }
-        />
+        path="/"
+        element={
+          <ProtectedRoute>
+            <CompanyDashboard />
+          </ProtectedRoute>
+        }
+      />
 
-     
-        {/* <Route path="main" element={<Main  />}/> */}
 
-        <Route
-          path="Info"
-          element={
-            <ProtectedRoute>
-              <Info />
-            </ProtectedRoute>
-          }
-        />
-        <Route path = 'chooseCompany'
-        element = {
+      {/* <Route path="main" element={<Main  />}/> */}
+
+      <Route
+        path="Info"
+        element={
+          <ProtectedRoute>
+            <Info />
+          </ProtectedRoute>
+        }
+      />
+      <Route path='chooseCompany'
+        element={
           <ProtectedRoute>
             <ChooseCompany />
           </ProtectedRoute>
-        }/>
-        <Route path = 'firstForm' element = {
+        } />
+      <Route path='firstForm' element={
+        <ProtectedRoute>
+          <FirstForm />
+        </ProtectedRoute>
+      } />
+      <Route
+        path="main"
+
+        element={
           <ProtectedRoute>
-            <FirstForm />
+            <Main />
           </ProtectedRoute>
-        }/>
-        <Route
-          path="main"
-          
-          element={
-            <ProtectedRoute>
-              <Main />
-            </ProtectedRoute>
-          }
-        />
-        < Route
-        path ='editCompany'
-        element = {
+        }
+      />
+      < Route
+        path='editCompany'
+        element={
           <ProtectedRoute>
             <EditCompany />
           </ProtectedRoute>
-        }/>
+        } />
 
-        <Route path="CVGenerate" element={<CVGenerate />} />
-        <Route
-          path="Update"
-          element={
-            <ProtectedRoute>
-              <Update />
-            </ProtectedRoute>
-          }
-        />
+      <Route path="CVGenerate" element={<CVGenerate />} />
+      <Route
+        path="Update"
+        element={
+          <ProtectedRoute>
+            <Update />
+          </ProtectedRoute>
+        }
+      />
 
-        <Route
-          path="/addCompany"
-          element={
-            <ProtectedRoute>
-              <AddCompany />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="viewCompany"
-          element={
-            <ProtectedRoute>
-              <ViewCompany />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="viewRole"
-          element={
-            <ProtectedRoute>
-              <ViewRole />
-            </ProtectedRoute>
-          }
-        />
+      <Route
+        path="/addCompany"
+        element={
+          <ProtectedRoute>
+            <AddCompany />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="viewCompany"
+        element={
+          <ProtectedRoute>
+            <ViewCompany />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="viewRole"
+        element={
+          <ProtectedRoute>
+            <ViewRole />
+          </ProtectedRoute>
+        }
+      />
 
-        {/* <Route path="viewCompany" element={<ViewCompany />} /> */}
-        {/* <Route path="viewRole" element={<ViewRole  />} /> */}
-        <Route
-          path="viewDepartment"
-          element={
-            <ProtectedRoute>
-              <ViewDepartment />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="superadmin" element={
+      {/* <Route path="viewCompany" element={<ViewCompany />} /> */}
+      {/* <Route path="viewRole" element={<ViewRole  />} /> */}
+      <Route
+        path="viewDepartment"
+        element={
+          <ProtectedRoute>
+            <ViewDepartment />
+          </ProtectedRoute>
+        }
+      />
+      <Route path="superadmin" element={
         <ProtectedRoute>
           <Superadmin />
         </ProtectedRoute>
       } />
 
-        <Route
-          path="employeeList"
-          element={
-            <ProtectedRoute>
-              <EmployeeList />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="customDropdown"
-          element={
-            <ProtectedRoute>
-              <CustomDropdown />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="viewAllEmployee"
-          element={
-            <ProtectedRoute>
-              <ViewAllEmployee />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="signup"
-          element={
-            <ProtectedRoute>
-              <Signup />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="TemplateList"
-          element={
-            <ProtectedRoute>
-              <TemplateList />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="CVFormat"
+      <Route
+        path="employeeList"
+        element={
+          <ProtectedRoute>
+            <EmployeeList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="customDropdown"
+        element={
+          <ProtectedRoute>
+            <CustomDropdown />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="viewAllEmployee"
+        element={
+          <ProtectedRoute>
+            <ViewAllEmployee />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="signup"
+        element={
+          <ProtectedRoute>
+            <Signup />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="TemplateList"
+        element={
+          <ProtectedRoute>
+            <TemplateList />
+          </ProtectedRoute>
+        }
+      />
+      <Route path="CVFormat"
         element={
           <ProtectedRoute>
             <CVFormat />
           </ProtectedRoute>
         }
-        />
-        <Route
-          path="editEmployee"
-          element={
-            <ProtectedRoute>
-              <EditEmployee />
-            </ProtectedRoute>
-          }
-        />
-     
+      />
+      <Route
+        path="editEmployee"
+        element={
+          <ProtectedRoute>
+            <EditEmployee />
+          </ProtectedRoute>
+        }
+      />
+
 
       <Route
         path="CVTemp"
@@ -212,7 +212,7 @@ const MainApp = () => {
         }
       />
 
-      
+
 
       {/*            
                 <Route

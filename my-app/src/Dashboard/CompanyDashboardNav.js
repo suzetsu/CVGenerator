@@ -10,6 +10,7 @@ const CompanyDashboardNav = () => {
     const history = useNavigate()
     const handleLogout = () => {
         localStorage.removeItem("tokendata");
+        localStorage.removeItem("selectedCompany");
         window.location.href = "/login";
     }
     const handleClick = () => {
@@ -36,6 +37,15 @@ const CompanyDashboardNav = () => {
 
 
                 <div className='hoverNav' onClick={() => history('/templateList')}>CV Template List</div>
+                {role === 'SuperAdmin' && (
+              <div className='hoverNav-company'>
+              Role Management
+              <div className='dropdown-menu hidden absolute top-10 left-0 bg-white shadow-md py-2'>
+                <div className='pb-2'><a href='/signup' className='menu-item'>Add Role</a></div>
+                <div><a href='/viewRole' className='menu-item'>View Role</a></div>
+              </div>
+            </div>
+            )}
                 {/* {userRole === 'Admin' || userRole === 'SuperAdmin' ? (
       <div className='hoverNav'>User Management</div>
         ) : null}

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import * as actionTypes from './actionTypes';
 import { url } from '../Config';
+import Swal from 'sweetalert2';
 
 export const createRole = (email, password, fullName, roleName) => async (dispatch) => {
     try {
@@ -17,10 +18,20 @@ export const createRole = (email, password, fullName, roleName) => async (dispat
   
       if (response.status === 201) {
         dispatch({ type: actionTypes.USER_CREATE_SUCCESS });
+        Swal.fire({
+          title: "Role Created successfully",
+          icon: "success",
+          timer: 2000,
+          showConfirmButton: false, // Hide the "OK" button
+        }).then(() => {
+          // Reload the window after the timer expires
+          window.location.reload();
+        });
       
       } else {
         
         dispatch({ type: actionTypes.USER_CREATE_FAILURE });
+        
       }
     } catch (error) {
       
@@ -53,13 +64,24 @@ export const createRole = (email, password, fullName, roleName) => async (dispat
       if (response.status === 200) {
         dispatch({ type: actionTypes.ROLE_DELETE_SUCCESS });
       } 
-      setTimeout(() => {
+      Swal.fire({
+        title: "Role Deleted successfully",
+        icon: "success",
+        timer: 2000,
+        showConfirmButton: false, // Hide the "OK" button
+      }).then(() => {
+        // Reload the window after the timer expires
         window.location.reload();
-      }, 1000)
-      alert("Role deleted successfully");
+      });
     } catch (error) {
       dispatch({ type: actionTypes.ROLE_DELETE_FAILURE });
-      alert("Error occurred while deleting role")
+     
+      Swal.fire({
+        title: "Error occurred while deleting role",
+        icon: "error",
+        timer: 2000,
+        showConfirmButton: false, // Hide the "OK" button
+      })
     }
   }
 
@@ -76,10 +98,15 @@ export const createRole = (email, password, fullName, roleName) => async (dispat
       if (response.status === 200) {
         dispatch({ type: actionTypes.ROLE_UPDATE_SUCCESS });
       } 
-      setTimeout(() => {
+      Swal.fire({
+        title: "Role Updated successfully",
+        icon: "success",
+        timer: 2000,
+        showConfirmButton: false, // Hide the "OK" button
+      }).then(() => {
+        // Reload the window after the timer expires
         window.location.reload();
-      }, 1000)
-      alert("Role updated successfully");
+      });
     } catch (error) {
       dispatch({ type: actionTypes.ROLE_UPDATE_FAILURE });
     }

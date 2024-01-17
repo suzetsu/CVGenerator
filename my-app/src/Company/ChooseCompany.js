@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { fetchCompanyInfo } from '../Redux/companyActions';
+import { setCompany } from '../Redux/companyActions';
 import InfoBody from '../CustomerDetails/InfoComponents/FirstForm';
 
 const ChooseCompany = () => {
@@ -34,6 +35,7 @@ const ChooseCompany = () => {
         setCompany(option);
         setSelectedCompany(option);
         setShowCompanyOptions(false);
+        sessionStorage.setItem ("companyInfo", JSON.stringify(option))
     };
     const handleCompanyInputChange = (e) => {
 

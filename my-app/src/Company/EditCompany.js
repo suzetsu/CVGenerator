@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createCompany, updateCompanyInfo } from "../Redux/companyActions";
+import { createCompany, setCompany, updateCompanyInfo } from "../Redux/companyActions";
 import { fetchCompanyInfo } from "../Redux/companyActions";
 import { GetAllDepartments, GetAllDistricts } from "../Redux/departmentActions";
 import Navbar from "../Dashboard/Navbar";
@@ -9,7 +9,7 @@ import Logo from "../images/Logo.png";
 import "../CustomerDetails/InfoComponents/infoStyles.css";
 import Swal from "sweetalert2";
 import CompanyDashboardNav from "../Dashboard/CompanyDashboardNav";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const EditCompany = ({ token }) => {
 
@@ -20,7 +20,7 @@ const EditCompany = ({ token }) => {
     // const [departments, setSelectedDepartment] = useState(editedCompany.departments.$values || []);
     // const [addedDepartments, setAddedDepartment] = useState([])
     const [addedDepartments, setAddedDepartment] = useState(editedCompany.departments.$values || [])
-    // console.log(departments);
+    const history = useNavigate()
    
  
   
@@ -30,8 +30,8 @@ const EditCompany = ({ token }) => {
   const [previewImage, setPreviewImage] = useState("");
   const [uploadedImage, setUploadedImage] = useState( editedCompany.uploadedImage );
   
-  const successStatus = useSelector(
-    (state) => state.company.companyCreationStatus
+  const companyUpdateStatus = useSelector(
+    (state) => state.company.companyUpdateStatus
   );
 
   const errorMessage = useSelector((state) => state.company.companyError);
@@ -188,7 +188,8 @@ const handleUpdate = () => {
     if (uploadedImage){
         updatedCompany.append("imageFile", uploadedImage)
     }
-    dispatch(updateCompanyInfo(companyId, updatedCompany))
+    dispatch(updateCompanyInfo(companyId, updatedCompany, history))
+    
 }
 
   return (
@@ -359,9 +360,9 @@ const handleUpdate = () => {
                 {error && (
                   <p className="error-message flex justify-center">{error}</p>
                 )}
-                {successStatus === "success" && (
+                {companyUpdateStatus === "success" && (
                   <div className="success-message flex justify-center">
-                    Company Added Successfully
+                    Company Updated Successfully
                   </div>
                   // Swal.fire({
                   //   icon: 'success',

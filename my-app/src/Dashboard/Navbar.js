@@ -16,8 +16,8 @@ const NavBar = () => {
   const role=  localStorage.getItem("tokendata") &&   JSON.parse(localStorage.getItem("tokendata")).role;
   const token=  localStorage.getItem("tokendata") &&   JSON.parse(localStorage.getItem("tokendata")).token;
 
-  const company = useSelector((state) => state.company.company)
-  const companyForm = company && company.formType
+  
+  
   
 
   useEffect(() => {
@@ -26,10 +26,9 @@ const NavBar = () => {
     }
   }, []);
 
-  
-
   const handleLogout = () => {
-    localStorage.removeItem("tokendata");
+    localStorage.removeItem("tokendata"); 
+    localStorage.removeItem("selectedCompany"); 
     window.location.href = "/login";
   }
 
@@ -74,8 +73,8 @@ const handleClick = () => {
             <div className='hoverNav-company'>
               Employee Management
               <div className='dropdown-menu hidden absolute top-10 left-0 bg-white shadow-md py-2'>
-                <div className='pb-2'><Link to='/firstForm' state={company} className='menu-item'   >Add Employee</Link></div>
-                <div className='pb-2'><a href='/viewAllEmployee' className='menu-item'>View All</a></div>
+                <div className='pb-2'><Link to='/firstForm' className='menu-item'   >Add Employee</Link></div>
+                <div className='pb-2'><Link to='/viewAllEmployee' className='menu-item'>View All</Link></div>
                 {/* <div><a href='/viewRole' className='menu-item'>View Employee</a></div> */}
               </div>
               </div>
